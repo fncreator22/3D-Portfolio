@@ -1,0 +1,44 @@
+﻿# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Next.js build output
+/.next/
+/out/
+/build/
+/dist/
+
+# Environment Variables & Secrets
+.env
+.env*.local
+.env.development
+.env.test
+.env.production
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Operating System & IDE Files
+.DS_Store
+*.pem
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local Python & Scratch Files
+*.py
+*.pyc
+__pycache__/
+.venv/
+venv/
+test.txt
