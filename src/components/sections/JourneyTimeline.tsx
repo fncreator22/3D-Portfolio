@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ROLES } from "@/data/projects";
+import { TechLogo } from "@/components/ui/TechLogo";
 
 export function JourneyTimeline() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -108,18 +109,10 @@ export function JourneyTimeline() {
                     {role.desc}
                   </p>
 
-                  <div className="mt-5 flex flex-wrap gap-2">
+                  {/* Skills badges with glowing Tech Logos */}
+                  <div className="mt-6 flex flex-wrap gap-2">
                     {role.skills.map((skill, sIdx) => (
-                      <span
-                        key={sIdx}
-                        className={`font-mono text-[0.68rem] tracking-wider uppercase px-3 py-1 rounded border transition-colors ${
-                          isActive
-                            ? "border-accent/40 bg-accent/10 text-paper"
-                            : "border-line text-stone"
-                        }`}
-                      >
-                        {skill}
-                      </span>
+                      <TechLogo key={sIdx} name={skill} />
                     ))}
                   </div>
                 </div>

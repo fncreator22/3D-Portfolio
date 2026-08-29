@@ -39,7 +39,7 @@ export default function AllProjectsPage() {
         {/* Search & Filter Bar */}
         <div className="border border-line bg-bg-raise/60 backdrop-blur-md p-4 sm:p-6 rounded-2xl mb-12 shadow-xl">
           <div className="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
-            {/* Search Input */}
+            {/* Search Input with Themed SVG Icon */}
             <div className="relative flex-grow max-w-md">
               <input
                 type="text"
@@ -48,9 +48,18 @@ export default function AllProjectsPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-bg border border-line rounded-xl px-4 py-2.5 pl-10 font-mono text-xs text-paper placeholder:text-stone/60 focus:outline-none focus:border-accent transition-colors"
               />
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone text-xs">
-                🔍
-              </span>
+              <svg
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone/80 pointer-events-none"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                viewBox="0 0 24 24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
             </div>
 
             {/* Category Filter Pills */}

@@ -6,13 +6,12 @@ import { useTypewriter } from "@/hooks/useTypewriter";
 import { Avatar3DModel } from "@/components/ui/Avatar3DModel";
 
 const TYPEWRITER_TEXT =
-  "I take projects from vague asks to production-grade systems — architecting Agentic AI pipelines, MCP safety guardrails, and full-stack platforms that verify themselves.";
+  "Built Sentinel — an MCP safety agent running inside Claude Desktop, Cursor, and CodeX, catching unsafe actions with a self-trained classifier at 76% cross-validation accuracy. Shipped 4 more production platforms since, from LMS grading engines to autonomous web agents.";
 
-const PILLS = [
+const PROJECT_CHIPS = [
   { label: "Sentinel MCP Guardrail", href: "/work/sentinel-mcp-guardrail" },
   { label: "BrowserPilot Agent", href: "/work/browserpilot-autonomous-web-agent" },
   { label: "Examly Enterprise", href: "/work/examly-enterprise" },
-  { label: "Explore 12 Systems", href: "/work" },
 ];
 
 export function Hero() {
@@ -21,12 +20,12 @@ export function Hero() {
 
   const { displayed, done } = useTypewriter({
     text: TYPEWRITER_TEXT,
-    speed: 32,
-    startDelay: 400,
+    speed: 28,
+    startDelay: 350,
   });
 
   useEffect(() => {
-    const t = setTimeout(() => setPillsVisible(true), 350);
+    const t = setTimeout(() => setPillsVisible(true), 300);
     return () => clearTimeout(t);
   }, []);
 
@@ -43,9 +42,9 @@ export function Hero() {
             {/* ─── Left: Text Content ─── */}
             <div className="flex flex-col max-w-xl">
 
-              {/* Roles Eyebrow */}
+              {/* Sharper 3-Tag Eyebrow */}
               <div className="eyebrow mb-3.5 sm:mb-4 text-[0.68rem] sm:text-xs">
-                AI Engineer · Software Developer · AI Automation Engineer · Full-Stack Developer
+                AI ENGINEER · MCP &amp; AGENTIC SYSTEMS · FULL-STACK ENGINEER
               </div>
 
               {/* High-Impact Headline */}
@@ -53,13 +52,13 @@ export function Hero() {
                 Engineering <span className="text-accent">Autonomous Systems</span> &amp; Production AI.
               </h1>
 
-              {/* Typewriter Statement */}
+              {/* Fact-Anchored Subheadline Statement */}
               <p
-                className="text-paper mb-6 sm:mb-7 font-body leading-[1.42]"
+                className="text-paper mb-6 sm:mb-7 font-body leading-[1.45]"
                 style={{
-                  fontSize: "clamp(15px, 2.3vw, 20px)",
+                  fontSize: "clamp(14px, 2.1vw, 18px)",
                   fontWeight: 400,
-                  minHeight: "56px",
+                  minHeight: "68px",
                 }}
               >
                 {displayed}
@@ -77,45 +76,59 @@ export function Hero() {
                 )}
               </p>
 
-              {/* Action Pill Buttons */}
+              {/* Action Buttons & Project Chips */}
               <div
-                className="flex flex-wrap gap-2 sm:gap-2.5 items-center"
+                className="flex flex-col gap-3.5 sm:gap-4"
                 style={{
                   opacity: pillsVisible ? 1 : 0,
                   transform: pillsVisible ? "translateY(0)" : "translateY(8px)",
                   transition: "opacity 0.45s ease, transform 0.45s ease",
                 }}
               >
-                {/* Flagship Project Pills */}
-                {PILLS.map((pill) => (
+                {/* Primary Action Buttons */}
+                <div className="flex flex-wrap gap-2.5 items-center">
                   <Link
-                    key={pill.href}
-                    href={pill.href}
-                    className="inline-flex items-center justify-center bg-paper text-bg border border-black/10 rounded-full font-body font-medium hover:bg-accent hover:text-paper hover:border-accent transition-colors duration-200 text-[0.78rem] sm:text-[0.85rem] px-3.5 sm:px-4 py-1.5 whitespace-nowrap"
+                    href="/work"
+                    className="inline-flex items-center justify-center bg-paper text-bg border border-black/10 rounded-full font-body font-medium hover:bg-accent hover:text-paper hover:border-accent transition-colors duration-200 text-[0.8rem] sm:text-[0.88rem] px-4 py-2"
                   >
-                    {pill.label}
+                    Explore 12 Systems
                   </Link>
-                ))}
 
-                {/* Direct Get in Touch CTA */}
-                <a
-                  href="#contact"
-                  className="inline-flex items-center justify-center bg-accent text-bg font-medium rounded-full hover:bg-accent/90 hover:shadow-md transition-all text-[0.78rem] sm:text-[0.85rem] px-4 py-1.5 whitespace-nowrap gap-1.5"
-                >
-                  <span>Get in Touch</span>
-                  <span className="text-xs">↓</span>
-                </a>
+                  <a
+                    href="#contact"
+                    className="inline-flex items-center justify-center bg-accent text-bg font-medium rounded-full hover:bg-accent/90 hover:shadow-md transition-all text-[0.8rem] sm:text-[0.88rem] px-4 py-2 gap-1.5"
+                  >
+                    <span>Get in Touch</span>
+                    <span className="text-xs">↓</span>
+                  </a>
 
-                {/* View/Download Resume CTA */}
-                <a
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center text-paper bg-transparent border border-paper/70 rounded-full font-body hover:bg-paper hover:text-bg hover:border-paper transition-colors duration-200 text-[0.78rem] sm:text-[0.85rem] px-3.5 sm:px-4 py-1.5 whitespace-nowrap gap-1.5"
-                >
-                  <span>Resume</span>
-                  <span className="text-xs">↗</span>
-                </a>
+                  <a
+                    href="/resume.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center text-paper bg-transparent border border-paper/70 rounded-full font-body hover:bg-paper hover:text-bg hover:border-paper transition-colors duration-200 text-[0.8rem] sm:text-[0.88rem] px-4 py-2 gap-1.5"
+                  >
+                    <span>Resume</span>
+                    <span className="text-xs">↗</span>
+                  </a>
+                </div>
+
+                {/* Flagship Project Chips */}
+                <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-line/50">
+                  <span className="font-mono text-[0.62rem] uppercase tracking-widest text-stone mr-1">
+                    Flagship:
+                  </span>
+                  {PROJECT_CHIPS.map((chip) => (
+                    <Link
+                      key={chip.href}
+                      href={chip.href}
+                      className="inline-flex items-center gap-1 font-mono text-[0.7rem] sm:text-xs text-paper/80 bg-bg-raise/80 border border-line/70 hover:border-accent hover:text-accent rounded-lg px-2.5 py-1 transition-all"
+                    >
+                      <span>{chip.label}</span>
+                      <span className="text-accent text-[0.65rem]">→</span>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
 
