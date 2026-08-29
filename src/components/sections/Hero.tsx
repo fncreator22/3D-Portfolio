@@ -9,14 +9,15 @@ const TYPEWRITER_TEXT =
   "I build systems that verify themselves. LLM orchestration, Sentinel MCP, and computer vision that ship.";
 
 const PILLS = [
-  { label: "Explore Sentinel MCP", href: "/work/sentinel-model-context-protocol" },
-  { label: "Inspect LatO Framework", href: "/work/lato-validation-framework" },
-  { label: "View Computer Vision / YOLO", href: "/work/sign-language-detection-yolov8" },
-  { label: "See 14 Case Studies", href: "/work" },
+  { label: "Sentinel MCP Guardrail", href: "/work/sentinel-mcp-guardrail" },
+  { label: "NexWare ERP", href: "/work/nexware-erp" },
+  { label: "Examly Enterprise", href: "/work/examly-enterprise" },
+  { label: "BrowserPilot Autonomous Agent", href: "/work/browserpilot-autonomous-web-agent" },
+  { label: "See 12 Systems", href: "/work" },
 ];
 
-const EMAIL = "sr2mahajan@gmail.com";
-const GMAIL_COMPOSE_URL = `https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}&su=Discussion:%20AI/ML%20Engineering`;
+const EMAIL = "sagarin588@gmail.com";
+const GMAIL_COMPOSE_URL = `https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}&su=Discussion:%20AI%20Engineering%20Roles`;
 
 export function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -29,7 +30,6 @@ export function Hero() {
     startDelay: 600,
   });
 
-  // Pills fade-in independent of typewriter — 400ms after load
   useEffect(() => {
     const t = setTimeout(() => setPillsVisible(true), 400);
     return () => clearTimeout(t);
@@ -57,7 +57,7 @@ export function Hero() {
       ref={containerRef}
       className="relative z-10 min-h-svh flex flex-col overflow-hidden"
     >
-      {/* Hero Layout — Responsive padding and spacing for mobile, tablet, and desktop */}
+      {/* Hero Layout */}
       <div className="flex-1 flex items-center pb-16 pt-24 sm:pt-28 md:pt-32">
         <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)] w-full">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
@@ -65,9 +65,9 @@ export function Hero() {
             {/* ─── Left: Text Content ─── */}
             <div className="flex flex-col max-w-xl">
 
-              {/* Crisp Eyebrow & Intro */}
-              <div className="eyebrow mb-3.5 sm:mb-4">
-                AI/ML Engineer · Systems Architect
+              {/* Roles Eyebrow */}
+              <div className="eyebrow mb-3.5 sm:mb-4 text-[0.68rem] sm:text-xs">
+                AI Engineer · Software Developer · AI Automation Engineer · Full-Stack Developer
               </div>
 
               {/* High-Impact Headline */}
@@ -119,7 +119,7 @@ export function Hero() {
                   </Link>
                 ))}
 
-                {/* Direct Gmail Launcher Pill */}
+                {/* Direct Gmail Launcher */}
                 <a
                   href={GMAIL_COMPOSE_URL}
                   target="_blank"
@@ -158,7 +158,7 @@ export function Hero() {
               </div>
             </div>
 
-            {/* ─── Right: 3D Avatar (Optimized for both mobile touch and desktop orbit) ─── */}
+            {/* ─── Right: 3D Avatar ─── */}
             <div
               className="hero-avatar-area flex justify-center lg:justify-end mt-4 lg:mt-0"
               style={{

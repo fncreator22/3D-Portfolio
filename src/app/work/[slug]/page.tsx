@@ -1,8 +1,9 @@
-import React from "react";
+﻿import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PROJECTS } from "@/data/projects";
 import { SentinelSimulator } from "@/components/ui/SentinelSimulator";
+import { TechLogo } from "@/components/ui/TechLogo";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -40,10 +41,12 @@ export default async function ProjectPage({
   const prevProject = PROJECTS[(projectIndex - 1 + total) % total];
   const nextProject = PROJECTS[(projectIndex + 1) % total];
 
+  const isSentinel = project.slug === "sentinel-mcp-guardrail";
+
   return (
     <div className="pt-20 sm:pt-24 pb-20 relative z-10">
       {/* Back link */}
-      <div className="max-w-[1240px] mx-auto px-[clamp(1.25rem,5vw,4rem)] pt-6 pb-2">
+      <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)] pt-6 pb-2">
         <Link
           href="/#projects"
           className="font-mono text-xs uppercase tracking-wider text-stone hover:text-accent inline-flex items-center gap-2 transition-colors py-2"
@@ -54,7 +57,7 @@ export default async function ProjectPage({
 
       {/* Hero Section: Editorial 2-Column Split */}
       <section className="border-b border-line py-8 sm:py-12">
-        <div className="max-w-[1240px] mx-auto px-[clamp(1.25rem,5vw,4rem)]">
+        <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
             {/* Left: Metadata & Intro */}
             <div>
@@ -75,7 +78,7 @@ export default async function ProjectPage({
                   href={project.gh}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-mono text-xs uppercase tracking-wider px-5 py-3 bg-accent border border-accent text-bg font-medium rounded hover:bg-transparent hover:text-accent transition-all"
+                  className="font-mono text-xs uppercase tracking-wider px-5 py-3 bg-accent border border-accent text-bg font-medium rounded-xl hover:bg-transparent hover:text-accent transition-all"
                 >
                   GitHub Source ↗
                 </a>
@@ -84,176 +87,183 @@ export default async function ProjectPage({
                     href={project.live}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-mono text-xs uppercase tracking-wider px-5 py-3 border border-line text-paper rounded hover:border-accent hover:text-accent transition-all"
+                    className="font-mono text-xs uppercase tracking-wider px-5 py-3 border border-line text-paper rounded-xl hover:border-accent hover:text-accent transition-all flex items-center gap-2"
                   >
-                    Live Demo ↗
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    Live Production ↗
                   </a>
                 )}
               </div>
             </div>
 
-            {/* Right: Containerized Media Mockup */}
-            <div className="relative rounded-2xl overflow-hidden border border-line bg-bg-raise shadow-[0_20px_50px_rgba(0,0,0,0.6)] group">
-              <div className="bg-bg px-4 py-2.5 border-b border-line/60 flex items-center justify-between text-stone font-mono text-[0.68rem]">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-line" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-line" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-line" />
-                </div>
-                <span className="truncate max-w-[200px]">{project.slug}.build</span>
-              </div>
-              <div className="relative aspect-[16/10] overflow-hidden bg-bg">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+            {/* Right: Media Preview */}
+            <div className="relative rounded-3xl overflow-hidden border border-line bg-bg-raise aspect-[16/10] shadow-[0_24px_60px_rgba(0,0,0,0.8)] group">
+              <img
+                src={project.image}
+                alt={project.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+              />
+              <div className="absolute top-4 right-4 bg-bg/85 backdrop-blur-md border border-line/60 px-3 py-1 rounded-full font-mono text-[0.65rem] tracking-wider uppercase text-paper/90 shadow-md">
+                {project.cat}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Deep-Dive Case Study Content */}
-      <section className="py-[clamp(4rem,8vw,6rem)]">
-        <div className="max-w-[1240px] mx-auto px-[clamp(1.25rem,5vw,4rem)] grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-16">
-          <div className="space-y-12">
-            <div>
-              <div className="eyebrow">Overview</div>
-              <h2 className="font-display font-medium text-[clamp(1.4rem,2.6vw,1.9rem)] mt-3 mb-4">
-                What it does
-              </h2>
-              <p className="text-stone font-light text-base leading-relaxed max-w-[680px]">
-                {project.desc}
-              </p>
-            </div>
+      {/* Main Case Study Body */}
+      <section className="py-12 sm:py-16">
+        <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-12 lg:gap-16">
+            {/* Left: Narrative Sections */}
+            <div className="space-y-12">
+              {/* Overview */}
+              <div>
+                <div className="eyebrow mb-4">Architecture &amp; Overview</div>
+                <p className="text-[clamp(1rem,1.4vw,1.18rem)] font-light text-paper/90 leading-relaxed">
+                  {project.desc}
+                </p>
+              </div>
 
-            <div>
-              <div className="eyebrow">The Problem</div>
-              <h2 className="font-display font-medium text-[clamp(1.4rem,2.6vw,1.9rem)] mt-3 mb-4">
-                Why it needed building
-              </h2>
-              <p className="text-stone font-light text-base leading-relaxed max-w-[680px]">
-                {project.problem}
-              </p>
-            </div>
+              {/* Problem */}
+              <div className="border-t border-line/60 pt-8">
+                <h2 className="font-display font-medium text-2xl text-paper mb-3">
+                  The Problem
+                </h2>
+                <p className="text-stone font-light text-base leading-relaxed">
+                  {project.problem}
+                </p>
+              </div>
 
-            <div>
-              <div className="eyebrow">The Approach</div>
-              <h2 className="font-display font-medium text-[clamp(1.4rem,2.6vw,1.9rem)] mt-3 mb-4">
-                How it was engineered
-              </h2>
-              <p className="text-stone font-light text-base leading-relaxed max-w-[680px]">
-                {project.approach}
-              </p>
+              {/* Approach */}
+              <div className="border-t border-line/60 pt-8">
+                <h2 className="font-display font-medium text-2xl text-paper mb-3">
+                  The Approach &amp; Implementation
+                </h2>
+                <p className="text-stone font-light text-base leading-relaxed">
+                  {project.approach}
+                </p>
+              </div>
 
-              {project.slug === "sentinel-model-context-protocol" && (
-                <div className="mt-8">
-                  <div className="text-accent text-xs font-mono mb-2 uppercase tracking-wider">
-                    Interactive Safety Sandbox
-                  </div>
+              {/* Outcome */}
+              <div className="border-t border-line/60 pt-8">
+                <h2 className="font-display font-medium text-2xl text-paper mb-3">
+                  Measurable Outcome
+                </h2>
+                <p className="text-stone font-light text-base leading-relaxed">
+                  {project.outcome}
+                </p>
+              </div>
+
+              {/* Interactive Simulator for Sentinel */}
+              {isSentinel && (
+                <div className="border-t border-line/60 pt-8">
+                  <div className="eyebrow mb-4">Interactive Sandbox</div>
+                  <h3 className="font-display font-medium text-2xl text-paper mb-2">
+                    Test the 3-Stage Gating Pipeline
+                  </h3>
+                  <p className="text-stone text-sm mb-6 font-light">
+                    Simulate how Sentinel blocks destructive shell commands and flags scope creep in real time.
+                  </p>
                   <SentinelSimulator />
                 </div>
               )}
             </div>
 
-            <div>
-              <div className="eyebrow">The Outcome</div>
-              <h2 className="font-display font-medium text-[clamp(1.4rem,2.6vw,1.9rem)] mt-3 mb-4">
-                Where it landed
-              </h2>
-              <p className="text-stone font-light text-base leading-relaxed max-w-[680px]">
-                {project.outcome}
-              </p>
-            </div>
-          </div>
+            {/* Right Sidebar: Tech Stack WITH LOGOS & Metrics */}
+            <div className="space-y-8">
+              {/* Tech Stack with Logos */}
+              <div className="p-6 sm:p-8 rounded-3xl bg-bg-raise border border-line/80 shadow-xl">
+                <div className="font-mono text-xs text-accent uppercase tracking-widest mb-4 font-semibold">
+                  Technologies &amp; Skills
+                </div>
+                <div className="flex flex-wrap gap-2.5">
+                  {project.tech.map((t) => (
+                    <TechLogo key={t} name={t} />
+                  ))}
+                </div>
+              </div>
 
-          {/* Sidebar */}
-          <aside className="space-y-10">
-            <div className="border border-line/60 bg-bg-raise/40 p-6 rounded-xl">
-              <div className="eyebrow mb-4">Key Metrics</div>
-              <div className="space-y-3 font-mono text-xs">
-                {project.metrics.length > 0 ? (
-                  project.metrics.map((m, i) => (
-                    <div key={i} className="py-2 border-b border-line/40 last:border-b-0 text-paper/90">
-                      • {m}
+              {/* Empirical Metrics */}
+              <div className="p-6 sm:p-8 rounded-3xl bg-bg-raise border border-line/80 shadow-xl">
+                <div className="font-mono text-xs text-accent uppercase tracking-widest mb-4 font-semibold">
+                  Key Verification Metrics
+                </div>
+                <div className="space-y-3">
+                  {project.metrics.map((m, idx) => (
+                    <div key={idx} className="flex items-start gap-2.5 font-mono text-xs text-paper/85">
+                      <span className="text-accent font-bold">•</span>
+                      <span>{m}</span>
                     </div>
-                  ))
-                ) : (
-                  <div className="text-stone py-2">Personal build — metrics not tracked.</div>
-                )}
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <div className="border border-line/60 bg-bg-raise/40 p-6 rounded-xl">
-              <div className="eyebrow mb-4">Tech Stack</div>
-              <div className="flex flex-wrap gap-2">
-                {project.tech.map((t, i) => (
-                  <span
-                    key={i}
-                    className="font-mono text-xs uppercase px-2.5 py-1 border border-line text-stone rounded hover:border-accent hover:text-paper transition-colors"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="border border-line/60 bg-bg-raise/40 p-6 rounded-xl">
-              <div className="eyebrow mb-4">Links & Source</div>
-              <div className="flex flex-col gap-3">
-                <a
-                  href={project.gh}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-mono text-xs uppercase text-accent hover:underline flex items-center justify-between"
-                >
-                  <span>GitHub Repository</span>
-                  <span>↗</span>
-                </a>
-                {project.live && (
+              {/* Direct Links Card */}
+              <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-bg-raise to-bg border border-line/80 shadow-xl">
+                <div className="font-mono text-xs text-accent uppercase tracking-widest mb-4 font-semibold">
+                  Project Availability
+                </div>
+                <div className="space-y-3">
                   <a
-                    href={project.live}
+                    href={project.gh}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-mono text-xs uppercase text-accent hover:underline flex items-center justify-between"
+                    className="w-full flex items-center justify-between p-3.5 rounded-xl bg-bg border border-line hover:border-accent hover:text-accent font-mono text-xs uppercase tracking-wider transition-all"
                   >
-                    <span>Live Deployment</span>
+                    <span>View Repository</span>
                     <span>↗</span>
                   </a>
-                )}
+                  {project.live ? (
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full flex items-center justify-between p-3.5 rounded-xl bg-accent text-bg font-mono text-xs uppercase tracking-wider font-semibold hover:bg-accent/90 transition-all"
+                    >
+                      <span>Open Live App</span>
+                      <span>↗</span>
+                    </a>
+                  ) : (
+                    <div className="p-3.5 rounded-xl bg-bg/50 border border-line/50 font-mono text-[0.7rem] text-stone">
+                      Codebase showcase · Live deploy upon request
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </aside>
+          </div>
         </div>
       </section>
 
-      {/* Prev / Next Project Switcher */}
-      <nav aria-label="Project switcher" className="border-t border-line grid grid-cols-1 md:grid-cols-2">
-        <Link
-          href={`/work/${prevProject.slug}`}
-          className="p-8 md:p-12 border-b md:border-b-0 md:border-r border-line hover:bg-white/[0.02] transition-colors flex flex-col items-start text-left group"
-        >
-          <span className="font-mono text-xs uppercase tracking-wider text-accent group-hover:-translate-x-1 transition-transform">
-            ← Previous Project
-          </span>
-          <span className="font-display font-medium text-xl mt-2 text-paper group-hover:text-accent transition-colors">
-            {prevProject.title}
-          </span>
-        </Link>
+      {/* Pagination Footer */}
+      <section className="border-t border-line mt-12 pt-12">
+        <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)] flex justify-between items-center">
+          <Link
+            href={`/work/${prevProject.slug}`}
+            className="group flex flex-col items-start"
+          >
+            <span className="font-mono text-xs uppercase text-stone group-hover:text-accent transition-colors">
+              ← Previous System
+            </span>
+            <span className="font-display font-medium text-lg sm:text-xl text-paper mt-1 group-hover:text-accent transition-colors">
+              {prevProject.title}
+            </span>
+          </Link>
 
-        <Link
-          href={`/work/${nextProject.slug}`}
-          className="p-8 md:p-12 hover:bg-white/[0.02] transition-colors flex flex-col items-start md:items-end text-left md:text-right group"
-        >
-          <span className="font-mono text-xs uppercase tracking-wider text-accent group-hover:translate-x-1 transition-transform">
-            Next Project →
-          </span>
-          <span className="font-display font-medium text-xl mt-2 text-paper group-hover:text-accent transition-colors">
-            {nextProject.title}
-          </span>
-        </Link>
-      </nav>
+          <Link
+            href={`/work/${nextProject.slug}`}
+            className="group flex flex-col items-end"
+          >
+            <span className="font-mono text-xs uppercase text-stone group-hover:text-accent transition-colors">
+              Next System →
+            </span>
+            <span className="font-display font-medium text-lg sm:text-xl text-paper mt-1 group-hover:text-accent transition-colors">
+              {nextProject.title}
+            </span>
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

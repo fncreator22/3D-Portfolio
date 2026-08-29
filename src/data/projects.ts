@@ -1,365 +1,447 @@
-import { Project, RoleExperience, SkillDomain } from "@/lib/types";
+﻿import { Project, RoleExperience, SkillDomain } from "@/lib/types";
+
+export const PROFILE = {
+  name: "Sagar Mahajan",
+  title: "AI Engineer · Software Developer · AI Automation Engineer · Full-Stack Developer",
+  roles: [
+    "AI Engineer",
+    "Software Developer",
+    "AI Automation Engineer",
+    "Full-Stack Developer"
+  ],
+  phone: "+91 9362746288",
+  email: "sagarin588@gmail.com",
+  location: "Hyderabad, India",
+  linkedin: "https://linkedin.com/in/sagar-mahajan-513a43200",
+  github: "https://github.com/fncreator22",
+  x: "https://x.com/sr2mahajan",
+  xHandle: "@sr2mahajan",
+  instagram: "https://instagram.com/sagar___0122",
+  instagramHandle: "@sagar___0122",
+  summary:
+    "Software Engineer with 1+ year of experience who takes a project from a vague ask to a live product with minimal hand-holding. Owns things end-to-end — scoping the real problem, making the architecture calls, building it, and staying on after launch instead of walking away. Picks up whatever a project demands quickly, and treats measurable outcomes as the real deliverable, earning repeat client work through dependable, on-time delivery.",
+  education: {
+    degree: "Bachelor of Technology — Computer Science & Engineering",
+    school: "Assam Down Town University, Guwahati, India",
+    period: "Aug 2021 – Jul 2025"
+  }
+};
 
 export const PROJECTS: Project[] = [
   {
     idx: 1,
-    slug: "lato-validation-framework",
-    cat: "AI / Agentic Infrastructure",
-    title: "LATO Validation Framework",
-    tagline: "Local-first multi-agent task orchestrator with real-time WebSocket token streaming, permission gating, and empirical action verification.",
-    desc: "Local-first multi-agent task orchestrator with real-time WebSocket token streaming, permission gating, and empirical action verification.",
-    problem: "Agent frameworks that only log what happened after the fact make debugging a multi-agent pipeline slow, and give no way to stop a bad action before it runs.",
-    approach: "Built a local-first orchestrator on FastAPI and Ollama, streaming every agent's reasoning and tool calls over WebSocket to a ReactFlow graph in real time, with a permission gate in front of every proposed action.",
-    outcome: "The result is a pipeline that runs almost entirely offline, holds 99.4% uptime, and turned regression testing that used to take hours into a 3.5 minute run.",
+    slug: "sentinel-mcp-guardrail",
+    cat: "AI, LLM & Agentic Systems",
+    title: "Sentinel — MCP Guardrail Agent",
+    tagline: "A safety layer that reviews every AI agent action before it runs.",
+    desc: "Sentinel sits between an LLM coding agent (Claude Code, Cursor, CodeX) and its execution environment, reviewing every proposed action before it runs. It uses a three-stage pipeline — a rules engine, a self-trained TF-IDF + Logistic Regression classifier (76.3% cross-validation accuracy on 828 hand-labeled examples), and a final LLM review pass — to block destructive commands, flag scope creep, and keep a full audit trail. Ships as an MCP plugin with both stdio and SSE transport support, integrating directly into engineers' daily workflow across Claude Desktop, Cursor, and CodeX.",
+    problem: "LLM coding assistants can propose file edits, shell commands, and network calls directly — and most setups have nothing standing between the model's suggestion and its execution, exposing developer environments to destructive actions.",
+    approach: "Engineered a 3-stage validation pipeline: deterministic rules filter, self-trained TF-IDF + Logistic Regression statistical classifier, and an asynchronous LLM contextual review pass in the MCP protocol layer.",
+    outcome: "Logged zero unauthorized escapes across 100k test payloads with under 5ms gateway check latency, and verified 76.3% 5-fold cross-validation accuracy across 828 hand-labeled edge cases.",
     metrics: [
-      "99.4% pipeline uptime",
-      "Regression testing: hours → 3.5 mins",
-      "500k+ daily tool calls"
+      "76.3% CV classifier accuracy (828 hand-labeled examples)",
+      "Zero unauthorized escapes / 100k test payloads",
+      "<5ms gateway check latency",
+      "Dual stdio & SSE transport support"
     ],
-    tech: ["FastAPI", "Ollama", "WebSocket", "ReactFlow", "Python", "TypeScript"],
-    gh: "https://github.com/fncreator22/lato-validation",
-    live: null,
+    tech: ["Python", "FastAPI", "scikit-learn", "Ollama", "Model Context Protocol", "Docker", "SQLite"],
+    gh: "https://github.com/fncreator22/sentinel-mcp",
+    live: "https://sentinel-landing-azure.vercel.app/",
     image: "/images/center.jpg",
-    gallery: ["/images/center.jpg", "/images/top_right.jpg", "/images/left.jpg"],
+    gallery: ["/images/center.jpg", "/images/top_left.jpg", "/images/right.jpg"],
     featured: true
   },
   {
     idx: 2,
-    slug: "sentinel-model-context-protocol",
-    cat: "Agentic AI / Protocol Engineering",
-    title: "Sentinel Model Context Protocol",
-    tagline: "Three-stage safety guardrail agent for LLM coding assistants (Claude Desktop, Cursor, CodeX), shipped as a plug-and-play MCP plugin.",
-    desc: "Three-stage safety guardrail agent for LLM coding assistants (Claude Desktop, Cursor, CodeX), shipped as a plug-and-play MCP plugin.",
-    problem: "LLM coding assistants can propose file edits, shell commands, and network calls directly — and most setups have nothing standing between the model's suggestion and its execution.",
-    approach: "Designed Sentinel as a three-stage review gateway that sits in the Model Context Protocol path between an agent and its execution environment, scoring and gating every proposed action before Claude Code, Cursor, or CodeX are allowed to run it.",
-    outcome: "Across 100k test payloads Sentinel logged zero unauthorized escapes, while holding gateway latency under 5ms across 40+ concurrent agent registries — safe without being slow enough to get disabled.",
+    slug: "nexware-erp",
+    cat: "Full-Stack & SaaS Platforms",
+    title: "NexWare ERP",
+    tagline: "A multi-tenant SaaS ERP unifying workspace, inventory, and billing.",
+    desc: "NexWare ERP centralizes business operations — inventory, warehouse management, billing/invoicing, workforce management, and analytics — into one platform. Built with a four-tier role hierarchy (Super Admin → Admin → Manager → Employee) and a permission-driven access engine, plus an integrated tax-calculation and invoicing system designed to replace multiple disconnected business tools with one unified system.",
+    problem: "Growing businesses struggle with fragmented tooling across separate inventory, workforce, and invoicing apps, leading to data synchronization failures and manual bookkeeping delays.",
+    approach: "Designed a centralized multi-tenant architecture with a granular 4-tier RBAC authorization model, real-time MongoDB aggregations, and an automated tax computation engine with Chart.js analytics.",
+    outcome: "Unified 5 separate operational departments into one system, eliminating manual invoicing delays and giving managers instant real-time financial telemetry.",
     metrics: [
-      "Zero unauthorized escapes / 100k payloads",
-      "<5ms gateway latency",
-      "40+ concurrent agent registries"
+      "4-tier role hierarchy (Super Admin → Admin → Manager → Employee)",
+      "Unified inventory, billing & workforce management",
+      "Real-time automated tax & invoicing engine",
+      "Interactive Chart.js executive telemetry"
     ],
-    tech: ["Python", "FastAPI", "scikit-learn", "Model Context Protocol"],
-    gh: "https://github.com/fncreator22/sentinel-mcp",
-    live: "https://sentinel-landing-azure.vercel.app/",
-    image: "/images/center.jpg",
-    gallery: ["/images/center.jpg", "/images/top_left.jpg"],
+    tech: ["Python", "FastAPI", "JavaScript", "MongoDB", "Chart.js", "Tailwind CSS"],
+    gh: "https://github.com/fncreator22/NexWare-ERP",
+    live: "https://nex-ware-erp.vercel.app",
+    image: "/images/top_right.jpg",
+    gallery: ["/images/top_right.jpg", "/images/center.jpg"],
     featured: true
   },
   {
     idx: 3,
-    slug: "sign-language-detection-yolov8",
-    cat: "Computer Vision Suite",
-    title: "Sign Language Detection YOLOv8",
-    tagline: "Real-time sign language gesture detection built on YOLOv8, tuned for edge deployment.",
-    desc: "Real-time sign language gesture detection built on YOLOv8, tuned for edge deployment.",
-    problem: "Real-time sign language recognition needs both high accuracy and low latency — most academic models hit one at the cost of the other, which makes them unusable for live conversation.",
-    approach: "Trained and tuned a YOLOv8 detector for hand-gesture classes, then exported through ONNX Runtime to get a model light enough to run on edge GPU hardware without a cloud round-trip.",
-    outcome: "The final pipeline holds 97.8% mAP@50 at 60 FPS on an edge GPU, with 35ms end-to-end latency from frame capture to label.",
+    slug: "examly-enterprise",
+    cat: "Full-Stack & EdTech Platforms",
+    title: "Examly Enterprise (LMS & Assessment)",
+    tagline: "A commercial-grade LMS and exam engine built for scale.",
+    desc: "A high-performance Learning Management + Assessment platform for schools and corporate training. Features a rules-based grading engine (cut grading time 75% for 200+ users), a token-wallet monetization system (1 token = ₹10, tiered Free/Paid/Premium content access), live leaderboards powered by a materialized PostgreSQL view, and Supabase Auth + Row-Level Security for zero-trust access control. Deployed with Server-Side Rendering for instant page loads and edge deployment via Cloudflare.",
+    problem: "Traditional LMS portals suffer from slow server-side page loads, high grading latency for instructors, and brittle authorization models that leak premium content.",
+    approach: "Built with React 19 and TanStack Start (SSR) on Cloudflare Workers, paired with a deterministic auto-grading engine, token wallet monetization, and Supabase PostgreSQL Row-Level Security.",
+    outcome: "Cut assessment grading time by 75% for over 200 concurrent users, achieved sub-50ms SSR edge delivery, and enforced zero-trust content gating.",
     metrics: [
-      "97.8% mAP@50",
-      "60 FPS on edge GPU",
-      "35ms end-to-end latency"
+      "Grading time cut by 75% for 200+ concurrent users",
+      "Token-wallet monetization (1 token = ₹10)",
+      "Sub-50ms SSR edge delivery via Cloudflare Workers",
+      "Zero-trust PostgreSQL Row-Level Security (RLS)"
     ],
-    tech: ["Python", "YOLOv8", "OpenCV", "PyTorch", "ONNX Runtime"],
-    gh: "https://github.com/fncreator22/Sign-language-detection-yolov8",
-    live: null,
-    image: "/images/center.jpg",
+    tech: ["React 19", "TypeScript", "TanStack Start", "Supabase", "PostgreSQL", "Tailwind CSS", "Cloudflare Workers"],
+    gh: "https://github.com/fncreator22/study-swift",
+    live: "https://examy-hazel.vercel.app",
+    image: "/images/left.jpg",
+    gallery: ["/images/left.jpg", "/images/top_right.jpg"],
     featured: true
   },
   {
     idx: 4,
-    slug: "high-speed-object-detection-yolov8",
-    cat: "Computer Vision Suite",
-    title: "High-Speed Object Detection YOLOv8",
-    tagline: "General-purpose object detection pipeline with DeepSORT multi-target tracking for high-throughput video.",
-    desc: "General-purpose object detection pipeline with DeepSORT multi-target tracking for high-throughput video.",
-    problem: "Detecting objects frame-by-frame isn't enough for video analytics — without consistent tracking, the same object gets treated as a new one every time it's briefly occluded.",
-    approach: "Paired a YOLOv8 detector with DeepSORT tracking on a CUDA-accelerated pipeline, exposed through FastAPI for batch video ingestion.",
-    outcome: "The pipeline processes at 120 FPS in batch mode with a 94.2% Multi-Object Tracking Accuracy score and under 1% identity-switch rate.",
+    slug: "browserpilot-autonomous-web-agent",
+    cat: "AI, LLM & Agentic Systems",
+    title: "BrowserPilot — Autonomous Web Agent",
+    tagline: "An enterprise-grade autonomous web agent that actually clicks, fills, and verifies.",
+    desc: "BrowserPilot is an autonomous browser-automation platform powered by Gemini 2.5 Flash reasoning and real Playwright browser sandboxes — not mock data. It plans a task, validates the plan against a security policy (domain whitelist, no arbitrary code injection), executes it through 8 canonical browser tools, and verifies the result with bounded retry recovery. Originally built as a multi-source job-discovery engine scraping LinkedIn, Y Combinator, and Indeed with 100% verified application URLs and 0% hallucinated listings (95%+ cut in manual search time), now generalized into a full autonomous web-agent platform with multi-tenancy, rate limiting, and Docker Compose one-command deployment.",
+    problem: "Most AI browser tools hallucinate URLs or break when interacting with dynamic single-page applications and complex DOM states.",
+    approach: "Paired Gemini 2.5 Flash reasoning with real Playwright headless browser sandboxes, bounded retry loops, BullMQ task queues, and strict security policy gating.",
+    outcome: "Delivered 100% verified URLs with 0% hallucination rate, cutting manual web search and workflow execution time by over 95%.",
     metrics: [
-      "94.2% MOTA",
-      "120 FPS batch processing",
-      "<1% ID switch rate"
+      "100% verified URLs (0% hallucinated listings)",
+      "95%+ reduction in manual research time",
+      "8 canonical browser execution tools",
+      "Gemini 2.5 Flash + Playwright headless sandbox"
     ],
-    tech: ["Python", "YOLOv8", "DeepSORT", "CUDA", "FastAPI"],
-    gh: "https://github.com/fncreator22/Object-detection-algorithm-YOLOv8",
-    live: null,
-    image: "/images/center.jpg"
+    tech: ["TypeScript", "Next.js 16", "Playwright", "Prisma", "PostgreSQL", "Redis", "BullMQ", "Gemini API", "Docker"],
+    gh: "https://github.com/fncreator22/browserpilot",
+    live: "https://browserpilot-iota.vercel.app",
+    image: "/images/top_left.jpg",
+    gallery: ["/images/top_left.jpg", "/images/center.jpg"],
+    featured: true
   },
   {
     idx: 5,
-    slug: "automated-thief-intrusion-detection-yolov11",
-    cat: "Computer Vision Suite",
-    title: "Automated Thief & Intrusion Detection YOLOv11",
-    tagline: "Security and surveillance anomaly detection system built on YOLOv11 for real-time alerting.",
-    desc: "Security and surveillance anomaly detection system built on YOLOv11 for real-time alerting.",
-    problem: "Traditional motion-triggered surveillance alerts are noisy — false alarms from shadows, animals, or weather erode trust in the system until people stop responding to it.",
-    approach: "Built an anomaly-detection layer on top of YOLOv11 that classifies intrusion-relevant behavior rather than raw motion, streaming verified alerts over WebSockets the moment a real event is confirmed.",
-    outcome: "The system reaches a 98.9% true intrusion detection rate while cutting false alarms by 92%, with alerts firing in under a second.",
+    slug: "lato-validation-framework",
+    cat: "AI, LLM & Agentic Systems",
+    title: "Local-First Multi-Agent Task Orchestrator",
+    tagline: "A local-first system where multiple AI agents coordinate work in real time.",
+    desc: "An industrial-grade, local-first multi-agent orchestrator with real-time WebSocket token streaming, permission gating between agents, and empirical action verification — agents don't just claim success, the system checks. Built for scenarios where sensitive workflows need to run entirely offline without cloud dependency.",
+    problem: "Cloud-dependent agent frameworks compromise data privacy and lack empirical verification to ensure that multi-agent subtasks actually succeed.",
+    approach: "Constructed a local-first FastAPI and Ollama runtime streaming tokens over WebSockets to a dynamic ReactFlow graph, enforcing permission gates before any tool call executes.",
+    outcome: "Achieved 100% offline multi-agent execution with 99.4% pipeline uptime, turning regression testing from hours into a 3.5 minute automated run.",
     metrics: [
-      "98.9% true intrusion detection rate",
-      "92% reduction in false alarms",
-      "Sub-second alerting"
+      "100% local/offline execution via Ollama",
+      "Real-time WebSocket token streaming",
+      "Interactive ReactFlow agent graph visualizer",
+      "Empirical action & permission gating"
     ],
-    tech: ["Python", "YOLOv11", "PyTorch", "OpenCV", "WebSockets"],
-    gh: "https://github.com/fncreator22/Thief-detection-YOLOv11",
+    tech: ["Python", "FastAPI", "Ollama", "ReactFlow", "TypeScript", "WebSocket"],
+    gh: "https://github.com/fncreator22/lato-validation",
     live: null,
-    image: "/images/center.jpg"
+    image: "/images/center.jpg",
+    gallery: ["/images/center.jpg", "/images/left.jpg"],
+    featured: false
   },
   {
     idx: 6,
-    slug: "ecg-signal-feature-extraction-classification",
-    cat: "Computer Vision & Signal Processing",
-    title: "ECG Signal Feature Extraction & Classification",
-    tagline: "Signal-processing pipeline for extracting and classifying features from ECG data in real time.",
-    desc: "Signal-processing pipeline for extracting and classifying features from ECG data in real time.",
-    problem: "Raw ECG waveforms are noisy, and clinically useful features like R-peaks need to be extracted reliably enough to trust downstream classification.",
-    approach: "Built a SciPy/NumPy signal-processing pipeline to isolate and extract R-peak and waveform features from 12-lead ECG data, with scikit-learn handling classification on top.",
-    outcome: "The pipeline hits 99.1% R-peak detection accuracy on the MIT-BIH benchmark dataset while processing all 12 leads in real time at 1,000 samples/sec.",
+    slug: "eldersphere-care-network",
+    cat: "Full-Stack & HealthTech",
+    title: "ElderSphere — Care Coordination Network",
+    tagline: "A secure care-coordination network for elderly residents.",
+    desc: "A care management platform with three role-based portals — family, caregiver, and admin — plus Razorpay-powered donation processing with real-time payment tracking for contributors funding resident care.",
+    problem: "Senior living homes struggle to keep family members updated on resident health while securely tracking donation funding and caregiver shift logs.",
+    approach: "Engineered three decoupled role portals (Family, Caregiver, Admin) with end-to-end Razorpay payment webhook reconciliation and MongoDB audit logging.",
+    outcome: "Streamlined resident care coordination, increased transparent family engagement, and automated donation receipts with zero bookkeeping errors.",
     metrics: [
-      "99.1% R-peak accuracy on MIT-BIH DB",
-      "Real-time 12-lead processing",
-      "1,000 samples/sec"
+      "3 role-based portals (Family, Caregiver, Admin)",
+      "Automated Razorpay donation processing",
+      "Real-time payment tracking & audit logs",
+      "Responsive mobile-first care dashboard"
     ],
-    tech: ["Python", "SciPy", "NumPy", "scikit-learn", "Matplotlib"],
-    gh: "https://github.com/fncreator22/ECG-feature-extraction",
+    tech: ["Next.js", "React", "Node.js", "Express.js", "MongoDB", "Razorpay API", "Tailwind CSS"],
+    gh: "https://github.com/fncreator22",
     live: null,
-    image: "/images/center.jpg"
+    image: "/images/right.jpg",
+    gallery: ["/images/right.jpg", "/images/top_right.jpg"],
+    featured: false
   },
   {
     idx: 7,
-    slug: "career-os-platform",
-    cat: "Full Stack / Productivity",
-    title: "Career OS Platform",
-    tagline: "Career management microservices suite — gateway, worker, credential vault, web client, and browser extension.",
-    desc: "Career management microservices suite — gateway, worker, credential vault, web client, and browser extension.",
-    problem: "Job searching means juggling resumes, applications, and credentials across a dozen disconnected tools with no single source of truth.",
-    approach: "Architected a microservices suite — a gateway, background worker, credential vault, web client, and browser extension — so resume parsing, application tracking, and credentials all live behind one coherent system.",
-    outcome: "Application tracking got 3.5x faster, the resume parser has run over 10,000 iterations in testing, and users rated the experience 4.8/5.",
+    slug: "agentic-sales-call-center",
+    cat: "AI Automation & Voice AI",
+    title: "Agentic Sales Call Center",
+    tagline: "A voice-AI agent that qualifies leads over the phone, end to end.",
+    desc: "A voice-AI lead-qualification system that pulls numbers from a Google Sheet, places outbound calls, and holds a human-like conversation. On genuine interest or a callback request, it fires WhatsApp confirmations to company and client, books a calendar slot, and logs every attempt to a tracking sheet.",
+    problem: "Manual outbound lead qualification is labor-intensive, has high latency, and often fails to log call notes or schedule immediate callbacks.",
+    approach: "Integrated Vapi Voice AI with n8n workflow automation, Google Sheets API for contact queues, Twilio WhatsApp API for instant messaging, and Google Calendar API for automated booking.",
+    outcome: "Automated end-to-end outbound calling with sub-second voice latency, instant calendar booking, and 100% automated CRM record synchronization.",
     metrics: [
-      "3.5x faster application tracking",
-      "10,000+ resume parse iterations",
-      "4.8/5 satisfaction score"
+      "Autonomous outbound calling via Vapi Voice AI",
+      "Instant WhatsApp confirmations via Twilio",
+      "Automated Google Calendar appointment booking",
+      "Real-time Google Sheets lead synchronization"
     ],
-    tech: ["TypeScript", "Node.js", "Express", "React", "PostgreSQL"],
-    gh: "https://github.com/fncreator22/career-os-web-client",
+    tech: ["Vapi Voice AI", "n8n", "Google Calendar API", "Google Sheets API", "Twilio WhatsApp API"],
+    gh: "https://github.com/fncreator22",
     live: null,
-    image: "/images/center.jpg"
+    image: "/images/down.jpg",
+    gallery: ["/images/down.jpg", "/images/center.jpg"],
+    featured: false
   },
   {
     idx: 8,
-    slug: "examly-enterprise-assessment-system",
-    cat: "Full Stack / EdTech",
-    title: "Examly Enterprise Assessment System",
-    tagline: "Enterprise LMS & assessment platform with SSR, RBAC, and isolated code evaluation for live exams.",
-    desc: "Enterprise LMS & assessment platform with SSR, RBAC, and isolated code evaluation for live exams.",
-    problem: "Live coding exams need to survive tens of thousands of concurrent submissions without leaking one candidate's code environment into another's, or crashing during finals week.",
-    approach: "Built on TanStack Start for server-side rendering, with Supabase and PostgreSQL row-level security enforcing per-tenant RBAC, and isolated evaluation sandboxes handling code submissions on Cloudflare Workers.",
-    outcome: "Examly now handles 25,000+ concurrent exam sessions with code submissions scoring in under 1.2 seconds and zero downtime at peak load.",
+    slug: "multi-agent-portfolio-orchestration",
+    cat: "AI & Financial Systems",
+    title: "Multi-Agent Portfolio Orchestration",
+    tagline: "An enterprise-grade hybrid portfolio platform with autonomous RAG-driven decisions.",
+    desc: "A multi-agent hybrid portfolio management platform featuring an autonomous 3-stage RAG (Retrieval-Augmented Generation) pipeline, a confidence gate that decides when to escalate to an LLM, a dual-mode shell, direct broker API integration, and a full admin portal.",
+    problem: "Financial decision systems often rely on static heuristics or hallucination-prone LLMs without deterministic verification or risk confidence gating.",
+    approach: "Designed a 3-stage RAG retrieval engine with dynamic vector embeddings, confidence scoring thresholds for LLM escalation, and real-time broker execution APIs.",
+    outcome: "Delivered deterministic, audited portfolio rebalancing recommendations with transparent provenance for every suggested asset allocation.",
     metrics: [
-      "25,000+ concurrent exam sessions",
-      "<1.2s code submission speed",
-      "Zero downtime at peak"
+      "3-stage autonomous RAG pipeline",
+      "Confidence-gated LLM escalation logic",
+      "Direct broker API execution layer",
+      "Dual-mode interactive terminal shell"
     ],
-    tech: ["React 19", "TanStack Start", "Supabase", "PostgreSQL RLS", "Cloudflare Workers"],
-    gh: "https://github.com/fncreator22/study-swift",
-    live: "https://examy-hazel.vercel.app",
-    image: "/images/center.jpg"
+    tech: ["TypeScript", "Python", "RAG & Embeddings", "LLM Orchestration", "Broker APIs", "FastAPI"],
+    gh: "https://github.com/fncreator22/Multi-Agent-Portfolio-Orchestration",
+    live: null,
+    image: "/images/eye_left.jpg",
+    gallery: ["/images/eye_left.jpg", "/images/top_left.jpg"],
+    featured: false
   },
   {
     idx: 9,
-    slug: "nexware-enterprise-resource-planning",
-    cat: "Enterprise Software",
-    title: "Nexware Enterprise Resource Planning",
-    tagline: "Modular SaaS ERP with a dynamic workflow builder, multi-tenant RBAC, and analytics dashboards.",
-    desc: "Modular SaaS ERP with a dynamic workflow builder, multi-tenant RBAC, and analytics dashboards.",
-    problem: "Off-the-shelf ERPs force every business into the same workflow shape; heavily customized ones become unmaintainable. Multi-branch operations need both flexibility and a single audit trail.",
-    approach: "Built a modular ERP with a drag-configurable workflow builder, multi-tenant RBAC via PostgreSQL and Prisma, and analytics dashboards that roll up across entity branches.",
-    outcome: "Audit discrepancies dropped 85%, monthly books close 4 days faster, and the system now runs across 50+ entity branches.",
+    slug: "applied-computer-vision-suite",
+    cat: "Computer Vision & Signal Processing",
+    title: "Applied Computer Vision Suite (YOLOv8/YOLOv11)",
+    tagline: "Real-time detection systems — from gesture control to surveillance anomaly detection.",
+    desc: "A set of applied computer-vision pipelines: real-time gesture and object detection (YOLOv8), a security/surveillance anomaly-detection system (YOLOv11), and an ECG signal-processing pipeline extracting diagnostic features from waveform data.",
+    problem: "Real-time edge vision requires high frame rates and low compute footprint, while medical waveform processing demands high feature fidelity.",
+    approach: "Trained custom YOLOv8 and YOLOv11 models optimized via ONNX/TensorRT for 60 FPS edge inference, paired with SciPy/OpenCV signal processing algorithms for ECG waveform analysis.",
+    outcome: "Achieved 60 FPS real-time detection with sub-35ms frame-to-prediction latency and automated diagnostic waveform feature extraction.",
     metrics: [
-      "85% reduction in audit discrepancies",
-      "Closed monthly books 4 days faster",
-      "50+ entity branches"
+      "60 FPS real-time edge inference",
+      "Sub-35ms frame-to-prediction latency",
+      "YOLOv8 gesture & YOLOv11 anomaly detection",
+      "Automated ECG waveform feature extraction"
     ],
-    tech: ["React", "TypeScript", "Express", "PostgreSQL", "Prisma"],
-    gh: "https://github.com/fncreator22/NexWare-ERP",
-    live: "https://nex-ware-erp.vercel.app",
-    image: "/images/center.jpg"
+    tech: ["OpenCV", "YOLOv8", "YOLOv11", "Python", "Signal Feature Extraction", "PyTorch"],
+    gh: "https://github.com/fncreator22",
+    live: null,
+    image: "/images/eye_right.jpg",
+    gallery: ["/images/eye_right.jpg", "/images/center.jpg"],
+    featured: false
   },
   {
     idx: 10,
-    slug: "split-money-financial-manager",
-    cat: "Web & Mobile App",
-    title: "Split Money Financial Manager",
-    tagline: "Real-time group expense tracking and splitting with graph debt simplification.",
-    desc: "Real-time group expense tracking and splitting with graph debt simplification.",
-    problem: "Splitting group expenses honestly is easy; settling them efficiently is not — naive splitting produces far more repayments between people than actually necessary.",
-    approach: "Modeled group debts as a graph and applied simplification to collapse chains of repayment into the minimum number of transactions, synced in real time across React and Firebase.",
-    outcome: "Debt simplification cut the number of transactions per group by 60%, the app has processed over $500k in tracked expenses, and calculations resolve in under 100ms.",
+    slug: "split-money-conversational-ai",
+    cat: "AI, LLM & Agentic Systems",
+    title: "Multi-turn Conversational AI Bot (Split Money)",
+    tagline: "A GPT-4-powered support bot handling real multi-turn conversations in production.",
+    desc: "A GPT-4-powered customer service bot handling multi-turn conversation state, deployed in live production for the Split Money fintech app.",
+    problem: "Customer support for split expenses and payment disputes suffers from high support ticket volumes and repetitive FAQ triage.",
+    approach: "Engineered a stateful conversational engine on FastAPI and Redis with GPT-4 function calling, intent classification, and automated transaction ledger queries.",
+    outcome: "Successfully resolved over 65% of user payment inquiries automatically without human operator intervention in live production.",
     metrics: [
-      "60% transaction reduction per group",
-      "$500k+ expenses processed",
-      "<100ms calculation"
+      "Deployed in live fintech production",
+      "Stateful multi-turn conversational memory",
+      "Sub-second contextual response latency",
+      "Automated intent routing & dispute triage"
     ],
-    tech: ["React", "TypeScript", "Tailwind CSS", "Firebase", "Node.js"],
-    gh: "https://github.com/fncreator22/Split-Money-application",
+    tech: ["Python", "GPT-4 API", "FastAPI", "Redis", "Prompt Engineering"],
+    gh: "https://github.com/fncreator22",
     live: null,
-    image: "/images/center.jpg"
+    image: "/images/up.jpg",
+    gallery: ["/images/up.jpg", "/images/right.jpg"],
+    featured: false
   },
   {
     idx: 11,
-    slug: "car-rental-fleet-booking-engine",
-    cat: "Full Stack / E-Commerce",
-    title: "Car Rental & Fleet Booking Engine",
-    tagline: "Booking platform for vehicle rentals with Stripe payments and optimistic locking against double-booking.",
-    desc: "Booking platform for vehicle rentals with Stripe payments and optimistic locking against double-booking.",
-    problem: "Booking platforms that don't lock inventory correctly under concurrent requests end up double-booking the same vehicle to two customers at once.",
-    approach: "Implemented optimistic locking around vehicle availability alongside Stripe for payments, with a search index built to stay fast across a large, fast-changing fleet.",
-    outcome: "Double-booking was eliminated entirely, checkout conversion rose 30%, and search stays sub-second across 5,000+ vehicles.",
+    slug: "voice-notes-ai",
+    cat: "AI & Audio Processing",
+    title: "Voice Notes AI",
+    tagline: "A Whisper-powered speech-to-text app for fast, searchable voice transcription.",
+    desc: "A speech-to-text application powered by OpenAI's Whisper model, converting voice recordings into searchable, timestamped transcripts with export options.",
+    problem: "Voice memos are quick to record but tedious to search, organize, and reference later without manual listening.",
+    approach: "Integrated Whisper AI with client-side audio normalization, streaming chunk processing, automated punctuation, and fast vector keyword indexing.",
+    outcome: "Delivered near-instant, high-accuracy timestamped transcripts with 1-click export to Markdown, JSON, and PDF.",
     metrics: [
-      "100% double-booking elimination",
-      "30% checkout conversion increase",
-      "Sub-second search across 5,000+ vehicles"
+      "Timestamped speech-to-text transcription",
+      "OpenAI Whisper model integration",
+      "Instant search & multi-format export (JSON/PDF/TXT)",
+      "Noise-resilient audio pre-processing"
     ],
-    tech: ["React", "TypeScript", "Tailwind CSS", "Node.js", "Stripe API"],
-    gh: "https://github.com/fncreator22/Car-rental-and-tour-booking-website",
+    tech: ["Python", "Whisper AI", "NLP", "FastAPI", "React", "TypeScript"],
+    gh: "https://github.com/fncreator22/voice-notes-ai",
     live: null,
-    image: "/images/center.jpg"
+    image: "/images/center.jpg",
+    gallery: ["/images/center.jpg", "/images/top_right.jpg"],
+    featured: false
   },
   {
     idx: 12,
-    slug: "legal-practice-consultation-portal",
-    cat: "Web Design & Development",
-    title: "Legal Practice & Consultation Portal",
-    tagline: "Animated portfolio and consultation site built for a legal professional.",
-    desc: "Animated portfolio and consultation site built for a legal professional.",
-    problem: "A law practice's site is often its first impression, but heavy animation and legal-services sites don't usually mix well with accessibility or page speed.",
-    approach: "Built an animated portfolio on React and Framer Motion with accessibility treated as a hard requirement from the start, not a pass at the end.",
-    outcome: "Shipped at a 98/100 Lighthouse score and 100% WCAG AA compliance, and the client saw a 45% increase in consultation inquiries after launch.",
+    slug: "career-os-auto-apply-engine",
+    cat: "AI & Distributed Systems",
+    title: "Auto-Apply Job Engine / Career OS",
+    tagline: "An autonomous job-discovery and application pipeline (precursor to BrowserPilot).",
+    desc: "An earlier system built around the same problem BrowserPilot later generalized — automatically discovering, verifying, and applying to job listings. Part of the broader Career OS microservices suite spanning 9 dedicated services (agent, browser extension, core API, web client, SDK, worker service, vault service, gateway service) designed as an end-to-end distributed system.",
+    problem: "Applying to hundreds of job listings manually is repetitive, time-consuming, and prone to application tracking chaos.",
+    approach: "Designed a 9-microservice architecture with a browser extension client, PostgreSQL state store, worker task queues, and automated form verification.",
+    outcome: "Demonstrated full end-to-end automated job discovery, credential injection, and application status logging across multiple major job portals.",
     metrics: [
-      "98/100 Lighthouse score",
-      "45% more consultation inquiries",
-      "100% WCAG AA compliant"
+      "9-microservice distributed architecture",
+      "Autonomous multi-source job verification",
+      "Custom browser extension & worker services",
+      "Secure credential vault & token gateway"
     ],
-    tech: ["React", "TypeScript", "Tailwind CSS", "Framer Motion"],
-    gh: "https://github.com/fncreator22/Professional-Lawyer-Portfolio-Website",
-    live: "https://professional-lawyer-portfolio-website.netlify.app/",
-    image: "/images/center.jpg"
-  },
-  {
-    idx: 13,
-    slug: "multi-turn-conversational-ai-bot",
-    cat: "AI / Agentic Systems",
-    title: "Multi-Turn Conversational AI Bot",
-    tagline: "GPT-4-powered customer service bot for Split Money app support with multi-turn state.",
-    desc: "GPT-4-powered customer service bot for Split Money app support with multi-turn state.",
-    problem: "Single-turn chatbots forget context the moment a conversation branches, which makes them useless for real support conversations that span several follow-up questions.",
-    approach: "Built a GPT-4-powered support bot for the Split Money app that maintains conversational state across multiple turns, so follow-up questions stay grounded in what was already said.",
-    outcome: "The bot handles multi-turn support conversations for Split Money users without losing context between messages.",
-    metrics: [],
-    tech: ["Python", "GPT-4", "OpenAI API"],
-    gh: "https://github.com/fncreator22/Development-of-a-Multi-Turn-Conversational-AI-Bot",
+    tech: ["Python", "TypeScript", "PostgreSQL", "PLpgSQL", "Microservices", "Docker", "Redis"],
+    gh: "https://github.com/fncreator22/browserpilot",
     live: null,
-    image: "/images/center.jpg"
-  },
-  {
-    idx: 14,
-    slug: "voice-notes-ai",
-    cat: "AI / Agentic Systems",
-    title: "Voice Notes AI",
-    tagline: "AI-driven voice capture and processing pipeline built end-to-end in Python.",
-    desc: "AI-driven voice capture and processing pipeline built end-to-end in Python.",
-    problem: "Turning raw voice memos into structured, searchable notes usually means stitching together several disconnected tools.",
-    approach: "Built a Python pipeline that captures and processes voice input end-to-end, from raw audio to structured notes, without a chain of external tools.",
-    outcome: "A self-contained voice-to-notes pipeline that runs from capture to processed output in one system.",
-    metrics: [],
-    tech: ["Python"],
-    gh: "https://github.com/fncreator22/voice-notes-ai",
-    live: null,
-    image: "/images/center.jpg"
+    image: "/images/top_right.jpg",
+    gallery: ["/images/top_right.jpg", "/images/top_left.jpg"],
+    featured: false
   }
 ];
 
 export const ROLES: RoleExperience[] = [
   {
-    title: "Full Stack Engineer",
-    company: "Fiverr — Freelance",
-    meta: "Aug 2025 – Present · 1 yr 1 mo · Remote, Hyderabad",
-    desc: "Built Sentinel, a three-stage guardrail agent for LLM-powered coding assistants. Sentinel sits between an LLM agent and its execution environment, reviewing every proposed action before it runs — integrating with Claude Code, Cursor, and CodeX.",
-    skills: ["Program Creation", "MEAN Stack", "LLM Guardrails"]
+    title: "Web Developer & AI Integration Specialist",
+    company: "Freelance & Upwork",
+    meta: "May 2025 – Present · Remote",
+    desc: "Independently scoped, architected, and shipped production-grade full-stack applications for 10+ clients across React/Next.js and Python/FastAPI/Flask stacks, owning each engagement from kickoff through launch and post-launch support. Architected Sentinel, engineered the grading system inside Examly Enterprise, launched NexWare ERP, built ElderSphere, and developed an Agentic Sales Call Center. Improved average page-load speed 20% via targeted frontend performance tuning, sustained reliable uptime across every deployment, and earned repeat client contracts through consistent on-time delivery.",
+    skills: ["Next.js", "React 19", "Python", "FastAPI", "Ollama", "Model Context Protocol", "MongoDB", "Supabase", "Docker"]
   },
   {
-    title: "Software Developer Intern",
-    company: "Indian Oil Corporation Limited",
-    meta: "Jun 2024 – Jul 2024 · 2 mos · On-site, Guwahati",
-    desc: "Automated web-based operations for internal platforms using Python & Flask, and ran performance testing that improved efficiency and software stability at an enterprise scale.",
-    skills: ["Web Development", "LLMOps", "Python", "Flask"]
-  },
-  {
-    title: "App Developer Intern",
-    company: "Down Town Venture Labs & Kareng Technologies",
-    meta: "Jul 2023 – Aug 2023 · 2 mos · Hybrid, Guwahati",
-    desc: "Developed cross-platform web and mobile applications using web technologies and Android frameworks, designing user-friendly, responsive interfaces in close collaboration with peers.",
-    skills: ["Android Frameworks", "Cross-Platform Web", "UI/UX Design"]
+    title: "Software Developer Intern — Machine Learning Track",
+    company: "IOCL, Guwahati",
+    meta: "Jun 2024 – Jul 2024 · On-site",
+    desc: "Trained and shipped a linear regression forecasting model (scikit-learn, pandas) as lead contributor for stock/equity market data. Constructed an end-to-end data pipeline — ingestion, cleaning, feature preparation — feeding a live Flask dashboard used for daily decision-making. Automated manual back-office workflows with custom Python/Flask scripts, cutting processing time 40% across a multi-person operations team.",
+    skills: ["Python", "scikit-learn", "pandas", "Flask", "Linear Regression", "Data Pipelines", "Automation"]
   },
   {
     title: "Web Developer & SEO Manager",
-    company: "Synar Technology — Part-time",
-    meta: "May 2023 – Jul 2023 · 3 mos · Remote, Guwahati",
-    desc: "Developed full-stack web applications using React.js & Flask, and implemented SEO strategies that increased web traffic by 15%.",
-    skills: ["React.js", "Flask", "SEO Optimization"]
+    company: "Synar Technology",
+    meta: "May 2023 – Jul 2023 · Remote",
+    desc: "Directed full-cycle development on multiple concurrent client websites, pairing React.js frontend with Flask backend. Lifted organic traffic 15% and cut front-end rendering time 20% via integrated technical + on-page SEO strategy.",
+    skills: ["React.js", "Flask", "JavaScript", "Technical SEO", "Performance Optimization", "REST APIs"]
+  },
+  {
+    title: "App & Web Developer Intern",
+    company: "Kareng Technologies",
+    meta: "Jul 2023 – Aug 2023 · Hybrid",
+    desc: "Designed 2 cross-platform web/mobile apps using a mobile-first, responsive design approach (HTML5, CSS3, JavaScript). Integrated RESTful API functionality and resolved bugs continuously to keep UX reliable and stable.",
+    skills: ["HTML5", "CSS3", "JavaScript", "Mobile-First Design", "RESTful APIs", "Cross-Platform UI"]
   }
 ];
 
 export const SKILL_DOMAINS: SkillDomain[] = [
   {
     idx: "01",
-    name: "AI & Agentic Systems",
+    name: "Languages & Frontend",
     items: [
-      "Multi-Agent Orchestration",
-      "LLM Orchestration",
-      "FastAPI + Ollama",
-      "OpenAI / Gemini APIs",
-      "Model Context Protocol",
-      "WebSocket Streaming"
+      "JavaScript",
+      "TypeScript",
+      "Python",
+      "SQL",
+      "React (18/19)",
+      "Next.js (incl. Next.js 16)",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "Chart.js",
+      "Material-UI",
+      "Bootstrap",
+      "Vite"
     ]
   },
   {
     idx: "02",
-    name: "Computer Vision & ML",
+    name: "Backend & Data",
     items: [
-      "YOLOv8 / YOLOv11",
-      "OpenCV",
-      "scikit-learn",
-      "Object Detection",
-      "Gesture Recognition",
-      "Signal Processing"
+      "Node.js",
+      "Express.js",
+      "FastAPI",
+      "Flask",
+      "REST APIs",
+      "PostgreSQL (Row-Level Security)",
+      "MongoDB",
+      "Supabase (Auth + RLS)",
+      "Cloudflare Workers",
+      "TanStack Start (SSR)",
+      "Prisma"
     ]
   },
   {
     idx: "03",
-    name: "Full Stack & Web",
+    name: "AI, LLM & Agentic Systems",
     items: [
-      "React 19",
-      "Next.js",
-      "TanStack Start",
-      "TypeScript",
-      "Node.js / Express",
-      "Tailwind CSS",
-      "shadcn/ui"
+      "GPT-4 API",
+      "Ollama (Local LLM)",
+      "Gemini API",
+      "Model Context Protocol (MCP)",
+      "LLM Agent Architecture & Orchestration",
+      "Coding Agents (Claude Code, Cursor, CodeX)",
+      "Prompt Engineering",
+      "LLM Guardrails & Evals",
+      "Retrieval-Oriented Pipelines (RAG)",
+      "WebSocket Streaming",
+      "Vapi (Voice AI)",
+      "n8n"
     ]
   },
   {
     idx: "04",
-    name: "Architecture & DevOps",
+    name: "Applied Machine Learning",
     items: [
-      "Microservices / Gateway",
-      "RBAC + RLS",
-      "PostgreSQL",
-      "MongoDB",
-      "Supabase",
+      "scikit-learn",
+      "TF-IDF",
+      "Logistic Regression",
+      "Linear Regression",
+      "Model Training & Cross-Validation",
+      "pandas",
+      "NLP Fundamentals"
+    ]
+  },
+  {
+    idx: "05",
+    name: "Computer Vision",
+    items: [
+      "OpenCV",
+      "YOLOv8",
+      "YOLOv11",
+      "Real-Time Object/Gesture Detection",
+      "Signal Feature Extraction (ECG)"
+    ]
+  },
+  {
+    idx: "06",
+    name: "Infrastructure & Tools",
+    items: [
       "Docker",
-      "Cloudflare Workers"
+      "Git",
+      "CI/CD",
+      "Razorpay API",
+      "Twilio WhatsApp API",
+      "Google Calendar & Sheets APIs",
+      "Playwright",
+      "Turso / LibSQL",
+      "BullMQ",
+      "Redis"
     ]
   }
+];
+
+export const CATEGORIES = [
+  "All",
+  "AI, LLM & Agentic Systems",
+  "Full-Stack & SaaS Platforms",
+  "Full-Stack & EdTech Platforms",
+  "Full-Stack & HealthTech",
+  "AI Automation & Voice AI",
+  "AI & Financial Systems",
+  "Computer Vision & Signal Processing",
+  "AI & Audio Processing",
+  "AI & Distributed Systems"
 ];

@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { PROFILE, PROJECTS, SKILL_DOMAINS } from "@/data/projects";
 
 export function Identity() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -31,9 +32,9 @@ export function Identity() {
     <section ref={sectionRef} id="identity" className="py-[clamp(4.5rem,8vw,8rem)] border-t border-line relative z-10">
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
         <div className="identity-reveal max-w-[760px] mb-10 md:mb-14">
-          <div className="eyebrow">01 — Identity</div>
+          <div className="eyebrow">01 — Identity &amp; Philosophy</div>
           <h2 className="font-display font-medium text-[clamp(1.9rem,4.5vw,3.2rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.08]">
-            Not just <em>building</em> AI systems — making them <em>accountable</em>.
+            Taking projects from <em>vague asks</em> to <em>live production</em>.
           </h2>
         </div>
 
@@ -41,27 +42,27 @@ export function Identity() {
           {/* Main Manifesto */}
           <div className="identity-reveal">
             <p className="text-[clamp(0.98rem,1.4vw,1.2rem)] font-light text-paper/90 leading-relaxed">
-              I&apos;m an AI/ML engineer focused on agentic systems, LLM orchestration, and applied computer vision — with full-stack engineering as the delivery layer that turns those systems into shipped products. Most of my recent work sits at the boundary between an autonomous agent and the real world it&apos;s allowed to act in: reviewing what an agent proposes before it runs, tracking what a model actually sees, and making sure the pipeline underneath stays honest at scale.
+              {PROFILE.summary}
             </p>
           </div>
 
-          {/* 2x2 Responsive Metric Grid on Mobile, Clean Column on Desktop */}
+          {/* 2x2 Responsive Metric Grid */}
           <div className="identity-reveal grid grid-cols-2 gap-3 sm:gap-4">
             <div className="p-4 sm:p-5 rounded-2xl bg-bg-raise/80 border border-line/70 hover:border-accent/40 transition-all flex flex-col justify-between">
-              <span className="font-serif italic text-3xl sm:text-4xl text-accent">14</span>
+              <span className="font-serif italic text-3xl sm:text-4xl text-accent">{PROJECTS.length}</span>
               <span className="font-mono text-[0.65rem] sm:text-xs tracking-wider uppercase text-stone mt-2">Shipped Projects</span>
             </div>
             <div className="p-4 sm:p-5 rounded-2xl bg-bg-raise/80 border border-line/70 hover:border-accent/40 transition-all flex flex-col justify-between">
-              <span className="font-serif italic text-3xl sm:text-4xl text-accent">04</span>
+              <span className="font-serif italic text-3xl sm:text-4xl text-accent">{String(SKILL_DOMAINS.length).padStart(2, "0")}</span>
               <span className="font-mono text-[0.65rem] sm:text-xs tracking-wider uppercase text-stone mt-2">Skill Domains</span>
             </div>
             <div className="p-4 sm:p-5 rounded-2xl bg-bg-raise/80 border border-line/70 hover:border-accent/40 transition-all flex flex-col justify-between">
-              <span className="font-serif italic text-3xl sm:text-4xl text-accent">27</span>
+              <span className="font-serif italic text-3xl sm:text-4xl text-accent">40+</span>
               <span className="font-mono text-[0.65rem] sm:text-xs tracking-wider uppercase text-stone mt-2">Core Technologies</span>
             </div>
             <div className="p-4 sm:p-5 rounded-2xl bg-bg-raise/80 border border-line/70 hover:border-accent/40 transition-all flex flex-col justify-between">
-              <span className="font-serif italic text-3xl sm:text-4xl text-accent">3+</span>
-              <span className="font-mono text-[0.65rem] sm:text-xs tracking-wider uppercase text-stone mt-2">Years Building</span>
+              <span className="font-serif italic text-3xl sm:text-4xl text-accent">1+</span>
+              <span className="font-mono text-[0.65rem] sm:text-xs tracking-wider uppercase text-stone mt-2">Year Experience</span>
             </div>
           </div>
         </div>
