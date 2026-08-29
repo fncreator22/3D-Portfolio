@@ -46,8 +46,8 @@ export const PROJECTS: Project[] = [
     tech: ["Python", "FastAPI", "scikit-learn", "Ollama", "Model Context Protocol", "Docker", "SQLite"],
     gh: "https://github.com/fncreator22/sentinel-mcp",
     live: "https://sentinel-landing-azure.vercel.app/",
-    image: "https://raw.githubusercontent.com/fncreator22/sentinel-landing/main/assets/sentinel-demo.gif",
-    gallery: ["/images/projects/lato-agent-pipeline.png", "/images/projects/fintech-portfolio-rag.png"],
+    image: "/images/projects/sentinel-live-reviews.png",
+    gallery: ["/images/projects/sentinel-live-reviews.png", "/images/projects/lato-agent-pipeline.png"],
     featured: true
   },
   {
@@ -69,8 +69,8 @@ export const PROJECTS: Project[] = [
     tech: ["TypeScript", "Next.js 16", "Playwright", "Prisma", "PostgreSQL", "Redis", "BullMQ", "Gemini API", "Docker"],
     gh: "https://github.com/fncreator22/browserpilot",
     live: "https://browserpilot-iota.vercel.app",
-    image: "/images/projects/careerflow-pipeline.png",
-    gallery: ["/images/projects/careerflow-pipeline.png", "/images/top_left.jpg"],
+    image: "/images/projects/browserpilot-live-execution.png",
+    gallery: ["/images/projects/browserpilot-live-execution.png", "/images/projects/careerflow-pipeline.png"],
     featured: true
   },
   {
@@ -92,8 +92,8 @@ export const PROJECTS: Project[] = [
     tech: ["React 19", "TypeScript", "TanStack Start", "Supabase", "PostgreSQL", "Tailwind CSS", "Cloudflare Workers"],
     gh: "https://github.com/fncreator22/study-swift",
     live: "https://examy-hazel.vercel.app",
-    image: "/images/left.jpg",
-    gallery: ["/images/left.jpg", "/images/top_right.jpg"],
+    image: "/images/projects/examly-lms-dashboard.png",
+    gallery: ["/images/projects/examly-lms-dashboard.png", "/images/top_right.jpg"],
     featured: true
   },
   {
@@ -115,8 +115,8 @@ export const PROJECTS: Project[] = [
     tech: ["Python", "FastAPI", "JavaScript", "MongoDB", "Chart.js", "Tailwind CSS"],
     gh: "https://github.com/fncreator22/NexWare-ERP",
     live: "https://nex-ware-erp.vercel.app",
-    image: "/images/top_right.jpg",
-    gallery: ["/images/top_right.jpg", "/images/center.jpg"],
+    image: "/images/projects/nexware-erp-dashboard.png",
+    gallery: ["/images/projects/nexware-erp-dashboard.png", "/images/center.jpg"],
     featured: true
   },
   {
@@ -139,7 +139,7 @@ export const PROJECTS: Project[] = [
     gh: "https://github.com/fncreator22/lato-validation",
     live: null,
     image: "/images/projects/lato-agent-pipeline.png",
-    gallery: ["/images/projects/lato-agent-pipeline.png", "/images/left.jpg"],
+    gallery: ["/images/projects/lato-agent-pipeline.png", "/images/projects/sentinel-live-reviews.png"],
     featured: false
   },
   {
@@ -300,7 +300,7 @@ export const PROJECTS: Project[] = [
     gh: "https://github.com/fncreator22/browserpilot",
     live: null,
     image: "/images/projects/careerflow-pipeline.png",
-    gallery: ["/images/projects/careerflow-pipeline.png", "/images/top_left.jpg"],
+    gallery: ["/images/projects/careerflow-pipeline.png", "/images/projects/browserpilot-live-execution.png"],
     featured: false
   }
 ];
