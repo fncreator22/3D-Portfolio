@@ -23,15 +23,15 @@ function Project3DCard({ project }: { project: Project }) {
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
-    const rotX = -(y / (rect.height / 2)) * 10;
-    const rotY = (x / (rect.width / 2)) * 10;
+    const rotX = -(y / (rect.height / 2)) * 8;
+    const rotY = (x / (rect.width / 2)) * 8;
 
-    card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.02, 1.02, 1.02)`;
+    card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.015, 1.015, 1.015)`;
 
     if (glareRef.current) {
       const glareX = ((e.clientX - rect.left) / rect.width) * 100;
       const glareY = ((e.clientY - rect.top) / rect.height) * 100;
-      glareRef.current.style.background = `radial-gradient(circle 220px at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.2), transparent 70%)`;
+      glareRef.current.style.background = `radial-gradient(circle 220px at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.18), transparent 70%)`;
     }
   };
 
@@ -49,7 +49,7 @@ function Project3DCard({ project }: { project: Project }) {
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="w-full lg:w-[min(78vw,460px)] h-[480px] sm:h-[520px] lg:h-[min(74vh,580px)] lg:mr-[clamp(1.5rem,3vw,2.5rem)] flex-shrink-0 border border-line bg-bg-raise flex flex-col relative overflow-hidden group rounded-3xl transition-transform duration-200 ease-out will-change-transform shadow-[0_20px_50px_rgba(0,0,0,0.7)] hover:border-accent hover:shadow-[0_28px_70px_rgba(0,0,0,0.85),0_0_35px_rgba(193,99,59,0.18)]"
+      className="w-full lg:w-[min(76vw,440px)] h-[460px] sm:h-[500px] lg:h-[min(62vh,510px)] lg:mr-[clamp(1.5rem,2.5vw,2.5rem)] flex-shrink-0 border border-line bg-bg-raise flex flex-col relative overflow-hidden group rounded-3xl transition-transform duration-200 ease-out will-change-transform shadow-[0_20px_50px_rgba(0,0,0,0.7)] hover:border-accent hover:shadow-[0_28px_70px_rgba(0,0,0,0.85),0_0_35px_rgba(193,99,59,0.18)]"
       style={{ transformStyle: "preserve-3d" }}
     >
       <Link
@@ -68,7 +68,7 @@ function Project3DCard({ project }: { project: Project }) {
       {/* Media preview */}
       <div
         className="relative w-full h-[40%] flex-shrink-0 overflow-hidden bg-bg border-b border-line/50"
-        style={{ transform: "translateZ(15px)" }}
+        style={{ transform: "translateZ(12px)" }}
       >
         <img
           src={project.image}
@@ -82,52 +82,58 @@ function Project3DCard({ project }: { project: Project }) {
       </div>
 
       {/* Card Body */}
-      <div className="p-5 sm:p-6 flex flex-col flex-grow min-h-0 relative z-10" style={{ transform: "translateZ(24px)" }}>
-        <div className="font-mono text-[0.68rem] sm:text-xs text-accent tracking-widest font-semibold">
-          {String(project.idx).padStart(2, "0")} / {String(PROJECTS.length).padStart(2, "0")}
+      <div className="p-5 sm:p-5 flex flex-col flex-grow min-h-0 relative z-10 justify-between" style={{ transform: "translateZ(20px)" }}>
+        <div>
+          <div className="font-mono text-[0.65rem] sm:text-xs text-accent tracking-widest font-semibold">
+            {String(project.idx).padStart(2, "0")} / {String(PROJECTS.length).padStart(2, "0")}
+          </div>
+
+          <h3 className="font-display font-medium text-[clamp(1.1rem,1.6vw,1.35rem)] mt-1 leading-snug group-hover:text-accent transition-colors text-paper">
+            {project.title}
+          </h3>
+
+          <p className="mt-2 text-stone-300 font-light text-xs sm:text-sm line-clamp-2 leading-relaxed">
+            {project.desc}
+          </p>
         </div>
 
-        <h3 className="font-display font-medium text-[clamp(1.15rem,1.8vw,1.45rem)] mt-1.5 leading-snug group-hover:text-accent transition-colors text-paper">
-          {project.title}
-        </h3>
+        <div>
+          {/* Key Metrics */}
+          <div className="pt-2.5 border-t border-line/60 space-y-1">
+            {project.metrics.slice(0, 2).map((m, mIdx) => (
+              <div key={mIdx} className="font-mono text-[0.65rem] sm:text-[0.7rem] text-paper/90 truncate font-medium">
+                • {m}
+              </div>
+            ))}
+          </div>
 
-        <p className="mt-2.5 text-stone-300 font-light text-xs sm:text-sm line-clamp-2 sm:line-clamp-3 leading-relaxed">
-          {project.desc}
-        </p>
-
-        <div className="mt-auto pt-3 sm:pt-4 border-t border-line/60">
-          {project.metrics.slice(0, 2).map((m, mIdx) => (
-            <div key={mIdx} className="font-mono text-[0.68rem] sm:text-xs text-paper/90 mb-0.5 sm:mb-1 truncate font-medium">
-              • {m}
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-3 sm:mt-4 flex items-center justify-between pt-1">
-          <span className="font-mono text-[0.72rem] sm:text-xs text-accent group-hover:underline flex items-center gap-1 font-semibold">
-            View Case Study →
-          </span>
-          <div className="flex gap-3 relative z-30">
-            <a
-              href={project.gh}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-mono text-[0.7rem] sm:text-xs uppercase text-stone-300 hover:text-accent transition-colors focus-visible:ring-2 focus-visible:ring-accent rounded px-1"
-              aria-label={`View GitHub repository for ${project.title}`}
-            >
-              Code ↗
-            </a>
-            {project.live && (
+          {/* Action Links */}
+          <div className="mt-3 flex items-center justify-between pt-1">
+            <span className="font-mono text-[0.7rem] sm:text-xs text-accent group-hover:underline flex items-center gap-1 font-semibold">
+              View Case Study →
+            </span>
+            <div className="flex gap-3 relative z-30">
               <a
-                href={project.live}
+                href={project.gh}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-mono text-[0.7rem] sm:text-xs uppercase text-stone-300 hover:text-accent transition-colors focus-visible:ring-2 focus-visible:ring-accent rounded px-1"
-                aria-label={`Open live production deployment for ${project.title}`}
+                className="font-mono text-[0.68rem] sm:text-xs uppercase text-stone-300 hover:text-accent transition-colors focus-visible:ring-2 focus-visible:ring-accent rounded px-1"
+                aria-label={`View GitHub repository for ${project.title}`}
               >
-                Live ↗
+                Code ↗
               </a>
-            )}
+              {project.live && (
+                <a
+                  href={project.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-[0.68rem] sm:text-xs uppercase text-stone-300 hover:text-accent transition-colors focus-visible:ring-2 focus-visible:ring-accent rounded px-1"
+                  aria-label={`Open live production deployment for ${project.title}`}
+                >
+                  Live ↗
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -180,10 +186,10 @@ export function HorizontalProjects() {
 
   return (
     <section id="projects" ref={sectionRef} className="relative z-10 border-t border-line" aria-labelledby="projects-heading">
-      <div ref={pinRef} className="lg:h-screen lg:overflow-hidden flex flex-col justify-between py-12 lg:py-8">
+      <div ref={pinRef} className="lg:h-screen lg:overflow-hidden flex flex-col justify-between py-10 lg:py-6">
         
         {/* Header Bar */}
-        <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] mb-6 flex-shrink-0 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] mb-4 flex-shrink-0 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <div className="eyebrow">04 — Selected Work</div>
             <h2 id="projects-heading" className="font-display font-medium text-[clamp(1.9rem,4vw,3.2rem)] tracking-[-0.01em] mt-2 leading-none text-paper">
@@ -210,10 +216,10 @@ export function HorizontalProjects() {
         </div>
 
         {/* Horizontal Track (Desktop) / Carousel Snap (Mobile) */}
-        <div className="flex-1 flex items-center w-full min-h-0">
+        <div className="flex-1 flex items-center w-full min-h-0 py-2">
           <div
             ref={trackRef}
-            className="flex flex-col lg:flex-row w-full lg:w-max px-[clamp(1rem,5vw,4rem)] gap-6 lg:gap-0 lg:pl-[clamp(1.5rem,5vw,4rem)] overflow-y-visible"
+            className="flex flex-col lg:flex-row w-full lg:w-max px-[clamp(1rem,5vw,4rem)] gap-6 lg:gap-0 lg:pl-[clamp(1.5rem,5vw,4rem)]"
           >
             {filteredProjects.map((project) => (
               <Project3DCard key={project.slug} project={project} />
@@ -221,8 +227,8 @@ export function HorizontalProjects() {
           </div>
         </div>
 
-        {/* Bottom Helper Bar */}
-        <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] mt-6 flex justify-between items-center text-stone-300 font-mono text-[0.68rem] tracking-wider uppercase flex-shrink-0">
+        {/* Bottom Helper Bar with Guaranteed Breathing Room */}
+        <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] pt-3 pb-1 flex justify-between items-center text-stone-300 font-mono text-[0.68rem] tracking-wider uppercase flex-shrink-0 border-t border-line/40">
           <span className="hidden lg:inline">
             Scroll vertically to traverse 3D Case Studies →
           </span>
