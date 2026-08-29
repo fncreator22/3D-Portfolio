@@ -44,28 +44,28 @@ export default async function ProjectPage({
   const isSentinel = project.slug === "sentinel-mcp-guardrail";
 
   return (
-    <div className="pt-20 sm:pt-24 pb-20 relative z-10">
+    <main id="main-content" className="pt-20 sm:pt-24 pb-20 relative z-10">
       {/* Back link */}
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)] pt-6 pb-2">
         <Link
           href="/#projects"
-          className="font-mono text-xs uppercase tracking-wider text-stone hover:text-accent inline-flex items-center gap-2 transition-colors py-2"
+          className="font-mono text-xs uppercase tracking-wider text-stone-300 hover:text-accent inline-flex items-center gap-2 transition-colors py-2 focus-visible:ring-2 focus-visible:ring-accent rounded px-1"
         >
           ← Back to all builds
         </Link>
       </div>
 
       {/* Hero Section: Editorial 2-Column Split */}
-      <section className="border-b border-line py-8 sm:py-12">
+      <section className="border-b border-line py-8 sm:py-12" aria-labelledby="case-study-title">
         <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
             {/* Left: Metadata & Intro */}
             <div>
-              <div className="font-mono text-xs text-accent tracking-widest uppercase mb-2">
+              <div className="font-mono text-xs text-accent tracking-widest uppercase mb-2 font-semibold">
                 {String(project.idx).padStart(2, "0")} / {String(total).padStart(2, "0")} — {project.cat}
               </div>
 
-              <h1 className="font-display font-medium text-[clamp(2rem,5vw,3.6rem)] leading-[1.04] mt-2 text-paper">
+              <h1 id="case-study-title" className="font-display font-medium text-[clamp(2rem,5vw,3.6rem)] leading-[1.04] mt-2 text-paper">
                 {project.title}
               </h1>
 
@@ -78,7 +78,8 @@ export default async function ProjectPage({
                   href={project.gh}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-mono text-xs uppercase tracking-wider px-5 py-3 bg-accent border border-accent text-bg font-medium rounded-xl hover:bg-transparent hover:text-accent transition-all"
+                  className="font-mono text-xs uppercase tracking-wider px-5 py-3 bg-accent border border-accent text-bg font-semibold rounded-xl hover:bg-transparent hover:text-accent transition-all focus-visible:ring-2 focus-visible:ring-paper"
+                  aria-label={`View GitHub repository for ${project.title}`}
                 >
                   GitHub Source ↗
                 </a>
@@ -87,9 +88,10 @@ export default async function ProjectPage({
                     href={project.live}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-mono text-xs uppercase tracking-wider px-5 py-3 border border-line text-paper rounded-xl hover:border-accent hover:text-accent transition-all flex items-center gap-2"
+                    className="font-mono text-xs uppercase tracking-wider px-5 py-3 border border-line text-paper rounded-xl hover:border-accent hover:text-accent transition-all flex items-center gap-2 font-medium focus-visible:ring-2 focus-visible:ring-accent"
+                    aria-label={`Open live production deployment for ${project.title}`}
                   >
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
                     Live Production ↗
                   </a>
                 )}
@@ -103,7 +105,7 @@ export default async function ProjectPage({
                 alt={project.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               />
-              <div className="absolute top-4 right-4 bg-bg/85 backdrop-blur-md border border-line/60 px-3 py-1 rounded-full font-mono text-[0.65rem] tracking-wider uppercase text-paper/90 shadow-md">
+              <div className="absolute top-4 right-4 bg-bg/90 backdrop-blur-md border border-line/70 px-3 py-1 rounded-full font-mono text-[0.68rem] tracking-wider uppercase text-paper font-semibold shadow-md">
                 {project.cat}
               </div>
             </div>
@@ -120,7 +122,7 @@ export default async function ProjectPage({
               {/* Overview */}
               <div>
                 <div className="eyebrow mb-4">Architecture &amp; Overview</div>
-                <p className="text-[clamp(1rem,1.4vw,1.18rem)] font-light text-paper/90 leading-relaxed">
+                <p className="text-[clamp(1rem,1.4vw,1.18rem)] font-light text-paper/95 leading-relaxed">
                   {project.desc}
                 </p>
               </div>
@@ -130,7 +132,7 @@ export default async function ProjectPage({
                 <h2 className="font-display font-medium text-2xl text-paper mb-3">
                   The Problem
                 </h2>
-                <p className="text-stone font-light text-base leading-relaxed">
+                <p className="text-stone-300 font-light text-base leading-relaxed">
                   {project.problem}
                 </p>
               </div>
@@ -140,7 +142,7 @@ export default async function ProjectPage({
                 <h2 className="font-display font-medium text-2xl text-paper mb-3">
                   The Approach &amp; Implementation
                 </h2>
-                <p className="text-stone font-light text-base leading-relaxed">
+                <p className="text-stone-300 font-light text-base leading-relaxed">
                   {project.approach}
                 </p>
               </div>
@@ -150,7 +152,7 @@ export default async function ProjectPage({
                 <h2 className="font-display font-medium text-2xl text-paper mb-3">
                   Measurable Outcome
                 </h2>
-                <p className="text-stone font-light text-base leading-relaxed">
+                <p className="text-stone-300 font-light text-base leading-relaxed">
                   {project.outcome}
                 </p>
               </div>
@@ -162,7 +164,7 @@ export default async function ProjectPage({
                   <h3 className="font-display font-medium text-2xl text-paper mb-2">
                     Test the 3-Stage Gating Pipeline
                   </h3>
-                  <p className="text-stone text-sm mb-6 font-light">
+                  <p className="text-stone-300 text-sm mb-6 font-light">
                     Simulate how Sentinel blocks destructive shell commands and flags scope creep in real time.
                   </p>
                   <SentinelSimulator />
@@ -191,8 +193,8 @@ export default async function ProjectPage({
                 </div>
                 <div className="space-y-3">
                   {project.metrics.map((m, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 font-mono text-xs text-paper/85">
-                      <span className="text-accent font-bold">•</span>
+                    <div key={idx} className="flex items-start gap-2.5 font-mono text-xs text-paper/90 font-medium">
+                      <span className="text-accent font-bold" aria-hidden="true">•</span>
                       <span>{m}</span>
                     </div>
                   ))}
@@ -209,7 +211,8 @@ export default async function ProjectPage({
                     href={project.gh}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full flex items-center justify-between p-3.5 rounded-xl bg-bg border border-line hover:border-accent hover:text-accent font-mono text-xs uppercase tracking-wider transition-all"
+                    className="w-full flex items-center justify-between p-3.5 rounded-xl bg-bg border border-line hover:border-accent hover:text-accent font-mono text-xs uppercase tracking-wider transition-all focus-visible:ring-2 focus-visible:ring-accent"
+                    aria-label={`View GitHub repository for ${project.title}`}
                   >
                     <span>View Repository</span>
                     <span>↗</span>
@@ -219,13 +222,14 @@ export default async function ProjectPage({
                       href={project.live}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full flex items-center justify-between p-3.5 rounded-xl bg-accent text-bg font-mono text-xs uppercase tracking-wider font-semibold hover:bg-accent/90 transition-all"
+                      className="w-full flex items-center justify-between p-3.5 rounded-xl bg-accent text-bg font-mono text-xs uppercase tracking-wider font-semibold hover:bg-accent/90 transition-all focus-visible:ring-2 focus-visible:ring-paper"
+                      aria-label={`Open live production deployment for ${project.title}`}
                     >
                       <span>Open Live App</span>
                       <span>↗</span>
                     </a>
                   ) : (
-                    <div className="p-3.5 rounded-xl bg-bg/50 border border-line/50 font-mono text-[0.7rem] text-stone">
+                    <div className="p-3.5 rounded-xl bg-bg/50 border border-line/50 font-mono text-[0.7rem] text-stone-400">
                       Codebase showcase · Live deploy upon request
                     </div>
                   )}
@@ -237,13 +241,14 @@ export default async function ProjectPage({
       </section>
 
       {/* Pagination Footer */}
-      <section className="border-t border-line mt-12 pt-12">
+      <nav className="border-t border-line mt-12 pt-12" aria-label="Adjacent Projects Pagination">
         <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)] flex justify-between items-center">
           <Link
             href={`/work/${prevProject.slug}`}
-            className="group flex flex-col items-start"
+            className="group flex flex-col items-start focus-visible:ring-2 focus-visible:ring-accent rounded-xl p-2"
+            aria-label={`Previous Project: ${prevProject.title}`}
           >
-            <span className="font-mono text-xs uppercase text-stone group-hover:text-accent transition-colors">
+            <span className="font-mono text-xs uppercase text-stone-300 group-hover:text-accent transition-colors">
               ← Previous System
             </span>
             <span className="font-display font-medium text-lg sm:text-xl text-paper mt-1 group-hover:text-accent transition-colors">
@@ -253,9 +258,10 @@ export default async function ProjectPage({
 
           <Link
             href={`/work/${nextProject.slug}`}
-            className="group flex flex-col items-end"
+            className="group flex flex-col items-end focus-visible:ring-2 focus-visible:ring-accent rounded-xl p-2"
+            aria-label={`Next Project: ${nextProject.title}`}
           >
-            <span className="font-mono text-xs uppercase text-stone group-hover:text-accent transition-colors">
+            <span className="font-mono text-xs uppercase text-stone-300 group-hover:text-accent transition-colors">
               Next System →
             </span>
             <span className="font-display font-medium text-lg sm:text-xl text-paper mt-1 group-hover:text-accent transition-colors">
@@ -263,7 +269,7 @@ export default async function ProjectPage({
             </span>
           </Link>
         </div>
-      </section>
-    </div>
+      </nav>
+    </main>
   );
 }

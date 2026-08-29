@@ -102,7 +102,7 @@ export function SkillsDomain() {
     const lines = new THREE.LineSegments(lineGeo, lineMat);
     scene.add(lines);
 
-    // 4. Interactive Orbital Motion
+    // 4. Interactive Orbital Motion with requestAnimationFrame
     let animId: number;
     let targetRotY = 0;
     let targetRotX = 0;
@@ -115,7 +115,7 @@ export function SkillsDomain() {
       targetRotX = -y * 0.6;
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
@@ -133,19 +133,25 @@ export function SkillsDomain() {
 
     animate();
 
+    // Throttled Resize with requestAnimationFrame
+    let resizeFrameId: number | null = null;
     const handleResize = () => {
-      if (!mount) return;
-      const newW = mount.clientWidth;
-      const newH = mount.clientHeight;
-      camera.aspect = newW / newH;
-      camera.updateProjectionMatrix();
-      renderer.setSize(newW, newH);
+      if (resizeFrameId) cancelAnimationFrame(resizeFrameId);
+      resizeFrameId = requestAnimationFrame(() => {
+        if (!mount) return;
+        const newW = mount.clientWidth;
+        const newH = mount.clientHeight;
+        camera.aspect = newW / newH;
+        camera.updateProjectionMatrix();
+        renderer.setSize(newW, newH);
+      });
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
 
     return () => {
       cancelAnimationFrame(animId);
+      if (resizeFrameId) cancelAnimationFrame(resizeFrameId);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
       renderer.dispose();
@@ -155,16 +161,23 @@ export function SkillsDomain() {
     };
   }, []);
 
+  const handleKeyDown = (e: React.KeyboardEvent, idx: number) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setActiveDomain(idx);
+    }
+  };
+
   return (
-    <section id="skills" className="py-[clamp(4.5rem,8vw,8rem)] border-t border-line relative z-10">
+    <section id="skills" className="py-[clamp(5rem,9vw,9rem)] border-t border-line relative z-10" aria-labelledby="skills-heading">
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
         {/* Header */}
         <div className="max-w-[760px] mb-10 sm:mb-14">
           <div className="eyebrow">03 — Technical Matrix</div>
-          <h2 className="font-display font-medium text-[clamp(2rem,5vw,3.4rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.08]">
+          <h2 id="skills-heading" className="font-display font-medium text-[clamp(2rem,5vw,3.4rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.08] text-paper">
             Core Domains &amp; <span className="font-serif italic text-accent font-normal">Production Technologies</span>.
           </h2>
-          <p className="mt-4 text-stone font-light text-base sm:text-lg max-w-[620px]">
+          <p className="mt-4 text-stone-300 font-light text-base sm:text-lg max-w-[620px] leading-relaxed">
             Hover to inspect the live neural graph and browse production toolchains with official tech badges.
           </p>
         </div>
@@ -172,14 +185,20 @@ export function SkillsDomain() {
         {/* 2-Column Matrix: Left Domain Selectors, Right 3D Visualizer & Skills Badges */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-start">
           {/* Left: Interactive Domain Accordion Cards */}
-          <div className="space-y-4">
+          <div className="space-y-4" role="tablist" aria-label="Technical Skill Domains">
             {SKILL_DOMAINS.map((domain, idx) => {
               const isActive = activeDomain === idx;
               return (
                 <div
                   key={domain.idx}
+                  role="tab"
+                  tabIndex={0}
+                  aria-selected={isActive}
+                  aria-expanded={isActive}
+                  aria-controls={`domain-panel-${idx}`}
                   onClick={() => setActiveDomain(idx)}
-                  className={`p-5 sm:p-6 rounded-2xl border transition-all duration-300 cursor-pointer ${
+                  onKeyDown={(e) => handleKeyDown(e, idx)}
+                  className={`p-5 sm:p-6 rounded-2xl border transition-all duration-300 cursor-pointer focus-visible:ring-2 focus-visible:ring-accent ${
                     isActive
                       ? "bg-bg-raise border-accent shadow-[0_10px_30px_rgba(0,0,0,0.6),0_0_20px_rgba(193,99,59,0.15)]"
                       : "bg-bg-raise/40 border-line/70 hover:border-accent/40 hover:bg-bg-raise/70"
@@ -194,14 +213,14 @@ export function SkillsDomain() {
                         {domain.name}
                       </h3>
                     </div>
-                    <span className="font-mono text-xs text-stone">
+                    <span className="font-mono text-xs text-stone-300 font-semibold" aria-hidden="true">
                       {isActive ? "▼" : "▶"}
                     </span>
                   </div>
 
                   {/* Skills badges with Logos inside active domain */}
                   {isActive && (
-                    <div className="mt-5 pt-4 border-t border-line/60 flex flex-wrap gap-2 animate-fadeIn">
+                    <div id={`domain-panel-${idx}`} className="mt-5 pt-4 border-t border-line/60 flex flex-wrap gap-2 animate-fadeIn">
                       {domain.items.map((skill) => (
                         <TechLogo key={skill} name={skill} />
                       ))}
@@ -218,7 +237,7 @@ export function SkillsDomain() {
               <span className="font-mono text-[0.68rem] tracking-widest uppercase text-accent font-semibold">
                 Domain 0{activeDomain + 1} — Neural Graph
               </span>
-              <span className="font-mono text-[0.65rem] tracking-wider uppercase px-2.5 py-1 rounded bg-bg border border-line text-stone">
+              <span className="font-mono text-[0.65rem] tracking-wider uppercase px-2.5 py-1 rounded bg-bg border border-line text-stone-300 font-medium">
                 3D Interactive
               </span>
             </div>
@@ -227,11 +246,12 @@ export function SkillsDomain() {
             <div
               ref={mountRef}
               className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none"
+              aria-hidden="true"
             />
 
             {/* Bottom Active Stack Card */}
-            <div className="z-10 bg-bg/90 backdrop-blur-xl border border-line/80 p-5 rounded-2xl shadow-xl">
-              <div className="font-mono text-xs text-accent font-medium uppercase tracking-wider mb-2">
+            <div className="z-10 bg-bg/95 backdrop-blur-xl border border-line/80 p-5 rounded-2xl shadow-xl">
+              <div className="font-mono text-xs text-accent font-semibold uppercase tracking-wider mb-2">
                 {SKILL_DOMAINS[activeDomain].name}
               </div>
               <div className="flex flex-wrap gap-2">

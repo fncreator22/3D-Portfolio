@@ -31,7 +31,7 @@ function Project3DCard({ project }: { project: Project }) {
     if (glareRef.current) {
       const glareX = ((e.clientX - rect.left) / rect.width) * 100;
       const glareY = ((e.clientY - rect.top) / rect.height) * 100;
-      glareRef.current.style.background = `radial-gradient(circle 220px at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.18), transparent 70%)`;
+      glareRef.current.style.background = `radial-gradient(circle 220px at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.2), transparent 70%)`;
     }
   };
 
@@ -54,7 +54,7 @@ function Project3DCard({ project }: { project: Project }) {
     >
       <Link
         href={`/work/${project.slug}`}
-        className="absolute inset-0 z-20"
+        className="absolute inset-0 z-20 focus-visible:ring-2 focus-visible:ring-accent rounded-3xl"
         aria-label={`Open case study: ${project.title}`}
       />
 
@@ -62,6 +62,7 @@ function Project3DCard({ project }: { project: Project }) {
       <div
         ref={glareRef}
         className="absolute inset-0 pointer-events-none z-30 transition-all duration-75 mix-blend-overlay"
+        aria-hidden="true"
       />
 
       {/* Media preview */}
@@ -73,36 +74,37 @@ function Project3DCard({ project }: { project: Project }) {
           src={project.image}
           alt={project.title}
           className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          loading="lazy"
         />
-        <div className="absolute top-3 right-3 bg-bg/85 backdrop-blur-md border border-line/60 px-2.5 py-0.5 rounded font-mono text-[0.62rem] sm:text-[0.65rem] tracking-wider uppercase text-paper/90 shadow-md">
+        <div className="absolute top-3 right-3 bg-bg/90 backdrop-blur-md border border-line/70 px-2.5 py-0.5 rounded font-mono text-[0.65rem] tracking-wider uppercase text-paper font-semibold shadow-md">
           {project.cat}
         </div>
       </div>
 
       {/* Card Body */}
       <div className="p-5 sm:p-6 flex flex-col flex-grow min-h-0 relative z-10" style={{ transform: "translateZ(24px)" }}>
-        <div className="font-mono text-[0.68rem] sm:text-xs text-accent tracking-widest">
+        <div className="font-mono text-[0.68rem] sm:text-xs text-accent tracking-widest font-semibold">
           {String(project.idx).padStart(2, "0")} / {String(PROJECTS.length).padStart(2, "0")}
         </div>
 
-        <h3 className="font-display font-medium text-[clamp(1.1rem,1.8vw,1.4rem)] mt-1.5 leading-snug group-hover:text-accent transition-colors">
+        <h3 className="font-display font-medium text-[clamp(1.15rem,1.8vw,1.45rem)] mt-1.5 leading-snug group-hover:text-accent transition-colors text-paper">
           {project.title}
         </h3>
 
-        <p className="mt-2.5 text-stone font-light text-xs sm:text-sm line-clamp-2 sm:line-clamp-3 leading-relaxed">
+        <p className="mt-2.5 text-stone-300 font-light text-xs sm:text-sm line-clamp-2 sm:line-clamp-3 leading-relaxed">
           {project.desc}
         </p>
 
         <div className="mt-auto pt-3 sm:pt-4 border-t border-line/60">
           {project.metrics.slice(0, 2).map((m, mIdx) => (
-            <div key={mIdx} className="font-mono text-[0.65rem] sm:text-[0.68rem] text-paper/85 mb-0.5 sm:mb-1 truncate">
+            <div key={mIdx} className="font-mono text-[0.68rem] sm:text-xs text-paper/90 mb-0.5 sm:mb-1 truncate font-medium">
               • {m}
             </div>
           ))}
         </div>
 
         <div className="mt-3 sm:mt-4 flex items-center justify-between pt-1">
-          <span className="font-mono text-[0.72rem] sm:text-xs text-accent group-hover:underline flex items-center gap-1">
+          <span className="font-mono text-[0.72rem] sm:text-xs text-accent group-hover:underline flex items-center gap-1 font-semibold">
             View Case Study →
           </span>
           <div className="flex gap-3 relative z-30">
@@ -110,7 +112,8 @@ function Project3DCard({ project }: { project: Project }) {
               href={project.gh}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-[0.7rem] sm:text-xs uppercase text-stone hover:text-accent transition-colors"
+              className="font-mono text-[0.7rem] sm:text-xs uppercase text-stone-300 hover:text-accent transition-colors focus-visible:ring-2 focus-visible:ring-accent rounded px-1"
+              aria-label={`View GitHub repository for ${project.title}`}
             >
               Code ↗
             </a>
@@ -119,7 +122,8 @@ function Project3DCard({ project }: { project: Project }) {
                 href={project.live}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-mono text-[0.7rem] sm:text-xs uppercase text-stone hover:text-accent transition-colors"
+                className="font-mono text-[0.7rem] sm:text-xs uppercase text-stone-300 hover:text-accent transition-colors focus-visible:ring-2 focus-visible:ring-accent rounded px-1"
+                aria-label={`Open live production deployment for ${project.title}`}
               >
                 Live ↗
               </a>
@@ -143,95 +147,94 @@ export function HorizontalProjects() {
       : PROJECTS.filter((p) => p.cat === activeCategory);
 
   useEffect(() => {
-    if (window.innerWidth < 1024) return;
+    // Only apply horizontal GSAP pin on wide desktop (lg+)
+    const isDesktop = window.innerWidth >= 1024;
+    if (!isDesktop) return;
 
     const track = trackRef.current;
     const pin = pinRef.current;
     if (!track || !pin) return;
 
-    let ctx = gsap.context(() => {
-      const scrollWidth = track.scrollWidth - window.innerWidth + 120;
+    const totalWidth = track.scrollWidth;
+    const viewWidth = window.innerWidth;
+    const scrollDistance = totalWidth - viewWidth + 80;
 
-      gsap.to(track, {
-        x: -scrollWidth,
-        ease: "none",
-        scrollTrigger: {
-          trigger: pin,
-          pin: true,
-          scrub: 1,
-          start: "top top",
-          end: () => `+=${scrollWidth * 1.1}`,
-          invalidateOnRefresh: true,
-        },
-      });
-    }, sectionRef);
+    const tween = gsap.to(track, {
+      x: () => -scrollDistance,
+      ease: "none",
+      scrollTrigger: {
+        trigger: pin,
+        pin: true,
+        scrub: 0.8,
+        start: "top top",
+        end: () => `+=${scrollDistance * 1.1}`,
+        invalidateOnRefresh: true,
+      },
+    });
 
-    return () => ctx.revert();
-  }, [filteredProjects]);
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, [activeCategory]);
 
   return (
-    <section ref={sectionRef} id="projects" className="relative z-10 border-t border-line">
-      {/* Section Header & Filter Controls */}
-      <div className="pt-16 sm:pt-24 pb-6 sm:pb-8 max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 pb-6 border-b border-line">
+    <section id="projects" ref={sectionRef} className="relative z-10 border-t border-line" aria-labelledby="projects-heading">
+      <div ref={pinRef} className="lg:h-screen lg:overflow-hidden flex flex-col justify-between py-12 lg:py-8">
+        
+        {/* Header Bar */}
+        <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] mb-6 flex-shrink-0 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <div className="eyebrow">04 — Selected Systems</div>
-            <h2 className="font-display font-medium text-[clamp(1.9rem,4.5vw,3.4rem)] tracking-[-0.01em] mt-3">
-              Production Work &amp; <em>Architectures</em>
+            <div className="eyebrow">04 — Selected Work</div>
+            <h2 id="projects-heading" className="font-display font-medium text-[clamp(1.9rem,4vw,3.2rem)] tracking-[-0.01em] mt-2 leading-none text-paper">
+              Engineered for <span className="font-serif italic text-accent font-normal">Autonomy &amp; Scale</span>.
             </h2>
           </div>
 
           {/* Category Filter Pills */}
-          <div className="flex flex-wrap gap-1.5 sm:gap-2">
-            {CATEGORIES.map((cat) => (
+          <div className="flex flex-wrap gap-2 overflow-x-auto no-scrollbar py-1">
+            {CATEGORIES.slice(0, 5).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`font-mono text-[0.68rem] sm:text-xs uppercase tracking-wider px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full border transition-all ${
+                className={`font-mono text-[0.68rem] uppercase tracking-wider px-3 py-1 rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-accent ${
                   activeCategory === cat
-                    ? "bg-accent text-bg border-accent font-medium shadow-md shadow-accent/20"
-                    : "border-line text-stone hover:text-paper hover:border-paper/40 bg-bg-raise/50"
+                    ? "bg-accent text-bg border-accent font-semibold shadow-md shadow-accent/20"
+                    : "border-line text-stone-300 hover:text-paper hover:border-paper/40 bg-bg/50"
                 }`}
               >
                 {cat}
               </button>
             ))}
           </div>
+        </div>
 
+        {/* Horizontal Track (Desktop) / Carousel Snap (Mobile) */}
+        <div className="flex-1 flex items-center w-full min-h-0">
+          <div
+            ref={trackRef}
+            className="flex flex-col lg:flex-row w-full lg:w-max px-[clamp(1rem,5vw,4rem)] gap-6 lg:gap-0 lg:pl-[clamp(1.5rem,5vw,4rem)] overflow-y-visible"
+          >
+            {filteredProjects.map((project) => (
+              <Project3DCard key={project.slug} project={project} />
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom Helper Bar */}
+        <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] mt-6 flex justify-between items-center text-stone-300 font-mono text-[0.68rem] tracking-wider uppercase flex-shrink-0">
+          <span className="hidden lg:inline">
+            Scroll vertically to traverse 3D Case Studies →
+          </span>
+          <span className="lg:hidden">
+            Swipe to explore systems ({filteredProjects.length})
+          </span>
           <Link
             href="/work"
-            className="font-mono text-xs uppercase tracking-wider text-accent hover:underline flex items-center gap-1.5 py-1"
+            className="text-accent hover:underline flex items-center gap-1 font-semibold focus-visible:ring-2 focus-visible:ring-accent rounded px-1"
           >
-            Full Archive ({PROJECTS.length} Projects) →
+            View All 12 Systems Archive ↗
           </Link>
-        </div>
-      </div>
-
-      {/* Desktop Mode (>= 1024px) */}
-      <div ref={pinRef} className="hidden lg:block h-screen relative overflow-hidden">
-        <div
-          ref={trackRef}
-          className="absolute top-0 left-0 h-full flex items-center pl-[clamp(1.25rem,5vw,4rem)] will-change-transform"
-        >
-          {filteredProjects.map((p) => (
-            <Project3DCard key={p.slug} project={p} />
-          ))}
-        </div>
-      </div>
-
-      {/* Mobile & Tablet Snap-Swipe Carousel (< 1024px) */}
-      <div className="lg:hidden px-[clamp(1rem,5vw,4rem)] pb-14 sm:pb-16">
-        <div className="flex overflow-x-auto gap-4 sm:gap-5 snap-x snap-mandatory py-3 no-scrollbar -mx-4 px-4">
-          {filteredProjects.map((p) => (
-            <div key={p.slug} className="snap-center flex-shrink-0 w-[min(84vw,360px)]">
-              <Project3DCard project={p} />
-            </div>
-          ))}
-        </div>
-        
-        {/* Mobile Swipe Guidance Indicator */}
-        <div className="flex items-center justify-center gap-2 mt-4 text-stone font-mono text-[0.65rem] uppercase tracking-widest">
-          <span>← Swipe to explore ({filteredProjects.length} systems) →</span>
         </div>
       </div>
     </section>
