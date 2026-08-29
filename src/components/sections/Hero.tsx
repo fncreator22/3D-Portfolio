@@ -6,51 +6,29 @@ import { useTypewriter } from "@/hooks/useTypewriter";
 import { Avatar3DModel } from "@/components/ui/Avatar3DModel";
 
 const TYPEWRITER_TEXT =
-  "I build systems that verify themselves. LLM orchestration, Sentinel MCP, and computer vision that ship.";
+  "I take projects from vague asks to production-grade systems — architecting Agentic AI pipelines, MCP safety guardrails, and full-stack platforms that verify themselves.";
 
 const PILLS = [
   { label: "Sentinel MCP Guardrail", href: "/work/sentinel-mcp-guardrail" },
-  { label: "NexWare ERP", href: "/work/nexware-erp" },
+  { label: "BrowserPilot Agent", href: "/work/browserpilot-autonomous-web-agent" },
   { label: "Examly Enterprise", href: "/work/examly-enterprise" },
-  { label: "BrowserPilot Autonomous Agent", href: "/work/browserpilot-autonomous-web-agent" },
-  { label: "See 12 Systems", href: "/work" },
+  { label: "Explore 12 Systems", href: "/work" },
 ];
-
-const EMAIL = "sagarin588@gmail.com";
-const GMAIL_COMPOSE_URL = `https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}&su=Discussion:%20AI%20Engineering%20Roles`;
 
 export function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [pillsVisible, setPillsVisible] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   const { displayed, done } = useTypewriter({
     text: TYPEWRITER_TEXT,
-    speed: 38,
-    startDelay: 600,
+    speed: 32,
+    startDelay: 400,
   });
 
   useEffect(() => {
-    const t = setTimeout(() => setPillsVisible(true), 400);
+    const t = setTimeout(() => setPillsVisible(true), 350);
     return () => clearTimeout(t);
   }, []);
-
-  const handleCopyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText(EMAIL);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    } catch {
-      const el = document.createElement("textarea");
-      el.value = EMAIL;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand("copy");
-      document.body.removeChild(el);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    }
-  };
 
   return (
     <section
@@ -60,7 +38,7 @@ export function Hero() {
       {/* Hero Layout */}
       <div className="flex-1 flex items-center pb-16 pt-24 sm:pt-28 md:pt-32">
         <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)] w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center">
 
             {/* ─── Left: Text Content ─── */}
             <div className="flex flex-col max-w-xl">
@@ -71,15 +49,15 @@ export function Hero() {
               </div>
 
               {/* High-Impact Headline */}
-              <h1 className="font-display font-medium text-[clamp(2.1rem,5.2vw,4.2rem)] tracking-[-0.02em] leading-[1.04] text-paper mb-4 sm:mb-5">
-                Hey there, I&apos;m <span className="text-accent">Sagar Mahajan</span>.
+              <h1 className="font-display font-medium text-[clamp(2.2rem,5vw,4.3rem)] tracking-[-0.02em] leading-[1.04] text-paper mb-4 sm:mb-5">
+                Engineering <span className="text-accent">Autonomous Systems</span> &amp; Production AI.
               </h1>
 
               {/* Typewriter Statement */}
               <p
-                className="text-paper mb-5 sm:mb-6 font-body leading-[1.38]"
+                className="text-paper mb-6 sm:mb-7 font-body leading-[1.42]"
                 style={{
-                  fontSize: "clamp(15px, 2.5vw, 22px)",
+                  fontSize: "clamp(15px, 2.3vw, 20px)",
                   fontWeight: 400,
                   minHeight: "56px",
                 }}
@@ -101,14 +79,14 @@ export function Hero() {
 
               {/* Action Pill Buttons */}
               <div
-                className="flex flex-wrap gap-1.5 sm:gap-2 items-center"
+                className="flex flex-wrap gap-2 sm:gap-2.5 items-center"
                 style={{
                   opacity: pillsVisible ? 1 : 0,
                   transform: pillsVisible ? "translateY(0)" : "translateY(8px)",
                   transition: "opacity 0.45s ease, transform 0.45s ease",
                 }}
               >
-                {/* Project Pills */}
+                {/* Flagship Project Pills */}
                 {PILLS.map((pill) => (
                   <Link
                     key={pill.href}
@@ -119,42 +97,25 @@ export function Hero() {
                   </Link>
                 ))}
 
-                {/* Direct Gmail Launcher */}
+                {/* Direct Get in Touch CTA */}
                 <a
-                  href={GMAIL_COMPOSE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center bg-accent text-bg font-medium rounded-full hover:bg-accent/90 hover:shadow-md transition-all text-[0.78rem] sm:text-[0.85rem] px-3.5 sm:px-4 py-1.5 whitespace-nowrap gap-1.5"
+                  href="#contact"
+                  className="inline-flex items-center justify-center bg-accent text-bg font-medium rounded-full hover:bg-accent/90 hover:shadow-md transition-all text-[0.78rem] sm:text-[0.85rem] px-4 py-1.5 whitespace-nowrap gap-1.5"
                 >
-                  <span>Open Gmail</span>
-                  <span className="text-xs">↗</span>
+                  <span>Get in Touch</span>
+                  <span className="text-xs">↓</span>
                 </a>
 
-                {/* Copy Email Pill */}
-                <button
-                  onClick={handleCopyEmail}
-                  className="inline-flex items-center justify-center text-paper bg-transparent border border-paper/70 rounded-full font-body hover:bg-paper hover:text-bg hover:border-paper transition-colors duration-200 text-[0.78rem] sm:text-[0.85rem] px-3.5 sm:px-4 py-1.5 whitespace-nowrap gap-2 cursor-pointer"
+                {/* View/Download Resume CTA */}
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center text-paper bg-transparent border border-paper/70 rounded-full font-body hover:bg-paper hover:text-bg hover:border-paper transition-colors duration-200 text-[0.78rem] sm:text-[0.85rem] px-3.5 sm:px-4 py-1.5 whitespace-nowrap gap-1.5"
                 >
-                  {copied ? (
-                    <>
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="flex-shrink-0">
-                        <polyline points="2,6 5,9 10,3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                      <span>Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>
-                        Copy:{" "}
-                        <span className="underline underline-offset-1">{EMAIL}</span>
-                      </span>
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="flex-shrink-0">
-                        <rect x="4" y="4" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.3" />
-                        <path d="M3 8H2C1.44772 8 1 7.55228 1 7V2C1 1.44772 1.44772 1 2 1H7C7.55228 1 8 1.44772 8 2V3" stroke="currentColor" strokeWidth="1.3" />
-                      </svg>
-                    </>
-                  )}
-                </button>
+                  <span>Resume</span>
+                  <span className="text-xs">↗</span>
+                </a>
               </div>
             </div>
 

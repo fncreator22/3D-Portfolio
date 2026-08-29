@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 import { SKILL_DOMAINS } from "@/data/projects";
+import { TechLogo } from "@/components/ui/TechLogo";
 
 export function SkillsDomain() {
   const [activeDomain, setActiveDomain] = useState<number>(0);
@@ -64,23 +65,15 @@ export function SkillsDomain() {
     const nodes = new THREE.Points(nodeGeo, nodeMat);
     scene.add(nodes);
 
-    // 3. Synaptic Axon Connections
-    const maxLines = 80;
-    const linePositions = new Float32Array(maxLines * 6);
-    const lineGeo = new THREE.BufferGeometry();
-    lineGeo.setAttribute("position", new THREE.BufferAttribute(linePositions, 3));
-
+    // 3. Synaptic Electrical Axons (Lines)
     const lineMat = new THREE.LineBasicMaterial({
       color: 0xc1633b,
       transparent: true,
-      opacity: 0.35,
+      opacity: 0.25,
       blending: THREE.AdditiveBlending,
     });
 
-    const lines = new THREE.LineSegments(lineGeo, lineMat);
-    scene.add(lines);
-
-    let lineIdx = 0;
+    const linePositions: number[] = [];
     for (let i = 0; i < nodeCount; i++) {
       for (let j = i + 1; j < nodeCount; j++) {
         const dx = nodePositions[i * 3] - nodePositions[j * 3];
@@ -88,126 +81,164 @@ export function SkillsDomain() {
         const dz = nodePositions[i * 3 + 2] - nodePositions[j * 3 + 2];
         const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-        if (dist < 4.8 && lineIdx < linePositions.length - 6) {
-          linePositions[lineIdx++] = nodePositions[i * 3];
-          linePositions[lineIdx++] = nodePositions[i * 3 + 1];
-          linePositions[lineIdx++] = nodePositions[i * 3 + 2];
-          linePositions[lineIdx++] = nodePositions[j * 3];
-          linePositions[lineIdx++] = nodePositions[j * 3 + 1];
-          linePositions[lineIdx++] = nodePositions[j * 3 + 2];
+        if (dist < 4.2) {
+          linePositions.push(
+            nodePositions[i * 3],
+            nodePositions[i * 3 + 1],
+            nodePositions[i * 3 + 2],
+            nodePositions[j * 3],
+            nodePositions[j * 3 + 1],
+            nodePositions[j * 3 + 2]
+          );
         }
       }
     }
-    lineGeo.attributes.position.needsUpdate = true;
 
-    // 4. Animation Loop
-    let animationId: number;
-    const clock = new THREE.Clock();
+    const lineGeo = new THREE.BufferGeometry();
+    lineGeo.setAttribute(
+      "position",
+      new THREE.Float32BufferAttribute(linePositions, 3)
+    );
+    const lines = new THREE.LineSegments(lineGeo, lineMat);
+    scene.add(lines);
+
+    // 4. Interactive Orbital Motion
+    let animId: number;
+    let targetRotY = 0;
+    let targetRotX = 0;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = mount.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      targetRotY = x * 0.6;
+      targetRotX = -y * 0.6;
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
 
     const animate = () => {
-      const t = clock.getElapsedTime();
-      nodes.rotation.y = t * 0.15;
-      nodes.rotation.x = Math.sin(t * 0.1) * 0.1;
-      lines.rotation.y = t * 0.15;
-      lines.rotation.x = Math.sin(t * 0.1) * 0.1;
+      animId = requestAnimationFrame(animate);
+
+      nodes.rotation.y += 0.003;
+      lines.rotation.y += 0.003;
+
+      nodes.rotation.y += (targetRotY - nodes.rotation.y) * 0.05;
+      nodes.rotation.x += (targetRotX - nodes.rotation.x) * 0.05;
+      lines.rotation.y = nodes.rotation.y;
+      lines.rotation.x = nodes.rotation.x;
 
       renderer.render(scene, camera);
-      animationId = requestAnimationFrame(animate);
     };
 
     animate();
 
     const handleResize = () => {
       if (!mount) return;
-      const w = mount.clientWidth;
-      const h = mount.clientHeight;
-      camera.aspect = w / h;
+      const newW = mount.clientWidth;
+      const newH = mount.clientHeight;
+      camera.aspect = newW / newH;
       camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
+      renderer.setSize(newW, newH);
     };
 
     window.addEventListener("resize", handleResize);
 
     return () => {
-      cancelAnimationFrame(animationId);
+      cancelAnimationFrame(animId);
+      window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
+      renderer.dispose();
       if (mount.contains(renderer.domElement)) {
         mount.removeChild(renderer.domElement);
       }
-      nodeGeo.dispose();
-      nodeMat.dispose();
-      lineGeo.dispose();
-      lineMat.dispose();
-      renderer.dispose();
     };
   }, []);
 
   return (
-    <section id="skills" className="py-[clamp(4.5rem,8vw,8.5rem)] border-t border-line relative z-10">
+    <section id="skills" className="py-[clamp(4.5rem,8vw,8rem)] border-t border-line relative z-10">
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
-        <div className="max-w-[760px] mb-10 sm:mb-12">
+        {/* Header */}
+        <div className="max-w-[760px] mb-10 sm:mb-14">
           <div className="eyebrow">03 — Technical Matrix</div>
-          <h2 className="font-display font-medium text-[clamp(1.9rem,4.5vw,3.2rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.08]">
-            Four domains that <em>compound</em> into one practice.
+          <h2 className="font-display font-medium text-[clamp(2rem,5vw,3.4rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.08]">
+            Core Domains &amp; <span className="font-serif italic text-accent font-normal">Production Technologies</span>.
           </h2>
+          <p className="mt-4 text-stone font-light text-base sm:text-lg max-w-[620px]">
+            Hover to inspect the live neural graph and browse production toolchains with official tech badges.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 lg:gap-10 items-center">
-          {/* Left: Domain Accordion List */}
-          <div className="flex flex-col">
+        {/* 2-Column Matrix: Left Domain Selectors, Right 3D Visualizer & Skills Badges */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-start">
+          {/* Left: Interactive Domain Accordion Cards */}
+          <div className="space-y-4">
             {SKILL_DOMAINS.map((domain, idx) => {
               const isActive = activeDomain === idx;
               return (
                 <div
                   key={domain.idx}
                   onClick={() => setActiveDomain(idx)}
-                  onMouseEnter={() => setActiveDomain(idx)}
-                  className={`domain-card grid grid-cols-1 sm:grid-cols-[70px_1fr] gap-3 sm:gap-5 border-t border-line py-5 sm:py-7 px-4 sm:px-5 rounded-2xl transition-all duration-300 cursor-pointer ${
+                  className={`p-5 sm:p-6 rounded-2xl border transition-all duration-300 cursor-pointer ${
                     isActive
-                      ? "bg-bg-raise border-accent/60 shadow-[0_12px_35px_rgba(0,0,0,0.6),0_0_20px_rgba(193,99,59,0.15)]"
-                      : "hover:bg-white/[0.02]"
-                  } last:border-b`}
+                      ? "bg-bg-raise border-accent shadow-[0_10px_30px_rgba(0,0,0,0.6),0_0_20px_rgba(193,99,59,0.15)]"
+                      : "bg-bg-raise/40 border-line/70 hover:border-accent/40 hover:bg-bg-raise/70"
+                  }`}
                 >
-                  <div className={`font-mono text-xs sm:text-sm pt-1 ${isActive ? "text-accent font-medium" : "text-stone"}`}>
-                    {domain.idx}
-                  </div>
-                  <div>
-                    <div className="font-display font-medium text-[clamp(1.15rem,2.2vw,1.75rem)] mb-2 sm:mb-3 flex items-center justify-between">
-                      <span className={isActive ? "text-paper" : "text-paper/85"}>{domain.name}</span>
-                      {isActive && (
-                        <span className="font-mono text-[0.58rem] sm:text-[0.62rem] uppercase tracking-wider text-accent border border-accent/40 bg-accent/10 px-2 py-0.5 rounded-full">
-                          Active Synapse
-                        </span>
-                      )}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="font-mono text-xs text-accent font-semibold">
+                        {domain.idx}
+                      </span>
+                      <h3 className="font-display font-medium text-lg sm:text-xl text-paper">
+                        {domain.name}
+                      </h3>
                     </div>
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2 pt-1">
-                      {domain.items.map((item, i) => (
-                        <span
-                          key={i}
-                          className={`font-mono text-[0.7rem] sm:text-xs px-2.5 py-0.5 sm:py-1 rounded-md transition-all ${
-                            isActive
-                              ? "bg-bg text-paper border border-line hover:border-accent hover:text-accent"
-                              : "text-stone bg-bg/50 border border-transparent"
-                          }`}
-                        >
-                          {item}
-                        </span>
+                    <span className="font-mono text-xs text-stone">
+                      {isActive ? "▼" : "▶"}
+                    </span>
+                  </div>
+
+                  {/* Skills badges with Logos inside active domain */}
+                  {isActive && (
+                    <div className="mt-5 pt-4 border-t border-line/60 flex flex-wrap gap-2 animate-fadeIn">
+                      {domain.items.map((skill) => (
+                        <TechLogo key={skill} name={skill} />
                       ))}
                     </div>
-                  </div>
+                  )}
                 </div>
               );
             })}
           </div>
 
-          {/* Right: 3D Interactive Synapse Visualizer */}
-          <div className="relative h-[240px] sm:h-[300px] lg:h-auto lg:aspect-square max-w-[420px] mx-auto w-full rounded-3xl bg-[radial-gradient(circle_at_50%_40%,rgba(193,99,59,0.18),#141311_70%)] border border-line/80 shadow-[0_20px_50px_rgba(0,0,0,0.7)] overflow-hidden flex items-center justify-center">
-            <div ref={mountRef} className="w-full h-full" />
-            
-            {/* Live Visualizer Status Overlay */}
-            <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 bg-bg/90 backdrop-blur-md border border-line px-3 py-1 rounded-full font-mono text-[0.58rem] sm:text-[0.62rem] tracking-wider uppercase text-paper/80 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap shadow-lg">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-              <span>Domain {SKILL_DOMAINS[activeDomain]?.idx || "01"} Synaptic Graph</span>
+          {/* Right: 3D Interactive Synaptic Visualizer & Active Domain Inspector */}
+          <div className="relative rounded-3xl overflow-hidden border border-line bg-gradient-to-b from-bg-raise to-bg p-6 sm:p-8 flex flex-col justify-between h-[480px] sm:h-[560px] shadow-[0_24px_60px_rgba(0,0,0,0.7)] sticky top-28">
+            <div className="flex items-center justify-between z-10">
+              <span className="font-mono text-[0.68rem] tracking-widest uppercase text-accent font-semibold">
+                Domain 0{activeDomain + 1} — Neural Graph
+              </span>
+              <span className="font-mono text-[0.65rem] tracking-wider uppercase px-2.5 py-1 rounded bg-bg border border-line text-stone">
+                3D Interactive
+              </span>
+            </div>
+
+            {/* Three.js Canvas Mount */}
+            <div
+              ref={mountRef}
+              className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none"
+            />
+
+            {/* Bottom Active Stack Card */}
+            <div className="z-10 bg-bg/90 backdrop-blur-xl border border-line/80 p-5 rounded-2xl shadow-xl">
+              <div className="font-mono text-xs text-accent font-medium uppercase tracking-wider mb-2">
+                {SKILL_DOMAINS[activeDomain].name}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {SKILL_DOMAINS[activeDomain].items.slice(0, 8).map((item) => (
+                  <TechLogo key={item} name={item} />
+                ))}
+              </div>
             </div>
           </div>
         </div>

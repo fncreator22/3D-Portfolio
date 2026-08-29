@@ -49,10 +49,12 @@ export function Footer() {
               Instagram ↗
             </a>
             <a
-              href={`mailto:${PROFILE.email}`}
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:text-accent transition-colors"
             >
-              Email ↗
+              Resume ↗
             </a>
           </div>
         </div>

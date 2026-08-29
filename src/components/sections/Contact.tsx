@@ -3,13 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { PROFILE } from "@/data/projects";
 
-const EMAIL = PROFILE.email;
-const PHONE = PROFILE.phone;
-const GMAIL_COMPOSE_URL = `https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}&su=Discussion:%20AI%20Engineering%20Roles`;
-
 export function Contact() {
-  const [copiedEmail, setCopiedEmail] = useState(false);
-  const [copiedPhone, setCopiedPhone] = useState(false);
   const [istTime, setIstTime] = useState("");
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -51,37 +45,10 @@ export function Contact() {
     }
   };
 
-  const copyToClipboard = async (text: string, isEmail: boolean) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      if (isEmail) {
-        setCopiedEmail(true);
-        setTimeout(() => setCopiedEmail(false), 2500);
-      } else {
-        setCopiedPhone(true);
-        setTimeout(() => setCopiedPhone(false), 2500);
-      }
-    } catch {
-      const el = document.createElement("textarea");
-      el.value = text;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand("copy");
-      document.body.removeChild(el);
-      if (isEmail) {
-        setCopiedEmail(true);
-        setTimeout(() => setCopiedEmail(false), 2500);
-      } else {
-        setCopiedPhone(true);
-        setTimeout(() => setCopiedPhone(false), 2500);
-      }
-    }
-  };
-
   return (
     <section id="contact" className="py-[clamp(4.5rem,10vw,9rem)] border-t border-line relative z-10">
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
-        <div className="eyebrow">06 — Direct Connect</div>
+        <div className="eyebrow">06 — Direct Comms</div>
 
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-12 items-start">
           {/* Left Text */}
@@ -131,91 +98,77 @@ export function Contact() {
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
               </div>
               <span className="font-mono text-[0.65rem] sm:text-[0.68rem] tracking-wider uppercase text-stone">
-                Direct Comms · Zero Friction
+                Private Channels · Zero Friction
               </span>
             </div>
 
             <div className="mt-5 sm:mt-6 space-y-3.5">
-              {/* Primary Email */}
-              <button
-                onClick={() => copyToClipboard(EMAIL, true)}
-                className="w-full group flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-bg border border-line hover:border-accent hover:shadow-[0_0_20px_rgba(193,99,59,0.2)] transition-all cursor-pointer text-left"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-accent/15 border border-accent/30 flex items-center justify-center text-accent flex-shrink-0 text-sm">
-                    ✉
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-mono text-[0.62rem] sm:text-[0.65rem] uppercase text-stone tracking-wider">
-                      Email Address
-                    </div>
-                    <div className="font-mono text-xs sm:text-sm text-paper group-hover:text-accent transition-colors truncate">
-                      {EMAIL}
-                    </div>
-                  </div>
-                </div>
-                <div className="font-mono text-[0.68rem] sm:text-xs uppercase px-2.5 sm:px-3 py-1 rounded bg-bg-raise border border-line text-stone group-hover:text-accent group-hover:border-accent/50 transition-all flex-shrink-0 ml-2">
-                  {copiedEmail ? "✓ Copied!" : "Copy"}
-                </div>
-              </button>
-
-              {/* Phone */}
-              <button
-                onClick={() => copyToClipboard(PHONE, false)}
-                className="w-full group flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-bg border border-line hover:border-accent hover:shadow-[0_0_20px_rgba(193,99,59,0.2)] transition-all cursor-pointer text-left"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-accent/15 border border-accent/30 flex items-center justify-center text-accent flex-shrink-0 text-sm">
-                    📞
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-mono text-[0.62rem] sm:text-[0.65rem] uppercase text-stone tracking-wider">
-                      Phone / WhatsApp
-                    </div>
-                    <div className="font-mono text-xs sm:text-sm text-paper group-hover:text-accent transition-colors truncate">
-                      {PHONE}
-                    </div>
-                  </div>
-                </div>
-                <div className="font-mono text-[0.68rem] sm:text-xs uppercase px-2.5 sm:px-3 py-1 rounded bg-bg-raise border border-line text-stone group-hover:text-accent group-hover:border-accent/50 transition-all flex-shrink-0 ml-2">
-                  {copiedPhone ? "✓ Copied!" : "Copy"}
-                </div>
-              </button>
-
-              {/* Direct Gmail Web Launcher */}
+              {/* LinkedIn Direct Connect */}
               <a
-                href={GMAIL_COMPOSE_URL}
+                href={PROFILE.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full group flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-bg border border-line hover:border-accent hover:shadow-[0_0_20px_rgba(193,99,59,0.2)] transition-all"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-accent/15 border border-accent/30 flex items-center justify-center text-accent flex-shrink-0 text-sm">
+                    💼
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-mono text-[0.62rem] sm:text-[0.65rem] uppercase text-stone tracking-wider">
+                      Professional Network
+                    </div>
+                    <div className="font-mono text-xs sm:text-sm text-paper group-hover:text-accent transition-colors">
+                      Connect on LinkedIn
+                    </div>
+                  </div>
+                </div>
+                <div className="font-mono text-[0.68rem] sm:text-xs uppercase px-2.5 sm:px-3 py-1 rounded bg-bg-raise border border-line text-stone group-hover:text-accent group-hover:border-accent/50 transition-all flex-shrink-0 ml-2">
+                  Connect ↗
+                </div>
+              </a>
+
+              {/* GitHub Profile */}
+              <a
+                href={PROFILE.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full group flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-bg border border-line hover:border-accent hover:shadow-[0_0_20px_rgba(193,99,59,0.2)] transition-all"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-accent/15 border border-accent/30 flex items-center justify-center text-accent flex-shrink-0 text-sm">
+                    🐙
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-mono text-[0.62rem] sm:text-[0.65rem] uppercase text-stone tracking-wider">
+                      Code Repositories
+                    </div>
+                    <div className="font-mono text-xs sm:text-sm text-paper group-hover:text-accent transition-colors">
+                      github.com/fncreator22
+                    </div>
+                  </div>
+                </div>
+                <div className="font-mono text-[0.68rem] sm:text-xs uppercase px-2.5 sm:px-3 py-1 rounded bg-bg-raise border border-line text-stone group-hover:text-accent group-hover:border-accent/50 transition-all flex-shrink-0 ml-2">
+                  Follow ↗
+                </div>
+              </a>
+
+              {/* Verified Resume Action */}
+              <a
+                href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-accent text-bg font-medium hover:bg-accent/90 hover:shadow-[0_0_25px_rgba(193,99,59,0.4)] transition-all"
               >
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs sm:text-sm tracking-wider uppercase font-semibold">Open in Gmail</span>
-                  <span className="font-mono text-[0.65rem] px-2 py-0.5 rounded bg-black/20 uppercase tracking-widest">Web</span>
+                  <span className="font-mono text-xs sm:text-sm tracking-wider uppercase font-semibold">View &amp; Download Resume</span>
+                  <span className="font-mono text-[0.65rem] px-2 py-0.5 rounded bg-black/20 uppercase tracking-widest">PDF</span>
                 </div>
                 <span className="text-base sm:text-lg">↗</span>
               </a>
 
-              {/* Social Links Grid */}
+              {/* Social Channels Grid */}
               <div className="grid grid-cols-2 gap-2.5 pt-1">
-                <a
-                  href={PROFILE.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 p-2.5 sm:p-3 rounded-xl bg-bg border border-line hover:border-accent hover:text-accent font-mono text-[0.68rem] sm:text-xs uppercase tracking-wider transition-all"
-                >
-                  <span>GitHub</span>
-                  <span>↗</span>
-                </a>
-                <a
-                  href={PROFILE.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 p-2.5 sm:p-3 rounded-xl bg-bg border border-line hover:border-accent hover:text-accent font-mono text-[0.68rem] sm:text-xs uppercase tracking-wider transition-all"
-                >
-                  <span>LinkedIn</span>
-                  <span>↗</span>
-                </a>
                 <a
                   href={PROFILE.x}
                   target="_blank"

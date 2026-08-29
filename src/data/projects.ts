@@ -9,8 +9,6 @@ export const PROFILE = {
     "AI Automation Engineer",
     "Full-Stack Developer"
   ],
-  phone: "+91 9362746288",
-  email: "sagarin588@gmail.com",
   location: "Hyderabad, India",
   linkedin: "https://linkedin.com/in/sagar-mahajan-513a43200",
   github: "https://github.com/fncreator22",
@@ -18,6 +16,7 @@ export const PROFILE = {
   xHandle: "@sr2mahajan",
   instagram: "https://instagram.com/sagar___0122",
   instagramHandle: "@sagar___0122",
+  resumeUrl: "/resume.pdf",
   summary:
     "Software Engineer with 1+ year of experience who takes a project from a vague ask to a live product with minimal hand-holding. Owns things end-to-end — scoping the real problem, making the architecture calls, building it, and staying on after launch instead of walking away. Picks up whatever a project demands quickly, and treats measurable outcomes as the real deliverable, earning repeat client work through dependable, on-time delivery.",
   education: {
@@ -47,31 +46,31 @@ export const PROJECTS: Project[] = [
     tech: ["Python", "FastAPI", "scikit-learn", "Ollama", "Model Context Protocol", "Docker", "SQLite"],
     gh: "https://github.com/fncreator22/sentinel-mcp",
     live: "https://sentinel-landing-azure.vercel.app/",
-    image: "/images/center.jpg",
-    gallery: ["/images/center.jpg", "/images/top_left.jpg", "/images/right.jpg"],
+    image: "https://raw.githubusercontent.com/fncreator22/sentinel-landing/main/assets/sentinel-demo.gif",
+    gallery: ["/images/projects/lato-agent-pipeline.png", "/images/projects/fintech-portfolio-rag.png"],
     featured: true
   },
   {
     idx: 2,
-    slug: "nexware-erp",
-    cat: "Full-Stack & SaaS Platforms",
-    title: "NexWare ERP",
-    tagline: "A multi-tenant SaaS ERP unifying workspace, inventory, and billing.",
-    desc: "NexWare ERP centralizes business operations — inventory, warehouse management, billing/invoicing, workforce management, and analytics — into one platform. Built with a four-tier role hierarchy (Super Admin → Admin → Manager → Employee) and a permission-driven access engine, plus an integrated tax-calculation and invoicing system designed to replace multiple disconnected business tools with one unified system.",
-    problem: "Growing businesses struggle with fragmented tooling across separate inventory, workforce, and invoicing apps, leading to data synchronization failures and manual bookkeeping delays.",
-    approach: "Designed a centralized multi-tenant architecture with a granular 4-tier RBAC authorization model, real-time MongoDB aggregations, and an automated tax computation engine with Chart.js analytics.",
-    outcome: "Unified 5 separate operational departments into one system, eliminating manual invoicing delays and giving managers instant real-time financial telemetry.",
+    slug: "browserpilot-autonomous-web-agent",
+    cat: "AI, LLM & Agentic Systems",
+    title: "BrowserPilot — Autonomous Web Agent",
+    tagline: "An enterprise-grade autonomous web agent that actually clicks, fills, and verifies.",
+    desc: "BrowserPilot is an autonomous browser-automation platform powered by Gemini 2.5 Flash reasoning and real Playwright browser sandboxes — not mock data. It plans a task, validates the plan against a security policy (domain whitelist, no arbitrary code injection), executes it through 8 canonical browser tools, and verifies the result with bounded retry recovery. Originally built as a multi-source job-discovery engine scraping LinkedIn, Y Combinator, and Indeed with 100% verified application URLs and 0% hallucinated listings (95%+ cut in manual search time), now generalized into a full autonomous web-agent platform with multi-tenancy, rate limiting, and Docker Compose one-command deployment.",
+    problem: "Most AI browser tools hallucinate URLs or break when interacting with dynamic single-page applications and complex DOM states.",
+    approach: "Paired Gemini 2.5 Flash reasoning with real Playwright headless browser sandboxes, bounded retry loops, BullMQ task queues, and strict security policy gating.",
+    outcome: "Delivered 100% verified URLs with 0% hallucination rate, cutting manual web search and workflow execution time by over 95%.",
     metrics: [
-      "4-tier role hierarchy (Super Admin → Admin → Manager → Employee)",
-      "Unified inventory, billing & workforce management",
-      "Real-time automated tax & invoicing engine",
-      "Interactive Chart.js executive telemetry"
+      "100% verified URLs (0% hallucinated listings)",
+      "95%+ reduction in manual research time",
+      "8 canonical browser execution tools",
+      "Gemini 2.5 Flash + Playwright headless sandbox"
     ],
-    tech: ["Python", "FastAPI", "JavaScript", "MongoDB", "Chart.js", "Tailwind CSS"],
-    gh: "https://github.com/fncreator22/NexWare-ERP",
-    live: "https://nex-ware-erp.vercel.app",
-    image: "/images/top_right.jpg",
-    gallery: ["/images/top_right.jpg", "/images/center.jpg"],
+    tech: ["TypeScript", "Next.js 16", "Playwright", "Prisma", "PostgreSQL", "Redis", "BullMQ", "Gemini API", "Docker"],
+    gh: "https://github.com/fncreator22/browserpilot",
+    live: "https://browserpilot-iota.vercel.app",
+    image: "/images/projects/careerflow-pipeline.png",
+    gallery: ["/images/projects/careerflow-pipeline.png", "/images/top_left.jpg"],
     featured: true
   },
   {
@@ -99,25 +98,25 @@ export const PROJECTS: Project[] = [
   },
   {
     idx: 4,
-    slug: "browserpilot-autonomous-web-agent",
-    cat: "AI, LLM & Agentic Systems",
-    title: "BrowserPilot — Autonomous Web Agent",
-    tagline: "An enterprise-grade autonomous web agent that actually clicks, fills, and verifies.",
-    desc: "BrowserPilot is an autonomous browser-automation platform powered by Gemini 2.5 Flash reasoning and real Playwright browser sandboxes — not mock data. It plans a task, validates the plan against a security policy (domain whitelist, no arbitrary code injection), executes it through 8 canonical browser tools, and verifies the result with bounded retry recovery. Originally built as a multi-source job-discovery engine scraping LinkedIn, Y Combinator, and Indeed with 100% verified application URLs and 0% hallucinated listings (95%+ cut in manual search time), now generalized into a full autonomous web-agent platform with multi-tenancy, rate limiting, and Docker Compose one-command deployment.",
-    problem: "Most AI browser tools hallucinate URLs or break when interacting with dynamic single-page applications and complex DOM states.",
-    approach: "Paired Gemini 2.5 Flash reasoning with real Playwright headless browser sandboxes, bounded retry loops, BullMQ task queues, and strict security policy gating.",
-    outcome: "Delivered 100% verified URLs with 0% hallucination rate, cutting manual web search and workflow execution time by over 95%.",
+    slug: "nexware-erp",
+    cat: "Full-Stack & SaaS Platforms",
+    title: "NexWare ERP",
+    tagline: "A multi-tenant SaaS ERP unifying workspace, inventory, and billing.",
+    desc: "NexWare ERP centralizes business operations — inventory, warehouse management, billing/invoicing, workforce management, and analytics — into one platform. Built with a four-tier role hierarchy (Super Admin → Admin → Manager → Employee) and a permission-driven access engine, plus an integrated tax-calculation and invoicing system designed to replace multiple disconnected business tools with one unified system.",
+    problem: "Growing businesses struggle with fragmented tooling across separate inventory, workforce, and invoicing apps, leading to data synchronization failures and manual bookkeeping delays.",
+    approach: "Designed a centralized multi-tenant architecture with a granular 4-tier RBAC authorization model, real-time MongoDB aggregations, and an automated tax computation engine with Chart.js analytics.",
+    outcome: "Unified 5 separate operational departments into one system, eliminating manual invoicing delays and giving managers instant real-time financial telemetry.",
     metrics: [
-      "100% verified URLs (0% hallucinated listings)",
-      "95%+ reduction in manual research time",
-      "8 canonical browser execution tools",
-      "Gemini 2.5 Flash + Playwright headless sandbox"
+      "4-tier role hierarchy (Super Admin → Admin → Manager → Employee)",
+      "Unified inventory, billing & workforce management",
+      "Real-time automated tax & invoicing engine",
+      "Interactive Chart.js executive telemetry"
     ],
-    tech: ["TypeScript", "Next.js 16", "Playwright", "Prisma", "PostgreSQL", "Redis", "BullMQ", "Gemini API", "Docker"],
-    gh: "https://github.com/fncreator22/browserpilot",
-    live: "https://browserpilot-iota.vercel.app",
-    image: "/images/top_left.jpg",
-    gallery: ["/images/top_left.jpg", "/images/center.jpg"],
+    tech: ["Python", "FastAPI", "JavaScript", "MongoDB", "Chart.js", "Tailwind CSS"],
+    gh: "https://github.com/fncreator22/NexWare-ERP",
+    live: "https://nex-ware-erp.vercel.app",
+    image: "/images/top_right.jpg",
+    gallery: ["/images/top_right.jpg", "/images/center.jpg"],
     featured: true
   },
   {
@@ -139,8 +138,8 @@ export const PROJECTS: Project[] = [
     tech: ["Python", "FastAPI", "Ollama", "ReactFlow", "TypeScript", "WebSocket"],
     gh: "https://github.com/fncreator22/lato-validation",
     live: null,
-    image: "/images/center.jpg",
-    gallery: ["/images/center.jpg", "/images/left.jpg"],
+    image: "/images/projects/lato-agent-pipeline.png",
+    gallery: ["/images/projects/lato-agent-pipeline.png", "/images/left.jpg"],
     featured: false
   },
   {
@@ -162,8 +161,8 @@ export const PROJECTS: Project[] = [
     tech: ["Next.js", "React", "Node.js", "Express.js", "MongoDB", "Razorpay API", "Tailwind CSS"],
     gh: "https://github.com/fncreator22",
     live: null,
-    image: "/images/right.jpg",
-    gallery: ["/images/right.jpg", "/images/top_right.jpg"],
+    image: "/images/projects/eldersphere-dashboard.png",
+    gallery: ["/images/projects/eldersphere-dashboard.png", "/images/top_right.jpg"],
     featured: false
   },
   {
@@ -185,8 +184,8 @@ export const PROJECTS: Project[] = [
     tech: ["Vapi Voice AI", "n8n", "Google Calendar API", "Google Sheets API", "Twilio WhatsApp API"],
     gh: "https://github.com/fncreator22",
     live: null,
-    image: "/images/down.jpg",
-    gallery: ["/images/down.jpg", "/images/center.jpg"],
+    image: "/images/projects/agentic-sales-call.png",
+    gallery: ["/images/projects/agentic-sales-call.png", "/images/center.jpg"],
     featured: false
   },
   {
@@ -208,8 +207,8 @@ export const PROJECTS: Project[] = [
     tech: ["TypeScript", "Python", "RAG & Embeddings", "LLM Orchestration", "Broker APIs", "FastAPI"],
     gh: "https://github.com/fncreator22/Multi-Agent-Portfolio-Orchestration",
     live: null,
-    image: "/images/eye_left.jpg",
-    gallery: ["/images/eye_left.jpg", "/images/top_left.jpg"],
+    image: "/images/projects/fintech-portfolio-rag.png",
+    gallery: ["/images/projects/fintech-portfolio-rag.png", "/images/top_left.jpg"],
     featured: false
   },
   {
@@ -231,8 +230,8 @@ export const PROJECTS: Project[] = [
     tech: ["OpenCV", "YOLOv8", "YOLOv11", "Python", "Signal Feature Extraction", "PyTorch"],
     gh: "https://github.com/fncreator22",
     live: null,
-    image: "/images/eye_right.jpg",
-    gallery: ["/images/eye_right.jpg", "/images/center.jpg"],
+    image: "/images/projects/yolo-vision-suite.png",
+    gallery: ["/images/projects/yolo-vision-suite.png", "/images/center.jpg"],
     featured: false
   },
   {
@@ -254,8 +253,8 @@ export const PROJECTS: Project[] = [
     tech: ["Python", "GPT-4 API", "FastAPI", "Redis", "Prompt Engineering"],
     gh: "https://github.com/fncreator22",
     live: null,
-    image: "/images/up.jpg",
-    gallery: ["/images/up.jpg", "/images/right.jpg"],
+    image: "/images/projects/split-money-chat.png",
+    gallery: ["/images/projects/split-money-chat.png", "/images/right.jpg"],
     featured: false
   },
   {
@@ -277,8 +276,8 @@ export const PROJECTS: Project[] = [
     tech: ["Python", "Whisper AI", "NLP", "FastAPI", "React", "TypeScript"],
     gh: "https://github.com/fncreator22/voice-notes-ai",
     live: null,
-    image: "/images/center.jpg",
-    gallery: ["/images/center.jpg", "/images/top_right.jpg"],
+    image: "/images/projects/voice-notes-whisper.png",
+    gallery: ["/images/projects/voice-notes-whisper.png", "/images/top_right.jpg"],
     featured: false
   },
   {
@@ -300,8 +299,8 @@ export const PROJECTS: Project[] = [
     tech: ["Python", "TypeScript", "PostgreSQL", "PLpgSQL", "Microservices", "Docker", "Redis"],
     gh: "https://github.com/fncreator22/browserpilot",
     live: null,
-    image: "/images/top_right.jpg",
-    gallery: ["/images/top_right.jpg", "/images/top_left.jpg"],
+    image: "/images/projects/careerflow-pipeline.png",
+    gallery: ["/images/projects/careerflow-pipeline.png", "/images/top_left.jpg"],
     featured: false
   }
 ];
