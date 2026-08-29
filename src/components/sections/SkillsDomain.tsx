@@ -183,9 +183,9 @@ export function SkillsDomain() {
         </div>
 
         {/* 2-Column Matrix: Left Domain Selectors, Right 3D Visualizer & Skills Badges */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-14 items-start">
           {/* Left: Interactive Domain Accordion Cards */}
-          <div className="space-y-4" role="tablist" aria-label="Technical Skill Domains">
+          <div className="space-y-3.5 sm:space-y-4" role="tablist" aria-label="Technical Skill Domains">
             {SKILL_DOMAINS.map((domain, idx) => {
               const isActive = activeDomain === idx;
               return (
@@ -209,7 +209,7 @@ export function SkillsDomain() {
                       <span className="font-mono text-xs text-accent font-semibold">
                         {domain.idx}
                       </span>
-                      <h3 className="font-display font-medium text-lg sm:text-xl text-paper">
+                      <h3 className="font-display font-medium text-base sm:text-xl text-paper">
                         {domain.name}
                       </h3>
                     </div>
@@ -232,7 +232,7 @@ export function SkillsDomain() {
           </div>
 
           {/* Right: 3D Interactive Synaptic Visualizer & Active Domain Inspector */}
-          <div className="relative rounded-3xl overflow-hidden border border-line bg-gradient-to-b from-bg-raise to-bg p-6 sm:p-8 flex flex-col justify-between h-[480px] sm:h-[560px] shadow-[0_24px_60px_rgba(0,0,0,0.7)] sticky top-28">
+          <div className="relative rounded-3xl overflow-hidden border border-line bg-gradient-to-b from-bg-raise to-bg p-5 sm:p-8 flex flex-col justify-between h-[360px] sm:h-[460px] lg:h-[540px] shadow-[0_24px_60px_rgba(0,0,0,0.7)] lg:sticky lg:top-28">
             <div className="flex items-center justify-between z-10">
               <span className="font-mono text-[0.68rem] tracking-widest uppercase text-accent font-semibold">
                 Domain 0{activeDomain + 1} — Neural Graph
@@ -250,7 +250,7 @@ export function SkillsDomain() {
             />
 
             {/* Bottom Active Stack Card */}
-            <div className="z-10 bg-bg/95 backdrop-blur-xl border border-line/80 p-5 rounded-2xl shadow-xl">
+            <div className="z-10 bg-bg/95 backdrop-blur-xl border border-line/80 p-4 sm:p-5 rounded-2xl shadow-xl">
               <div className="font-mono text-xs text-accent font-semibold uppercase tracking-wider mb-2">
                 {SKILL_DOMAINS[activeDomain].name}
               </div>
