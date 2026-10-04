@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
@@ -32,7 +32,7 @@ export function Identity() {
     <section ref={sectionRef} id="identity" className="py-[clamp(5rem,9vw,9rem)] border-t border-line relative z-10" aria-labelledby="identity-heading">
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
         <div className="identity-reveal max-w-[760px] mb-10 md:mb-14">
-          <div className="eyebrow">01 — Identity &amp; Philosophy</div>
+          <div className="eyebrow">01 / Identity &amp; Philosophy</div>
           <h2 id="identity-heading" className="font-display font-medium text-[clamp(1.9rem,4.5vw,3.2rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.08] text-paper">
             Taking projects from <em>vague asks</em> to <em>live production</em>.
           </h2>

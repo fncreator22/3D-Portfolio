@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 
@@ -60,6 +60,37 @@ export function TechLogo({ name, className = "w-4 h-4", showName = true }: TechL
         <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
           <circle cx="12" cy="12" r="11" fill="#059669"/>
           <path d="M13 3L6 14h5l-1 7 7-11h-5l1-7z" fill="#FFFFFF"/>
+        </svg>
+      );
+    }
+    if (norm.includes("kotlin")) {
+      return (
+        <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+          <path d="M22 2H2v20l10-10L22 2zM12 12L2 22h20L12 12z" fill="#7F52FF"/>
+        </svg>
+      );
+    }
+    if (norm === "go" || norm.includes("golang")) {
+      return (
+        <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+          <circle cx="12" cy="12" r="11" fill="#00ADD8"/>
+          <path d="M7 12a3 3 0 106 0 3 3 0 00-6 0zm7 0h3" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round"/>
+        </svg>
+      );
+    }
+    if (norm.includes("sqlite") || norm.includes("sqlcipher")) {
+      return (
+        <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+          <ellipse cx="12" cy="6" rx="9" ry="3" fill="#003B57"/>
+          <path d="M3 6v12c0 1.66 4.03 3 9 3s9-1.34 9-3V6" stroke="#003B57" strokeWidth="1.5"/>
+        </svg>
+      );
+    }
+    if (norm.includes("ffmpeg")) {
+      return (
+        <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+          <rect width="24" height="24" rx="4" fill="#007808"/>
+          <path d="M6 8h12M6 12h8M6 16h5" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
         </svg>
       );
     }

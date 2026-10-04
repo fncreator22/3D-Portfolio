@@ -42,3 +42,4 @@ __pycache__/
 .venv/
 venv/
 test.txt
+.vercel

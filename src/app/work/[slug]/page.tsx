@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PROJECTS } from "@/data/projects";
@@ -22,7 +22,7 @@ export async function generateMetadata({
   if (!project) return { title: "Project Not Found" };
 
   return {
-    title: `${project.title} — Sagar Mahajan`,
+    title: `${project.title} | Sagar Mahajan`,
     description: project.desc,
   };
 }
@@ -62,7 +62,7 @@ export default async function ProjectPage({
             {/* Left: Metadata & Intro */}
             <div>
               <div className="font-mono text-xs text-accent tracking-widest uppercase mb-2 font-semibold">
-                {String(project.idx).padStart(2, "0")} / {String(total).padStart(2, "0")} — {project.cat}
+                {String(project.idx).padStart(2, "0")} / {String(total).padStart(2, "0")} · {project.cat}
               </div>
 
               <h1 id="case-study-title" className="font-display font-medium text-[clamp(2rem,5vw,3.6rem)] leading-[1.04] mt-2 text-paper">

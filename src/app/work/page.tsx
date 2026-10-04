@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -69,7 +69,7 @@ export default function AllProjectsPage() {
 
             {/* Horizontally Scrollable Category Filter Rail on Mobile */}
             <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 max-w-full">
-              {CATEGORIES.slice(0, 6).map((cat) => (
+              {CATEGORIES.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setSelectedCat(cat)}
