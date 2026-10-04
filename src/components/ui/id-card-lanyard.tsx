@@ -86,8 +86,8 @@ const CSS = `
 
 .idcl-card {
   position: absolute;
-  width: clamp(210px, 65vw, 246px);
-  aspect-ratio: 246 / 460;
+  width: clamp(232px, 68vw, 258px);
+  aspect-ratio: 246 / 485;
   perspective: 1400px;
   cursor: grab;
   touch-action: none;
@@ -96,6 +96,12 @@ const CSS = `
   pointer-events: auto;
 }
 .idcl-card:active { cursor: grabbing; }
+.idcl-card a {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  position: relative;
+  z-index: 25;
+}
 
 .idcl-flipper {
   position: relative;
@@ -108,7 +114,7 @@ const CSS = `
   position: absolute;
   inset: 0;
   border-radius: 20px;
-  padding: 16px 16px 14px;
+  padding: 14px 14px 12px;
   display: flex;
   flex-direction: column;
   backface-visibility: hidden;
@@ -174,7 +180,7 @@ const CSS = `
   height: 8px;
   background: #090807;
   border-radius: 4px;
-  margin: 0 auto 10px;
+  margin: 0 auto 8px;
   flex-shrink: 0;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -183,7 +189,7 @@ const CSS = `
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .idcl-brand {
   display: flex;
@@ -203,7 +209,7 @@ const CSS = `
 .idcl-brand-text b {
   font-family: var(--idcl-font-display);
   font-weight: 700;
-  font-size: 11px;
+  font-size: 10.5px;
   letter-spacing: .02em;
   color: var(--idcl-card-ink);
   line-height: 1.2;
@@ -223,7 +229,7 @@ const CSS = `
 }
 .idcl-pillars span {
   font-family: var(--idcl-font-mono);
-  font-size: 6.8px;
+  font-size: 6.5px;
   letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--idcl-card-soft);
@@ -238,11 +244,11 @@ const CSS = `
 .idcl-photo {
   position: relative;
   width: 100%;
-  height: 118px;
+  height: 108px;
   border-radius: 12px;
   background: #11100e;
   overflow: hidden;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   flex-shrink: 0;
   border: 1px solid var(--idcl-card-line);
 }
@@ -256,8 +262,8 @@ const CSS = `
   position: absolute;
   right: 6px;
   bottom: 6px;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: linear-gradient(160deg, #34d399, #059669);
   display: flex;
@@ -265,19 +271,19 @@ const CSS = `
   justify-content: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 0 2px var(--idcl-card);
 }
-.idcl-verified svg { width: 11px; height: 11px; stroke: #fff; }
+.idcl-verified svg { width: 10px; height: 10px; stroke: #fff; }
 
 .idcl-name {
   margin: 0 0 2px;
   font-family: var(--idcl-font-display);
   font-weight: 700;
-  font-size: 17px;
+  font-size: 16px;
   color: var(--idcl-card-ink);
   letter-spacing: -.01em;
 }
 .idcl-role {
-  margin: 0 0 8px;
-  font-size: 9px;
+  margin: 0 0 6px;
+  font-size: 8.5px;
   color: var(--idcl-accent);
   font-weight: 600;
   letter-spacing: .08em;
@@ -285,25 +291,67 @@ const CSS = `
   font-family: var(--idcl-font-mono);
 }
 
+/* Front Social Channels Row */
+.idcl-front-socials {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 2px 0 8px;
+  width: 100%;
+}
+.idcl-front-social-pill {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 3px;
+  border-radius: 6px;
+  background: #161513;
+  border: 1px solid var(--idcl-card-line);
+  color: var(--idcl-card-ink);
+  font-family: var(--idcl-font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.idcl-front-social-pill:hover {
+  background: #23201b;
+  border-color: var(--idcl-accent);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(193, 99, 59, 0.3);
+}
+.idcl-front-social-pill svg {
+  width: 10.5px;
+  height: 10.5px;
+  flex-shrink: 0;
+  color: var(--idcl-accent);
+}
+.idcl-front-social-pill:hover svg {
+  color: #fff;
+}
+
 .idcl-divider {
   width: 100%;
   height: 1px;
   background: var(--idcl-card-line);
-  margin-bottom: 8px;
+  margin-bottom: 7px;
 }
 
 .idcl-idrow {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 .idcl-idrow-labels {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   font-family: var(--idcl-font-mono);
 }
 .idcl-idrow-labels div {
@@ -312,27 +360,87 @@ const CSS = `
   align-items: baseline;
 }
 .idcl-idrow-labels span {
-  width: 52px;
+  width: 48px;
   flex-shrink: 0;
-  font-size: 7.2px;
+  font-size: 7px;
   letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--idcl-card-soft);
 }
 .idcl-idrow-labels b {
-  font-size: 8.8px;
+  font-size: 8.5px;
   font-weight: 600;
   color: var(--idcl-card-ink);
+}
+
+.idcl-qr-link {
+  display: block;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+.idcl-qr-link:hover {
+  transform: scale(1.06);
+}
+
+/* Clickable Barcode Component */
+.idcl-barcode-interactive {
+  display: block;
+  width: 100%;
+  margin: 4px 0 6px;
+  text-decoration: none;
+  border-radius: 6px;
+  padding: 4px 5px;
+  background: rgba(246, 244, 238, 0.05);
+  border: 1px dashed var(--idcl-card-line);
+  transition: all 0.2s ease;
+}
+.idcl-barcode-interactive:hover {
+  border-color: var(--idcl-accent);
+  background: rgba(193, 99, 59, 0.12);
+  box-shadow: 0 0 12px rgba(193, 99, 59, 0.25);
+}
+.idcl-barcode {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 24px;
+  width: 100%;
+  background: #f6f4ee;
+  border-radius: 3px;
+  padding: 0 3px;
+  overflow: hidden;
+}
+.idcl-barcode span {
+  width: 2px;
+  background: #11100e;
+}
+.idcl-barcode-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 3px;
+  font-family: var(--idcl-font-mono);
+  font-size: 6.8px;
+  color: var(--idcl-card-soft);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.idcl-barcode-meta strong {
+  color: var(--idcl-accent);
+  font-weight: 600;
+}
+.idcl-barcode-interactive:hover .idcl-barcode-meta strong {
+  text-decoration: underline;
 }
 
 .idcl-footer {
   width: 100%;
   margin-top: auto;
-  padding-top: 8px;
+  padding-top: 6px;
   border-top: 1px solid var(--idcl-card-line);
   text-align: center;
   font-family: var(--idcl-font-mono);
-  font-size: 7.2px;
+  font-size: 7px;
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--idcl-card-soft);
@@ -345,32 +453,16 @@ const CSS = `
 
 .idcl-stripe {
   width: 100%;
-  height: 28px;
+  height: 24px;
   background: repeating-linear-gradient(45deg, #11100e, #11100e 6px, #1f1e1a 6px, #1f1e1a 12px);
   border-radius: 4px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   border: 1px solid var(--idcl-card-line);
 }
-.idcl-barcode {
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 30px;
-  width: 100%;
-  background: #f6f4ee;
-  border-radius: 4px;
-  padding: 0 4px;
-  margin-bottom: 6px;
-  overflow: hidden;
-}
-.idcl-barcode span {
-  width: 2px;
-  background: #11100e;
-}
 .idcl-idnum {
-  margin: 0 0 6px;
+  margin: 0 0 5px;
   font-family: var(--idcl-font-mono);
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 600;
   color: var(--idcl-card-ink);
   letter-spacing: .04em;
@@ -384,16 +476,16 @@ const CSS = `
 
 .idcl-backrow {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: flex-start;
-  margin-bottom: 8px;
+  margin: 6px 0 8px;
 }
 .idcl-qr {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   gap: 1px;
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   background: #f6f4ee;
   padding: 3px;
   border-radius: 4px;
@@ -401,20 +493,20 @@ const CSS = `
 }
 .idcl-qr i { background: transparent; }
 .idcl-qr i.on { background: #11100e; }
-.idcl-qr.idcl-small { width: 44px; height: 44px; padding: 2.5px; }
+.idcl-qr.idcl-small { width: 40px; height: 40px; padding: 2.5px; }
 
 .idcl-scan {
   font-family: var(--idcl-font-mono);
-  font-size: 7.8px;
+  font-size: 7.5px;
   color: var(--idcl-card-soft);
-  line-height: 1.45;
+  line-height: 1.4;
   padding-top: 1px;
   text-align: left;
 }
 .idcl-scan b {
   color: var(--idcl-card-ink);
   display: block;
-  font-size: 8.5px;
+  font-size: 8px;
   margin-bottom: 2px;
 }
 
@@ -422,7 +514,9 @@ const CSS = `
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 10px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--idcl-card-line);
 }
 .idcl-connect span {
   font-family: var(--idcl-font-mono);
@@ -431,10 +525,10 @@ const CSS = `
   text-transform: uppercase;
   color: var(--idcl-card-soft);
 }
-.idcl-connect-icons { display: flex; gap: 8px; }
+.idcl-connect-icons { display: flex; gap: 7px; }
 .idcl-connect-icons a {
-  width: 26px;
-  height: 26px;
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -446,16 +540,16 @@ const CSS = `
 }
 .idcl-connect-icons a:hover {
   border-color: var(--idcl-accent);
-  color: var(--idcl-card-ink);
+  color: #fff;
   transform: translateY(-2px);
   box-shadow: 0 0 10px rgba(193, 99, 59, 0.4);
 }
-.idcl-connect-icons svg { width: 13px; height: 13px; }
+.idcl-connect-icons svg { width: 12px; height: 12px; }
 
-.idcl-sig { margin-top: 12px; }
+.idcl-sig { margin-top: 8px; }
 .idcl-sig .idcl-script {
   font-family: var(--idcl-font-script);
-  font-size: 22px;
+  font-size: 20px;
   font-style: italic;
   color: var(--idcl-accent);
   line-height: 1;
@@ -463,7 +557,7 @@ const CSS = `
 .idcl-sig small {
   display: block;
   font-family: var(--idcl-font-mono);
-  font-size: 7.5px;
+  font-size: 7px;
   letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--idcl-card-soft);
@@ -523,6 +617,7 @@ export function IDCardLanyard({
   const cardRef = useRef<HTMLDivElement>(null);
   const flipperRef = useRef<HTMLDivElement>(null);
   const barcodeRef = useRef<HTMLDivElement>(null);
+  const barcodeFrontRef = useRef<HTMLDivElement>(null);
   const qrBackRef = useRef<HTMLDivElement>(null);
   const qrFrontRef = useRef<HTMLDivElement>(null);
   const [interacted, setInteracted] = useState(false);
@@ -534,19 +629,24 @@ export function IDCardLanyard({
     const card = cardRef.current;
     const flipper = flipperRef.current;
     const barcodeEl = barcodeRef.current;
+    const barcodeFrontEl = barcodeFrontRef.current;
     const qrBackEl = qrBackRef.current;
     const qrFrontEl = qrFrontRef.current;
     if (!container || !canvas || !rail || !card || !flipper || !barcodeEl || !qrBackEl || !qrFrontEl) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Generate barcode bars
-    barcodeEl.innerHTML = "";
-    for (let i = 0; i < 32; i++) {
-      const bar = document.createElement("span");
-      bar.style.height = ((i * 37) % 100 > 38 ? 100 : 55) + "%";
-      barcodeEl.appendChild(bar);
-    }
+    // Generate barcode bars helper
+    const buildBarcode = (target: HTMLDivElement) => {
+      target.innerHTML = "";
+      for (let i = 0; i < 30; i++) {
+        const bar = document.createElement("span");
+        bar.style.height = ((i * 37) % 100 > 38 ? 100 : 55) + "%";
+        target.appendChild(bar);
+      }
+    };
+    buildBarcode(barcodeEl);
+    if (barcodeFrontEl) buildBarcode(barcodeFrontEl);
 
     // Build QR pattern
     function buildQR(el: HTMLDivElement, seed: number) {
@@ -899,6 +999,59 @@ export function IDCardLanyard({
 
               <h3 className="idcl-name">{name}</h3>
               <p className="idcl-role">{role}</p>
+
+              {/* Prominent Front Social Links */}
+              <div className="idcl-front-socials">
+                {githubUrl && (
+                  <a
+                    href={githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="idcl-front-social-pill"
+                    title="GitHub: github.com/fncreator22"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                    </svg>
+                    <span>GitHub</span>
+                  </a>
+                )}
+                {linkedinUrl && (
+                  <a
+                    href={linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="idcl-front-social-pill"
+                    title="LinkedIn: Sagar Mahajan"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.28 1.64 1.64 0 0 0 0 3.28m1.4 9.74v-8.37H5.06v8.37h2.8z"/>
+                    </svg>
+                    <span>LinkedIn</span>
+                  </a>
+                )}
+                {xUrl && (
+                  <a
+                    href={xUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="idcl-front-social-pill"
+                    title="X: @sr2mahajan"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                    <span>X</span>
+                  </a>
+                )}
+              </div>
+
               <div className="idcl-divider" />
 
               <div className="idcl-idrow">
@@ -916,8 +1069,35 @@ export function IDCardLanyard({
                     <b>{validThru}</b>
                   </div>
                 </div>
-                <div className="idcl-qr idcl-small" ref={qrFrontRef} />
+                <a
+                  href={`https://${site}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="idcl-qr-link"
+                  title={`Open ${site}`}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="idcl-qr idcl-small" ref={qrFrontRef} />
+                </a>
               </div>
+
+              {/* Clickable Barcode Link to Portfolio */}
+              <a
+                href={`https://${site}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="idcl-barcode-interactive group"
+                title={`Click to open https://${site}`}
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="idcl-barcode" ref={barcodeFrontRef} />
+                <div className="idcl-barcode-meta">
+                  <span>PORTFOLIO VERIFICATION</span>
+                  <strong>{site} ↗</strong>
+                </div>
+              </a>
 
               <div className="idcl-footer">
                 Verify<i>·</i>Scale<i>·</i>Deploy
@@ -934,17 +1114,43 @@ export function IDCardLanyard({
                 <span>NO. {idNumber}</span>
                 <em>{validThru}</em>
               </div>
-              <div className="idcl-barcode" ref={barcodeRef} />
+
+              {/* Back Clickable Barcode Link */}
+              <a
+                href={`https://${site}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="idcl-barcode-interactive group"
+                title={`Click to open https://${site}`}
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="idcl-barcode" ref={barcodeRef} />
+                <div className="idcl-barcode-meta">
+                  <span>SYSTEM AUTH KEY</span>
+                  <strong>{site} ↗</strong>
+                </div>
+              </a>
 
               <div className="idcl-backrow">
-                <div className="idcl-qr" ref={qrBackRef} />
+                <a
+                  href={`https://${site}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="idcl-qr-link"
+                  title={`Open ${site}`}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="idcl-qr" ref={qrBackRef} />
+                </a>
                 <div className="idcl-scan">
-                  <b>Scan for Portfolio</b>
+                  <b>Scan or Click for Portfolio</b>
                   {site}
                   <br />
                   16 Production Systems,
                   <br />
-                  MCP specs &amp; code.
+                  MCP specs &amp; source code.
                 </div>
               </div>
 
@@ -953,21 +1159,45 @@ export function IDCardLanyard({
                 <span>Direct Access</span>
                 <div className="idcl-connect-icons">
                   {githubUrl && (
-                    <a href={githubUrl} target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" title="GitHub">
+                    <a
+                      href={githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="GitHub Profile"
+                      title="GitHub Profile"
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <svg viewBox="0 0 24 24" fill="currentColor">
                         <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
                       </svg>
                     </a>
                   )}
                   {linkedinUrl && (
-                    <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile" title="LinkedIn">
+                    <a
+                      href={linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="LinkedIn Profile"
+                      title="LinkedIn Profile"
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.28 1.64 1.64 0 0 0 0 3.28m1.4 9.74v-8.37H5.06v8.37h2.8z"/>
                       </svg>
                     </a>
                   )}
                   {xUrl && (
-                    <a href={xUrl} target="_blank" rel="noopener noreferrer" aria-label="X Profile" title="X (Twitter)">
+                    <a
+                      href={xUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="X Profile"
+                      title="X (Twitter) Profile"
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                       </svg>

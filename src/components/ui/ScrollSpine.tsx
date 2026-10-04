@@ -11,7 +11,7 @@ const SECTIONS = [
   { id: "skills", label: "Skills" },
   { id: "projects", label: "Work" },
   { id: "thinking", label: "Think" },
-  { id: "invariants", label: "Invariants" },
+  { id: "invariants", label: "Profile" },
   { id: "connect", label: "Connect" },
 ];
 

@@ -30,61 +30,84 @@ export function Contact() {
     <section id="invariants" className="py-[clamp(5rem,9vw,9rem)] border-t border-line relative z-10 overflow-visible" aria-labelledby="invariants-heading">
       <span id="contact" className="sr-only" aria-hidden="true" />
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
-        <div className="eyebrow">06 / Engineering Invariants</div>
+        <div className="eyebrow">06 / Engineering &amp; Profile</div>
 
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-12 items-center">
-          {/* Left Column: Editorial Manifesto & Credentials */}
+          {/* Left Column: Clear Human-Centric Overview */}
           <div>
-            <h2 id="invariants-heading" className="font-display font-medium text-[clamp(2rem,5vw,3.8rem)] tracking-[-0.02em] leading-[1.06] text-paper">
-              Systems engineered with <br />
-              <span className="font-serif italic text-accent font-normal">empirical verification.</span>
+            <h2 id="invariants-heading" className="font-display font-medium text-[clamp(2rem,4.5vw,3.5rem)] tracking-[-0.02em] leading-[1.1] text-paper">
+              Building intelligent systems <br />
+              <span className="font-serif italic text-accent font-normal">ready for production.</span>
             </h2>
 
-            <p className="mt-5 sm:mt-6 text-stone-300 font-light max-w-[540px] text-[clamp(0.95rem,1.4vw,1.12rem)] leading-relaxed">
-              I build autonomous software on three non-negotiable invariants: no blind LLM execution, deterministic sub-200ms latency ceilings, and zero uninspected telemetry.
+            <p className="mt-4 sm:mt-5 text-stone-300 font-light max-w-[520px] text-[clamp(0.95rem,1.3vw,1.1rem)] leading-relaxed">
+              I engineer autonomous AI agents, conversational voice systems, and reliable full-stack applications. Focused on clean architecture, sub-second responsiveness, and software that delivers real-world value.
             </p>
 
-            {/* Core Verification Tenets */}
-            <div className="mt-6 space-y-3 max-w-[540px]">
-              <div className="p-4 rounded-xl bg-bg-raise/80 border border-line/80 flex items-start gap-3">
-                <span className="text-accent font-mono text-xs font-semibold mt-0.5 select-none">01</span>
-                <div>
-                  <h3 className="font-display font-medium text-sm text-paper">Zero Blind Tool Calls</h3>
-                  <p className="text-stone-300 font-light text-xs mt-0.5 leading-relaxed">
-                    Every tool invocation is inspected by protocol-layer rules, statistical classification, and policy guardrails before execution.
-                  </p>
-                </div>
+            {/* Core Capabilities */}
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[520px]">
+              <div className="p-4 rounded-xl bg-bg-raise/80 border border-line/80">
+                <div className="font-mono text-xs text-accent font-semibold tracking-wider uppercase">01 / Agentic AI &amp; Voice</div>
+                <p className="text-stone-300 font-light text-xs mt-1.5 leading-relaxed">
+                  Autonomous reasoning workflows, MCP tool integrations, and real-time voice agents.
+                </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-bg-raise/80 border border-line/80 flex items-start gap-3">
-                <span className="text-accent font-mono text-xs font-semibold mt-0.5 select-none">02</span>
-                <div>
-                  <h3 className="font-display font-medium text-sm text-paper">Streaming Sub-200ms Turn Taking</h3>
-                  <p className="text-stone-300 font-light text-xs mt-0.5 leading-relaxed">
-                    Audio pipelines use client AudioWorklet buffers with WebSocket bridges directly to Gemini 3.8 Live, supporting instantaneous barge-in.
-                  </p>
-                </div>
+              <div className="p-4 rounded-xl bg-bg-raise/80 border border-line/80">
+                <div className="font-mono text-xs text-accent font-semibold tracking-wider uppercase">02 / Full-Stack Systems</div>
+                <p className="text-stone-300 font-light text-xs mt-1.5 leading-relaxed">
+                  Production-grade web apps built with Next.js, TypeScript, Python/FastAPI, and fast APIs.
+                </p>
               </div>
             </div>
 
-            {/* Education Credentials Badge */}
-            <div className="mt-6 p-4 sm:p-5 rounded-2xl bg-bg-raise border border-line/80 max-w-[540px] shadow-md">
-              <div className="font-mono text-[0.68rem] text-accent uppercase tracking-widest font-semibold">
-                Academic Background
+            {/* Academic Background & Location Row */}
+            <div className="mt-6 p-4 rounded-xl bg-bg-raise/80 border border-line/80 max-w-[520px] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <div className="font-mono text-[0.68rem] text-accent uppercase tracking-wider font-semibold">
+                  Academic Background
+                </div>
+                <div className="font-display font-medium text-sm text-paper mt-0.5">
+                  {PROFILE.education.degree}
+                </div>
+                <div className="font-mono text-xs text-stone-300 mt-0.5">
+                  {PROFILE.education.school}
+                </div>
               </div>
-              <div className="font-display font-medium text-base text-paper mt-1">
-                {PROFILE.education.degree}
-              </div>
-              <div className="font-mono text-xs text-stone-300 mt-0.5 font-medium">
-                {PROFILE.education.school} · {PROFILE.education.period}
+              <div className="flex items-center gap-2 font-mono text-xs text-paper bg-bg px-3 py-1.5 rounded-full border border-line/70 w-fit flex-shrink-0">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
+                <span>IST: <strong className="text-accent font-semibold">{istTime || "Loading..."}</strong></span>
               </div>
             </div>
 
-            {/* Live IST Telemetry */}
-            <div className="mt-5 flex items-center gap-2.5 sm:gap-3 font-mono text-[0.72rem] sm:text-xs text-paper bg-bg-raise border border-line/80 px-4 py-2.5 rounded-full w-fit backdrop-blur-md shadow-md">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" aria-hidden="true" />
-              <span className="truncate">{PROFILE.location} · IST:</span>
-              <span className="text-accent font-semibold">{istTime || "Loading..."}</span>
+            {/* Quick Actions */}
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <a
+                href={PROFILE.resumeUrl}
+                download
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-paper font-mono text-xs uppercase tracking-wider font-medium hover:bg-accent/90 transition-colors shadow-md shadow-accent/20"
+              >
+                <span>Download Resume</span>
+                <span>↓</span>
+              </a>
+              <a
+                href={PROFILE.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-bg-raise border border-line/80 text-paper font-mono text-xs uppercase tracking-wider hover:border-accent hover:text-accent transition-colors"
+              >
+                <span>LinkedIn</span>
+                <span>↗</span>
+              </a>
+              <a
+                href={PROFILE.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-bg-raise border border-line/80 text-paper font-mono text-xs uppercase tracking-wider hover:border-accent hover:text-accent transition-colors"
+              >
+                <span>GitHub</span>
+                <span>↗</span>
+              </a>
             </div>
           </div>
 
