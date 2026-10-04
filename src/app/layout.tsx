@@ -27,8 +27,9 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sagar Mahajan — AI/ML Engineer",
-  description: "Agentic systems, LLM orchestration, and applied computer vision — with full-stack engineering.",
+  metadataBase: new URL("https://sagarmahajan.cloud"),
+  title: "Sagar Mahajan | AI Engineer",
+  description: "Agentic AI, autonomous voice agents, LLM guardrails, and full-stack engineering.",
 };
 
 export default function RootLayout({

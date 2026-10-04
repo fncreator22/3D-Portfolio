@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
@@ -173,7 +173,7 @@ export function SkillsDomain() {
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
         {/* Header */}
         <div className="max-w-[760px] mb-10 sm:mb-14">
-          <div className="eyebrow">03 — Technical Matrix</div>
+          <div className="eyebrow">03 / Technical Matrix</div>
           <h2 id="skills-heading" className="font-display font-medium text-[clamp(2rem,5vw,3.4rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.08] text-paper">
             Core Domains &amp; <span className="font-serif italic text-accent font-normal">Production Technologies</span>.
           </h2>
@@ -235,7 +235,7 @@ export function SkillsDomain() {
           <div className="relative rounded-3xl overflow-hidden border border-line bg-gradient-to-b from-bg-raise to-bg p-5 sm:p-8 flex flex-col justify-between h-[360px] sm:h-[460px] lg:h-[540px] shadow-[0_24px_60px_rgba(0,0,0,0.7)] lg:sticky lg:top-28">
             <div className="flex items-center justify-between z-10">
               <span className="font-mono text-[0.68rem] tracking-widest uppercase text-accent font-semibold">
-                Domain 0{activeDomain + 1} — Neural Graph
+                Domain 0{activeDomain + 1} / Neural Graph
               </span>
               <span className="font-mono text-[0.65rem] tracking-wider uppercase px-2.5 py-1 rounded bg-bg border border-line text-stone-300 font-medium">
                 3D Interactive

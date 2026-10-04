@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -6,12 +6,13 @@ import { useTypewriter } from "@/hooks/useTypewriter";
 import { Avatar3DModel } from "@/components/ui/Avatar3DModel";
 
 const TYPEWRITER_TEXT =
-  "Built Sentinel — an MCP safety agent running inside Claude Desktop, Cursor, and CodeX, catching unsafe actions with a self-trained classifier at 76% cross-validation accuracy. Shipped 4 more production platforms since, from LMS grading engines to autonomous web agents.";
+  "Built Sentinel, an MCP safety agent running inside Claude Desktop, Cursor, and CodeX, catching unsafe actions with a self-trained classifier at 76% cross-validation accuracy. Shipped production platforms across autonomous multilingual voice agents, offline Android operating systems, and agentic browsers.";
 
 const PROJECT_CHIPS = [
   { label: "Sentinel MCP Guardrail", href: "/work/sentinel-mcp-guardrail" },
+  { label: "VaniFlow Voice AI", href: "/work/vaniflow-multilingual-voice-ai" },
   { label: "BrowserPilot Agent", href: "/work/browserpilot-autonomous-web-agent" },
-  { label: "Examly Enterprise", href: "/work/examly-enterprise" },
+  { label: "Daybook Android OS", href: "/work/daybook-offline-productivity-os" },
 ];
 
 export function Hero() {
@@ -44,7 +45,7 @@ export function Hero() {
 
               {/* Sharper 3-Tag Eyebrow */}
               <div className="eyebrow mb-3.5 sm:mb-4 text-[0.68rem] sm:text-xs">
-                AI ENGINEER · MCP &amp; AGENTIC SYSTEMS · FULL-STACK ENGINEER
+                AI ENGINEER · AGENTIC &amp; VOICE AI · FULL-STACK SYSTEMS
               </div>
 
               {/* High-Impact Headline */}
@@ -91,7 +92,7 @@ export function Hero() {
                     href="/work"
                     className="inline-flex items-center justify-center bg-paper text-bg border border-black/10 rounded-full font-body font-medium hover:bg-accent hover:text-paper hover:border-accent transition-colors duration-200 text-[0.8rem] sm:text-[0.88rem] px-4 py-2"
                   >
-                    Explore 12 Systems
+                    Explore 16 Systems
                   </Link>
 
                   <a

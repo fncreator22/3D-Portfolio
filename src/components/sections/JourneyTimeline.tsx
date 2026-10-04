@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
@@ -45,7 +45,7 @@ export function JourneyTimeline() {
     <section ref={containerRef} id="journey" className="border-t border-line py-[clamp(5rem,10vw,8rem)] relative z-10">
       <div className="max-w-[1240px] mx-auto px-[clamp(1.25rem,5vw,4rem)]">
         <div className="max-w-[760px] mb-14">
-          <div className="eyebrow">02 — Trajectory</div>
+          <div className="eyebrow">02 / Trajectory</div>
           <h2 className="font-display font-medium text-[clamp(2rem,5vw,3.4rem)] tracking-[-0.01em] mt-4 leading-[1.08]">
             Four roles, one <em>throughline</em>: ship it, then prove it&apos;s safe.
           </h2>
@@ -98,14 +98,14 @@ export function JourneyTimeline() {
                     </div>
                   </div>
 
-                  <div className="font-mono text-xs tracking-wider uppercase text-stone mt-1.5 flex items-center gap-2">
+                  <div className="font-mono text-xs tracking-wider uppercase text-stone-300 mt-1.5 flex items-center gap-2">
                     <span>{role.meta}</span>
                     {isActive && (
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     )}
                   </div>
 
-                  <p className="mt-4 max-w-[720px] text-stone font-light text-[clamp(0.95rem,1.2vw,1.05rem)] leading-relaxed">
+                  <p className="mt-4 max-w-[720px] text-stone-300 font-light text-[clamp(0.95rem,1.2vw,1.05rem)] leading-relaxed">
                     {role.desc}
                   </p>
 

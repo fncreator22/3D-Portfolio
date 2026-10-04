@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
@@ -31,12 +31,12 @@ export function ThinkingPhilosophy() {
   }, []);
 
   const statementText =
-    "An agent that can act is only as trustworthy as the system watching it act. I don't ship autonomy — I ship autonomy with a witness: something that reviews, verifies, and can say no.";
+    "An agent that can act is only as trustworthy as the system watching it act. I do not ship blind autonomy; I ship autonomy with a witness: something that reviews, verifies, and can say no.";
 
   return (
     <section ref={sectionRef} id="thinking" className="py-[clamp(5rem,9vw,9rem)] border-t border-line relative z-10" aria-labelledby="thinking-heading">
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
-        <div id="thinking-heading" className="eyebrow">05 — Engineering Philosophy</div>
+        <div id="thinking-heading" className="eyebrow">05 / Engineering Philosophy</div>
 
         <p
           ref={statementRef}
@@ -62,7 +62,7 @@ export function ThinkingPhilosophy() {
             <div className="font-mono text-accent text-xs font-semibold">02</div>
             <h3 className="font-display font-medium text-base sm:text-lg mt-2.5 text-paper">Latency is a feature</h3>
             <p className="mt-2.5 text-stone-300 font-light text-xs sm:text-sm leading-relaxed">
-              A guardrail nobody can afford to run gets bypassed. Sub-5ms gateway checks and 35ms end-to-end vision pipelines aren&apos;t vanity metrics — they&apos;re what makes safety usable.
+              A guardrail nobody can afford to run gets bypassed. Sub-5ms gateway checks and 35ms end-to-end vision pipelines aren&apos;t vanity metrics, they are what makes safety usable.
             </p>
           </div>
 
@@ -70,7 +70,7 @@ export function ThinkingPhilosophy() {
             <div className="font-mono text-accent text-xs font-semibold">03</div>
             <h3 className="font-display font-medium text-base sm:text-lg mt-2.5 text-paper">Ship the whole stack</h3>
             <p className="mt-2.5 text-stone-300 font-light text-xs sm:text-sm leading-relaxed">
-              A model is not a product. I build the FastAPI gateway, the RBAC layer, and the React surface around it — because the delivery layer is where trust is actually earned.
+              A model is not a product. I build the FastAPI gateway, the RBAC layer, and the React surface around it because the delivery layer is where trust is actually earned.
             </p>
           </div>
         </div>

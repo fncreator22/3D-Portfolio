@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 const NAV_LINKS = [
   { href: "/#journey", id: "journey", label: "Trajectory" },
   { href: "/#skills", id: "skills", label: "Skills" },
-  { href: "/work", id: "work", label: "Systems (12)" },
+  { href: "/work", id: "work", label: "Systems (16)" },
   { href: "/resume.pdf", id: "resume", label: "Resume ↗", target: "_blank" },
 ];
 
@@ -23,7 +23,7 @@ export function Navigation() {
       setScrolled(window.scrollY > 20);
 
       if (pathname === "/") {
-        const sections = ["journey", "skills", "contact"];
+        const sections = ["journey", "skills", "projects", "contact"];
         const scrollPosition = window.scrollY + 200;
 
         for (const section of sections) {
