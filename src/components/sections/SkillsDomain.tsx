@@ -102,20 +102,24 @@ export function SkillsDomain() {
     const lines = new THREE.LineSegments(lineGeo, lineMat);
     scene.add(lines);
 
-    // 4. Interactive Orbital Motion with requestAnimationFrame
+    // 4. Interactive Orbital Motion with Mouse & Touch Gestures
     let animId: number;
     let targetRotY = 0;
     let targetRotX = 0;
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handlePointerMove = (e: MouseEvent | TouchEvent) => {
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
       const rect = mount.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-      targetRotY = x * 0.6;
-      targetRotX = -y * 0.6;
+      const x = ((clientX - rect.left) / rect.width) * 2 - 1;
+      const y = -((clientY - rect.top) / rect.height) * 2 + 1;
+      targetRotY = x * 0.7;
+      targetRotX = -y * 0.7;
     };
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("mousemove", handlePointerMove, { passive: true });
+    mount.parentElement?.addEventListener("touchstart", handlePointerMove, { passive: true });
+    mount.parentElement?.addEventListener("touchmove", handlePointerMove, { passive: true });
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
@@ -152,7 +156,9 @@ export function SkillsDomain() {
     return () => {
       cancelAnimationFrame(animId);
       if (resizeFrameId) cancelAnimationFrame(resizeFrameId);
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousemove", handlePointerMove);
+      mount.parentElement?.removeEventListener("touchstart", handlePointerMove);
+      mount.parentElement?.removeEventListener("touchmove", handlePointerMove);
       window.removeEventListener("resize", handleResize);
       renderer.dispose();
       if (mount.contains(renderer.domElement)) {
@@ -169,23 +175,23 @@ export function SkillsDomain() {
   };
 
   return (
-    <section id="skills" className="py-[clamp(5rem,9vw,9rem)] border-t border-line relative z-10" aria-labelledby="skills-heading">
+    <section id="skills" className="py-[clamp(5rem,9vw,9rem)] border-t border-line relative z-10 overflow-x-clip max-w-full" aria-labelledby="skills-heading">
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
         {/* Header */}
-        <div className="max-w-[760px] mb-10 sm:mb-14">
+        <div className="max-w-[760px] mb-8 sm:mb-14">
           <div className="eyebrow">03 / Technical Matrix</div>
           <h2 id="skills-heading" className="font-display font-medium text-[clamp(2rem,5vw,3.4rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.08] text-paper">
             Core Domains &amp; <span className="font-serif italic text-accent font-normal">Production Technologies</span>.
           </h2>
-          <p className="mt-4 text-stone-300 font-light text-base sm:text-lg max-w-[620px] leading-relaxed">
-            Hover to inspect the live neural graph and browse production toolchains with official tech badges.
+          <p className="mt-3.5 text-stone-300 font-light text-base sm:text-lg max-w-[620px] leading-relaxed">
+            Drag or tap to explore the live 3D neural graph and inspect production toolchains with verified badges.
           </p>
         </div>
 
-        {/* 2-Column Matrix: Left Domain Selectors, Right 3D Visualizer & Skills Badges */}
+        {/* 2-Column Matrix: Mobile-first ordering puts 3D Visualizer top on phones, Left on wide screens */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-14 items-start">
           {/* Left: Interactive Domain Accordion Cards */}
-          <div className="space-y-3.5 sm:space-y-4" role="tablist" aria-label="Technical Skill Domains">
+          <div className="order-2 lg:order-1 space-y-3.5 sm:space-y-4" role="tablist" aria-label="Technical Skill Domains">
             {SKILL_DOMAINS.map((domain, idx) => {
               const isActive = activeDomain === idx;
               return (
@@ -232,7 +238,7 @@ export function SkillsDomain() {
           </div>
 
           {/* Right: 3D Interactive Synaptic Visualizer & Active Domain Inspector */}
-          <div className="relative rounded-3xl overflow-hidden border border-line bg-gradient-to-b from-bg-raise to-bg p-5 sm:p-8 flex flex-col justify-between h-[360px] sm:h-[460px] lg:h-[540px] shadow-[0_24px_60px_rgba(0,0,0,0.7)] lg:sticky lg:top-28">
+          <div className="order-1 lg:order-2 relative rounded-3xl overflow-hidden border border-line bg-gradient-to-b from-bg-raise to-bg p-5 sm:p-8 flex flex-col justify-between h-[340px] sm:h-[460px] lg:h-[540px] shadow-[0_24px_60px_rgba(0,0,0,0.7)] lg:sticky lg:top-28 touch-pan-y">
             <div className="flex items-center justify-between z-10">
               <span className="font-mono text-[0.68rem] tracking-widest uppercase text-accent font-semibold">
                 Domain 0{activeDomain + 1} / Neural Graph

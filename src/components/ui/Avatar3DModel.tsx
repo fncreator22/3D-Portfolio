@@ -5,12 +5,15 @@ import * as THREE from "three";
 
 export function Avatar3DModel() {
   const mountRef = useRef<HTMLDivElement>(null);
-  const [hudStatus, setHudStatus] = useState("10,480 Neural Nodes · 3D Active");
+  const [hudStatus, setHudStatus] = useState("18,488 NEURAL NODES · SYNCED");
   const [dispersionMode, setDispersionMode] = useState(false);
 
   useEffect(() => {
     const mount = mountRef.current;
-    if (!mount) return;
+    if (!mount) {
+      console.log("Avatar3DModel: mount is null");
+      return;
+    }
 
     // 1. Dynamic Size from Container (Auto-calibrated for all phone & tablet widths)
     const initialWidth = mount.clientWidth || 300;
@@ -247,21 +250,25 @@ export function Avatar3DModel() {
       mouse.targetY = Math.max(-1, Math.min(1, normY));
 
       if (Math.abs(mouse.targetX) > 0.35) {
-        setHudStatus(mouse.targetX > 0 ? "Neural Cluster · Right Orbit" : "Neural Cluster · Left Orbit");
+        setHudStatus(mouse.targetX > 0 ? "NEURAL CLUSTER · RIGHT ORBIT" : "NEURAL CLUSTER · LEFT ORBIT");
       } else if (mouse.targetY < -0.3) {
-        setHudStatus("Neural Cluster · Upward Gaze");
+        setHudStatus("NEURAL CLUSTER · UPWARD GAZE");
       } else {
-        setHudStatus("10,480 Neural Nodes · Synced");
+        setHudStatus("18,488 NEURAL NODES · SYNCED");
       }
     };
+
+    let dispersionTimer: ReturnType<typeof setTimeout> | null = null;
 
     const handlePointerDown = () => {
       targetDispersion = 1.0;
       setDispersionMode(true);
-      setHudStatus("Neural Pulse · Dispersion Wave");
-      setTimeout(() => {
+      setHudStatus("NEURAL PULSE · DISPERSION WAVE");
+      if (dispersionTimer) clearTimeout(dispersionTimer);
+      dispersionTimer = setTimeout(() => {
         targetDispersion = 0;
         setDispersionMode(false);
+        setHudStatus("18,488 NEURAL NODES · SYNCED");
       }, 700);
     };
 
@@ -273,29 +280,47 @@ export function Avatar3DModel() {
         const normY = (touch.clientY - (rect.top + rect.height / 2)) / (window.innerHeight * 0.35);
         mouse.targetX = Math.max(-1, Math.min(1, normX));
         mouse.targetY = Math.max(-1, Math.min(1, normY));
+
+        if (Math.abs(mouse.targetX) > 0.35) {
+          setHudStatus(mouse.targetX > 0 ? "NEURAL CLUSTER · RIGHT ORBIT" : "NEURAL CLUSTER · LEFT ORBIT");
+        } else if (mouse.targetY < -0.3) {
+          setHudStatus("NEURAL CLUSTER · UPWARD GAZE");
+        } else {
+          setHudStatus("18,488 NEURAL NODES · SYNCED");
+        }
       }
+    };
+
+    const handleTouchEnd = () => {
+      mouse.targetX = 0;
+      mouse.targetY = 0;
+      setHudStatus("18,488 NEURAL NODES · SYNCED");
     };
 
     const handleResize = () => {
       if (!mount) return;
       const w = mount.clientWidth;
       const h = mount.clientHeight;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
+      if (w > 0 && h > 0) {
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      }
     };
 
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     mount.addEventListener("pointerdown", handlePointerDown);
     window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", handleTouchEnd, { passive: true });
     window.addEventListener("resize", handleResize);
 
-    // 5. 60FPS Kinematics Loop
+    // 5. 60FPS Kinematics Loop (High-precision performance timer)
     let animationId: number;
-    const clock = new THREE.Clock();
+    const startTime = performance.now();
 
     const animate = () => {
-      const elapsedTime = clock.getElapsedTime();
+      const elapsedTime = (performance.now() - startTime) * 0.001;
 
       mouse.x += (mouse.targetX - mouse.x) * 0.08;
       mouse.y += (mouse.targetY - mouse.y) * 0.08;
@@ -332,10 +357,13 @@ export function Avatar3DModel() {
     animate();
 
     return () => {
+      if (dispersionTimer) clearTimeout(dispersionTimer);
       cancelAnimationFrame(animationId);
       window.removeEventListener("pointermove", handlePointerMove);
       mount.removeEventListener("pointerdown", handlePointerDown);
       window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
+      window.removeEventListener("touchcancel", handleTouchEnd);
       window.removeEventListener("resize", handleResize);
       if (mount.contains(renderer.domElement)) {
         mount.removeChild(renderer.domElement);
@@ -350,11 +378,12 @@ export function Avatar3DModel() {
     <div className="flex justify-center items-center w-full select-none">
       <div className="relative w-[min(320px,76vw)] aspect-square rounded-[28px] sm:rounded-[32px] p-2 bg-[radial-gradient(circle_at_50%_35%,rgba(193,99,59,0.22),#141311_75%)] border border-accent/40 shadow-[0_24px_60px_rgba(0,0,0,0.8),0_0_45px_rgba(193,99,59,0.2)]">
         
-        {/* WebGL Canvas Container (Auto-fills responsive parent) */}
+        {/* WebGL Canvas Container (Auto-fills responsive parent with touch-action: none) */}
         <div
           ref={mountRef}
-          className="w-full h-full rounded-[22px] sm:rounded-[24px] overflow-hidden bg-bg/95 flex items-center justify-center cursor-grab active:cursor-grabbing"
-          title="Click / Tap to trigger Neural Particle Pulse"
+          style={{ touchAction: "none" }}
+          className="w-full h-full rounded-[22px] sm:rounded-[24px] overflow-hidden bg-bg/95 flex items-center justify-center cursor-grab active:cursor-grabbing touch-none select-none"
+          title="Drag / Swipe to orbit avatar · Tap for particle dispersion pulse"
         />
 
         {/* Dynamic Holographic Scanner Line */}
@@ -364,7 +393,8 @@ export function Avatar3DModel() {
         <div className="absolute -inset-1.5 sm:-inset-2 rounded-[32px] sm:rounded-[36px] border border-accent/20 pointer-events-none" />
 
         {/* Live HUD Status Badge */}
-        <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 bg-bg/95 backdrop-blur-md border border-accent px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full font-mono text-[0.6rem] sm:text-[0.65rem] tracking-[0.12em] uppercase text-paper flex items-center gap-1.5 sm:gap-2 whitespace-nowrap shadow-[0_12px_30px_rgba(0,0,0,0.7)] z-20">
+        <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 bg-bg/95 backdrop-blur-md border border-accent/80 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full font-mono text-[0.6rem] sm:text-[0.65rem] tracking-[0.12em] uppercase text-paper flex items-center gap-1.5 sm:gap-2 whitespace-nowrap shadow-[0_12px_30px_rgba(0,0,0,0.7)] z-20">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
           <span>{hudStatus}</span>
         </div>
       </div>

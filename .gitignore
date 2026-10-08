@@ -1,4 +1,4 @@
-﻿# Dependencies
+# Dependencies
 /node_modules
 /.pnp
 .pnp.js
@@ -43,3 +43,5 @@ __pycache__/
 venv/
 test.txt
 .vercel
+brag-output/
+skills-lock.json

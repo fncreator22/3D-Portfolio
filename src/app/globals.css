@@ -50,11 +50,30 @@
 html {
   background: var(--bg);
   color: var(--paper);
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 html, body {
   overflow-x: hidden;
+  max-width: 100vw;
 }
 
 body {
@@ -64,6 +83,107 @@ body {
   font-weight: 400;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+}
+
+main {
+  overflow-x: clip;
+  width: 100%;
+  max-width: 100%;
+}
+
+button, a, [role="button"] {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+}
+
+/* Mobile-native snappy press feedback */
+button:active, [role="button"]:active {
+  transform: scale(0.97);
+  transition: transform 90ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Background Ambient Aurora Blobs */
+.aurora {
+  position: fixed;
+  inset: -10%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.aurora span {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.28;
+  will-change: transform;
+}
+
+.aurora .b1 {
+  width: 52vw;
+  height: 52vw;
+  top: -14%;
+  right: -10%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  animation: drift1 34s ease-in-out infinite alternate;
+}
+
+.aurora .b2 {
+  width: 46vw;
+  height: 46vw;
+  bottom: -16%;
+  left: -12%;
+  background: radial-gradient(circle, var(--cool) 0%, transparent 70%);
+  animation: drift2 40s ease-in-out infinite alternate;
+}
+
+.aurora .b3 {
+  width: 30vw;
+  height: 30vw;
+  top: 38%;
+  left: 36%;
+  background: radial-gradient(circle, var(--accent-dim) 0%, transparent 72%);
+  opacity: 0.16;
+  animation: drift3 46s ease-in-out infinite alternate;
+}
+
+@keyframes drift1 {
+  0% { transform: translate(0,0) scale(1); }
+  100% { transform: translate(-6%,8%) scale(1.12); }
+}
+@keyframes drift2 {
+  0% { transform: translate(0,0) scale(1); }
+  100% { transform: translate(8%,-6%) scale(1.08); }
+}
+@keyframes drift3 {
+  0% { transform: translate(0,0) scale(1); }
+  100% { transform: translate(-10%,-10%) scale(1.2); }
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.spotlight {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(600px circle at var(--mx, 50%) var(--my, 20%), var(--accent-glow), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+.spotlight.active {
+  opacity: 1;
 }
 
 /* Accessible High-Contrast Keyboard Focus Rings */

@@ -95,7 +95,7 @@ export const WorkflowBuilderCard = ({
       whileHover={{ y: -6 }}
       transition={{ duration: 0.28, ease: [0.25, 1, 0.5, 1] }}
       className={cn(
-        "w-[84vw] sm:w-[350px] lg:w-[380px] xl:w-[400px] flex-shrink-0 cursor-pointer relative group select-none",
+        "w-[84vw] sm:w-[350px] lg:w-[380px] xl:w-[400px] snap-center flex-shrink-0 cursor-pointer relative group select-none",
         className
       )}
     >
@@ -110,9 +110,9 @@ export const WorkflowBuilderCard = ({
         </Link>
       )}
 
-      <Card className="overflow-hidden rounded-2xl border border-line bg-bg-raise text-paper shadow-[0_16px_40px_rgba(0,0,0,0.65)] transition-all duration-300 group-hover:border-accent group-hover:shadow-[0_24px_60px_rgba(0,0,0,0.85),0_0_35px_rgba(193,99,59,0.2)]">
+      <Card className="overflow-hidden rounded-2xl border border-line bg-bg-raise text-paper shadow-[0_16px_40px_rgba(0,0,0,0.65)] transition-all duration-300 group-hover:border-accent group-hover:shadow-[0_24px_60px_rgba(0,0,0,0.85),0_0_35px_rgba(193,99,59,0.2)] h-full flex flex-col justify-between">
         {/* Card Image with Themed Vignette */}
-        <div className="relative h-44 sm:h-48 w-full overflow-hidden bg-bg border-b border-line/60">
+        <div className="relative h-44 sm:h-48 w-full overflow-hidden bg-bg border-b border-line/60 flex-shrink-0">
           <img
             src={imageUrl}
             alt={title}
@@ -137,7 +137,7 @@ export const WorkflowBuilderCard = ({
         </div>
 
         {/* Card Body */}
-        <div className="p-4 sm:p-5">
+        <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
           {/* Always-visible header content */}
           <div className="flex items-start justify-between">
             <div className="flex flex-col">
@@ -162,48 +162,77 @@ export const WorkflowBuilderCard = ({
             </button>
           </div>
 
-          {/* Animated Collapsible Minimal Points Section (1 to 2 Points Max) */}
-          <AnimatePresence initial={false}>
-            {isHovered && (
-              <motion.div
-                key="details"
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                variants={detailVariants}
-                className="overflow-hidden space-y-2 pt-0.5"
-              >
-                {/* 1 to 2 Crisp Highlights */}
-                {displayPoints.length > 0 && (
-                  <ul className="space-y-1.5 text-stone-300 font-light text-xs sm:text-[0.78rem] leading-snug">
-                    {displayPoints.map((point, pIdx) => (
-                      <li key={pIdx} className="flex items-start gap-2">
-                        <span className="text-accent font-bold text-xs leading-none mt-0.5 select-none">
-                          •
-                        </span>
-                        <span className="line-clamp-2">{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                {/* Tech Stack Badges (Top 3 badges) */}
-                {tags && tags.length > 0 && (
-                  <div className="pt-2 border-t border-line/40 flex flex-wrap gap-1.5">
-                    {tags.slice(0, 3).map((tag) => (
-                      <Badge
-                        key={tag}
-                        variant="secondary"
-                        className="font-mono text-[0.62rem] px-2 py-0.5 bg-bg border border-line text-stone-300"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </motion.div>
+          {/* On Mobile (< 1024px): Highlights & tech stack badges always visible */}
+          <div className="lg:hidden space-y-2 pt-2 border-t border-line/40">
+            {displayPoints.length > 0 && (
+              <ul className="space-y-1 text-stone-300 font-light text-xs leading-snug">
+                {displayPoints.slice(0, 2).map((point, pIdx) => (
+                  <li key={pIdx} className="flex items-start gap-1.5">
+                    <span className="text-accent font-bold text-xs leading-none mt-0.5 select-none">•</span>
+                    <span className="line-clamp-2">{point}</span>
+                  </li>
+                ))}
+              </ul>
             )}
-          </AnimatePresence>
+            {tags && tags.length > 0 && (
+              <div className="pt-1.5 flex flex-wrap gap-1">
+                {tags.slice(0, 3).map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant="secondary"
+                    className="font-mono text-[0.62rem] px-2 py-0.5 bg-bg border border-line text-stone-300"
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* On Desktop (>= 1024px): Animated Collapsible Details on Hover */}
+          <div className="hidden lg:block">
+            <AnimatePresence initial={false}>
+              {isHovered && (
+                <motion.div
+                  key="details"
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                  variants={detailVariants}
+                  className="overflow-hidden space-y-2 pt-0.5"
+                >
+                  {/* 1 to 2 Crisp Highlights */}
+                  {displayPoints.length > 0 && (
+                    <ul className="space-y-1.5 text-stone-300 font-light text-xs sm:text-[0.78rem] leading-snug">
+                      {displayPoints.map((point, pIdx) => (
+                        <li key={pIdx} className="flex items-start gap-2">
+                          <span className="text-accent font-bold text-xs leading-none mt-0.5 select-none">
+                            •
+                          </span>
+                          <span className="line-clamp-2">{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {/* Tech Stack Badges (Top 3 badges) */}
+                  {tags && tags.length > 0 && (
+                    <div className="pt-2 border-t border-line/40 flex flex-wrap gap-1.5">
+                      {tags.slice(0, 3).map((tag) => (
+                        <Badge
+                          key={tag}
+                          variant="secondary"
+                          className="font-mono text-[0.62rem] px-2 py-0.5 bg-bg border border-line text-stone-300"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Card Footer: Arrow like earlier cards */}

@@ -5,7 +5,7 @@ import { IDCardLanyard } from "@/components/ui/id-card-lanyard";
 export function Contact() {
 
   return (
-    <section id="invariants" className="py-[clamp(5rem,9vw,9rem)] border-t border-line relative z-10 overflow-visible" aria-labelledby="invariants-heading">
+    <section id="invariants" className="py-[clamp(5rem,9vw,9rem)] border-t border-line relative z-10 overflow-x-clip max-w-full bg-bg" aria-labelledby="invariants-heading">
       <span id="contact" className="sr-only" aria-hidden="true" />
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
         <div className="eyebrow">06 / Engineering &amp; Profile</div>

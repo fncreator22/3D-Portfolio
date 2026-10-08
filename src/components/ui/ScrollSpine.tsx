@@ -143,12 +143,12 @@ export function ScrollSpine() {
 
       {isHome && (
         <>
-
           {/* ───────────────────────────────────────────────────────── */}
-          {/* 3. RIGHT SIDE STRICT VERTICAL SPINE (8 Interactive Dots)  */}
+          {/* 2. RIGHT SIDE STRICT VERTICAL SPINE (8 Interactive Dots)  */}
+          {/* Sits unobtrusively in right margin (right-2 on mobile, clamp on desktop) with zero button overlap */}
           {/* ───────────────────────────────────────────────────────── */}
-          <div className="fixed right-[clamp(1rem,3vw,2.6rem)] top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center select-none">
-            <div className="relative w-[2px] h-[280px] bg-line/80 rounded-full">
+          <div className="fixed right-2 md:right-[clamp(1rem,3vw,2.6rem)] top-1/2 -translate-y-1/2 z-40 flex flex-col items-center select-none pointer-events-auto">
+            <div className="relative w-[2px] h-[190px] md:h-[280px] bg-line/80 rounded-full">
               {/* Fill bar showing true scroll progression */}
               <div
                 ref={spineFillRef}
@@ -158,18 +158,19 @@ export function ScrollSpine() {
               {/* Section Dots */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-[2px] flex flex-col justify-between py-1">
                 {SECTIONS.map((sec, i) => (
-                  <div
+                  <button
                     key={sec.id}
                     onClick={() => scrollTo(sec.id)}
-                    className={`w-[9px] h-[9px] rounded-full border cursor-pointer -translate-x-[3.5px] relative transition-all duration-200 group ${
+                    aria-label={`Scroll to ${sec.label}`}
+                    className={`w-[6px] h-[6px] md:w-[9px] md:h-[9px] rounded-full border cursor-pointer -translate-x-[2px] md:-translate-x-[3.5px] relative transition-all duration-200 group ${
                       activeIdx === i
                         ? "bg-accent border-accent scale-125 shadow-[0_0_12px_rgba(193,99,59,0.95)]"
                         : "bg-bg border-line hover:border-accent hover:scale-110"
                     }`}
                   >
-                    {/* Tooltip Label */}
+                    {/* Tooltip Label (Desktop only) */}
                     <div
-                      className={`absolute right-5 top-1/2 -translate-y-1/2 font-mono text-[0.62rem] tracking-wider uppercase whitespace-nowrap transition-all duration-200 pointer-events-none flex items-center gap-1.5 ${
+                      className={`hidden md:flex absolute right-5 top-1/2 -translate-y-1/2 font-mono text-[0.62rem] tracking-wider uppercase whitespace-nowrap transition-all duration-200 pointer-events-none items-center gap-1.5 ${
                         activeIdx === i
                           ? "opacity-100 text-paper font-semibold translate-x-0 bg-bg-raise/95 border border-line px-2 py-0.5 rounded shadow-md"
                           : "opacity-0 group-hover:opacity-100 text-stone-400 translate-x-1 group-hover:translate-x-0 bg-bg/90 px-1.5 py-0.5 rounded border border-line/60"
@@ -178,7 +179,7 @@ export function ScrollSpine() {
                       <span className="text-accent font-semibold">{sec.code}</span>
                       <span>{sec.label}</span>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>

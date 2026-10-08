@@ -20,8 +20,8 @@ export function JourneyTimeline() {
       items.forEach((item, i) => {
         ScrollTrigger.create({
           trigger: item,
-          start: "top 65%",
-          end: "bottom 40%",
+          start: "top 72%",
+          end: "bottom 30%",
           onEnter: () => setActiveRoleIndex(i),
           onEnterBack: () => setActiveRoleIndex(i),
         });
@@ -30,8 +30,8 @@ export function JourneyTimeline() {
       if (fillLine) {
         ScrollTrigger.create({
           trigger: ".role-track-wrap",
-          start: "top 65%",
-          end: "bottom 65%",
+          start: "top 72%",
+          end: "bottom 55%",
           onUpdate: (self) => {
             const p = self.progress;
             fillLine.style.height = `${p * 100}%`;
@@ -48,7 +48,7 @@ export function JourneyTimeline() {
   }, []);
 
   return (
-    <section ref={containerRef} id="journey" className="border-t border-line py-[clamp(5rem,10vw,8rem)] relative z-10">
+    <section ref={containerRef} id="journey" className="border-t border-line py-[clamp(5rem,10vw,8rem)] relative z-10 overflow-x-clip max-w-full">
       <div className="max-w-[1240px] mx-auto px-[clamp(1.25rem,5vw,4rem)]">
         <div className="max-w-[760px] mb-14">
           <div className="eyebrow">02 / Trajectory</div>
@@ -86,7 +86,8 @@ export function JourneyTimeline() {
             return (
               <div
                 key={i}
-                className={`role-item relative py-8 md:py-10 border-b border-line last:border-b-0 transition-all duration-500 ${
+                onClick={() => setActiveRoleIndex(i)}
+                className={`role-item relative py-8 md:py-10 border-b border-line last:border-b-0 transition-all duration-500 cursor-pointer ${
                   isActive
                     ? "opacity-100 translate-x-1"
                     : "opacity-40 hover:opacity-75"

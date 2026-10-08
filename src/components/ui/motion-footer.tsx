@@ -269,6 +269,18 @@ const ConnectedChannels = () => (
       <span className="text-accent text-xs">↗</span>
     </MagneticButton>
 
+    {/* Resume (PDF) */}
+    <MagneticButton
+      as="a"
+      href="/resume.pdf"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="footer-glass-pill px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-paper font-mono text-xs sm:text-sm font-semibold flex items-center gap-3 group border-accent/40"
+      aria-label="Download Resume PDF"
+    >
+      <span>Resume (PDF)</span>
+      <span className="text-accent text-xs">↗</span>
+    </MagneticButton>
   </div>
 );
 
@@ -324,8 +336,9 @@ export function CinematicFooter() {
     if (typeof window === "undefined") return;
     if (!isHome || !wrapperRef.current) return;
 
-    // React strict mode compatible GSAP context cleanup
-    const ctx = gsap.context(() => {
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 1024px)", () => {
       // Parallax Scrub for Giant Background Text
       gsap.fromTo(
         giantTextRef.current,
@@ -361,9 +374,9 @@ export function CinematicFooter() {
           },
         }
       );
-    }, wrapperRef);
+    });
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, [isHome]);
 
   const scrollToTop = () => {
@@ -426,64 +439,110 @@ export function CinematicFooter() {
 
   // -----------------------------------------------------------------------
   // HOMEPAGE (/):
-  // High-craft curtain reveal with early trigger and zero dead-scroll gap.
+  // Clean in-flow footer for mobile touch devices (< 1024px);
+  // High-craft curtain reveal for wide desktop screens (>= 1024px).
   // -----------------------------------------------------------------------
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
       
-      <div
-        ref={wrapperRef}
-        id="connect"
-        className="relative min-h-[680px] lg:h-screen w-full"
-        style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
-      >
-        <footer className="relative lg:fixed bottom-0 left-0 flex min-h-[680px] lg:h-screen w-full flex-col justify-between overflow-hidden bg-bg text-paper cinematic-footer-wrapper py-8 lg:py-12 border-t border-line">
+      <div id="connect" className="w-full">
+        {/* ─── MOBILE IN-FLOW FOOTER (lg:hidden): Natural flow, zero clipping, 100% visible & touch friendly ─── */}
+        <footer className="lg:hidden relative w-full overflow-hidden bg-bg text-paper cinematic-footer-wrapper py-10 sm:py-14 border-t border-line">
           {/* Ambient Light & Grid Background */}
-          <div className="footer-aurora absolute left-1/2 top-1/2 h-[65vh] w-[85vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[90px] pointer-events-none z-0" />
+          <div className="footer-aurora absolute left-1/2 top-1/2 h-[50vh] w-[90vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[90px] pointer-events-none z-0" />
           <div className="footer-bg-grid absolute inset-0 z-0 pointer-events-none" />
 
           {/* Giant background typography watermark */}
           <div
-            ref={giantTextRef}
-            className="footer-giant-bg-text absolute -bottom-[2vh] left-1/2 -translate-x-1/2 whitespace-nowrap z-0 pointer-events-none select-none text-center"
+            className="footer-giant-bg-text absolute -bottom-[2vh] left-1/2 -translate-x-1/2 whitespace-nowrap z-0 pointer-events-none select-none text-center opacity-30"
             aria-hidden="true"
           >
             SAGAR
           </div>
 
-          {/* 1. Diagonal Sleek Marquee (Top of Footer) */}
-          <div className="relative w-full overflow-hidden border-y border-line/60 bg-bg-raise/80 backdrop-blur-md py-3.5 z-10 -rotate-1 scale-105 shadow-2xl">
-            <div className="flex w-max animate-footer-scroll-marquee font-mono text-[0.68rem] sm:text-xs font-semibold tracking-[0.25em] text-stone-300 uppercase">
+          {/* 1. Diagonal Sleek Marquee */}
+          <div className="relative w-full overflow-hidden border-y border-line/60 bg-bg-raise/80 backdrop-blur-md py-3 z-10 -rotate-1 scale-105 shadow-2xl mb-8">
+            <div className="flex w-max animate-footer-scroll-marquee font-mono text-[0.68rem] font-semibold tracking-[0.25em] text-stone-300 uppercase">
               <MarqueeItem />
               <MarqueeItem />
             </div>
           </div>
 
           {/* 2. Main Center Content */}
-          <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 my-6 w-full max-w-5xl mx-auto text-center">
-            <div className="eyebrow mb-4 text-[0.68rem] sm:text-xs">
+          <div className="relative z-10 flex flex-col items-center justify-center px-4 w-full max-w-xl mx-auto text-center">
+            <div className="eyebrow mb-3 text-[0.68rem]">
               07 / Terminal Connection
             </div>
 
-            <h2
-              ref={headingRef}
-              className="font-display font-medium text-4xl sm:text-6xl lg:text-7xl footer-text-glow tracking-tight text-center max-w-4xl leading-[1.08]"
-            >
+            <h2 className="font-display font-medium text-3xl sm:text-5xl footer-text-glow tracking-tight text-center max-w-xl leading-[1.12]">
               Initiate Transmission. <br />
               <span className="font-serif italic text-accent font-normal">Let&apos;s build autonomous scale.</span>
             </h2>
 
-            {/* Interactive Magnetic Glass Pills Layout */}
-            <div ref={linksRef} className="flex flex-col items-center gap-5 w-full mt-8">
+            <div className="flex flex-col items-center gap-4 w-full mt-7">
               <ConnectedChannels />
               <SecondaryNavigation />
             </div>
           </div>
 
-          {/* 3. Bottom Status Bar & Credits */}
+          {/* 3. Bottom Status Bar */}
           <FooterStatusBar onScrollTop={scrollToTop} />
         </footer>
+
+        {/* ─── DESKTOP CURTAIN REVEAL FOOTER (hidden lg:block) ─── */}
+        <div
+          ref={wrapperRef}
+          className="hidden lg:block relative min-h-[640px] h-screen w-full max-w-full overflow-hidden"
+          style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
+        >
+          <footer className="fixed bottom-0 left-0 flex min-h-[640px] h-screen w-full max-w-full flex-col justify-between overflow-hidden bg-bg text-paper cinematic-footer-wrapper py-8 lg:py-12 border-t border-line">
+            {/* Ambient Light & Grid Background */}
+            <div className="footer-aurora absolute left-1/2 top-1/2 h-[65vh] w-[85vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[90px] pointer-events-none z-0" />
+            <div className="footer-bg-grid absolute inset-0 z-0 pointer-events-none" />
+
+            {/* Giant background typography watermark */}
+            <div
+              ref={giantTextRef}
+              className="footer-giant-bg-text absolute -bottom-[2vh] left-1/2 -translate-x-1/2 whitespace-nowrap z-0 pointer-events-none select-none text-center"
+              aria-hidden="true"
+            >
+              SAGAR
+            </div>
+
+            {/* 1. Diagonal Sleek Marquee (Top of Footer) */}
+            <div className="relative w-full overflow-hidden border-y border-line/60 bg-bg-raise/80 backdrop-blur-md py-3.5 z-10 -rotate-1 scale-105 shadow-2xl">
+              <div className="flex w-max animate-footer-scroll-marquee font-mono text-xs font-semibold tracking-[0.25em] text-stone-300 uppercase">
+                <MarqueeItem />
+                <MarqueeItem />
+              </div>
+            </div>
+
+            {/* 2. Main Center Content */}
+            <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 my-6 w-full max-w-5xl mx-auto text-center">
+              <div className="eyebrow mb-4 text-xs">
+                07 / Terminal Connection
+              </div>
+
+              <h2
+                ref={headingRef}
+                className="font-display font-medium text-4xl sm:text-6xl lg:text-7xl footer-text-glow tracking-tight text-center max-w-4xl leading-[1.08]"
+              >
+                Initiate Transmission. <br />
+                <span className="font-serif italic text-accent font-normal">Let&apos;s build autonomous scale.</span>
+              </h2>
+
+              {/* Interactive Magnetic Glass Pills Layout */}
+              <div ref={linksRef} className="flex flex-col items-center gap-5 w-full mt-8">
+                <ConnectedChannels />
+                <SecondaryNavigation />
+              </div>
+            </div>
+
+            {/* 3. Bottom Status Bar & Credits */}
+            <FooterStatusBar onScrollTop={scrollToTop} />
+          </footer>
+        </div>
       </div>
     </>
   );

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Fraunces, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { AuroraBackground } from "@/components/effects/AuroraBackground";
@@ -26,6 +26,16 @@ const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-mono",
   weight: ["400", "500"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0b0a09" },
+    { media: "(prefers-color-scheme: light)", color: "#0b0a09" },
+  ],
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sagarmahajan.cloud"),

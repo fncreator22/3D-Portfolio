@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <>
       <Global3DBackground />
-      <div id="main-content">
+      <div id="main-content" className="w-full max-w-full overflow-x-clip">
         <div id="hero">
           <Hero />
         </div>

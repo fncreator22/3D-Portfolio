@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { Avatar3DModel } from "@/components/ui/Avatar3DModel";
 
 const PROJECT_CHIPS = [
   { label: "Sentinel MCP Guardrail", href: "/work/sentinel-mcp-guardrail" },
@@ -258,11 +259,14 @@ export function Hero() {
   };
 
   // Click-Anywhere-on-Hero Screen Audio Handler:
-  // If the visitor clicks anywhere on the hero section (stage, text, background),
-  // we toggle the audio. If they clicked a link or interactive button, we let that element execute.
+  // If the visitor clicks anywhere on the hero section on desktop (stage, text, background),
+  // we toggle the audio. Strictly disabled on mobile/tablet (<1024px) where the video is hidden.
   const handleHeroStageClick = (e: React.MouseEvent<HTMLElement>) => {
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      return;
+    }
     const target = e.target as HTMLElement | null;
-    if (target?.closest?.("a, button, [role='button'], input, textarea, select")) {
+    if (target?.closest?.("a, button, [role='button'], input, textarea, select, canvas")) {
       return;
     }
     toggleSound();
@@ -275,8 +279,8 @@ export function Hero() {
       className="relative z-10 min-h-svh flex flex-col justify-between overflow-hidden bg-bg cursor-pointer selection:cursor-auto"
       aria-label="Hero Introduction"
     >
-      {/* ─── Seamless Ambient Video Background (Zero-Dark-Dip Layering Engine) ─── */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none bg-[#cbc4ba]">
+      {/* ─── Seamless Ambient Video Background (Desktop lg+ only) ─── */}
+      <div className="hidden lg:block absolute inset-0 z-0 overflow-hidden pointer-events-none select-none bg-[#cbc4ba]">
         {/* Layer 1 (z-[1]): Scene 2 Standing Lifelike Idle (Rock-solid, always 100% opaque underlying canvas) */}
         <video
           ref={videoIdleRef}
@@ -286,7 +290,7 @@ export function Hero() {
           muted
           loop
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover object-[right_center] lg:object-[82%_center] z-[1]"
+          className="absolute inset-0 w-full h-full object-cover object-[50%_center] sm:object-[80%_center] lg:object-[82%_center] z-[1]"
           style={{ opacity: 1, backgroundColor: "#cbc4ba" }}
         />
 
@@ -302,7 +306,7 @@ export function Hero() {
             onTimeUpdate={handleIntroTimeUpdate}
             onEnded={transitionToIntroComplete}
             preload="auto"
-            className="absolute inset-0 w-full h-full object-cover object-[right_center] lg:object-[82%_center] z-[2] transition-opacity duration-150 ease-out will-change-[opacity]"
+            className="absolute inset-0 w-full h-full object-cover object-[50%_center] sm:object-[80%_center] lg:object-[82%_center] z-[2] transition-opacity duration-150 ease-out will-change-[opacity]"
             style={{
               opacity: introOpacity,
               backgroundColor: "#cbc4ba",
@@ -320,7 +324,7 @@ export function Hero() {
           onEnded={handleTalkEnded}
           onError={() => setHasTalkVideo(false)}
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover object-[right_center] lg:object-[82%_center] z-[3] transition-opacity duration-150 ease-out will-change-[opacity]"
+          className="absolute inset-0 w-full h-full object-cover object-[50%_center] sm:object-[80%_center] lg:object-[82%_center] z-[3] transition-opacity duration-150 ease-out will-change-[opacity]"
           style={{
             opacity: talkOpacity,
             backgroundColor: "#cbc4ba",
@@ -369,40 +373,45 @@ export function Hero() {
       </div>
 
       {/* ─── Hero Content Foreground Layer ─── */}
-      <div className="relative z-20 flex-1 flex items-center pt-28 sm:pt-32 pb-12 pointer-events-auto">
-        <div className="max-w-[1320px] mx-auto px-[clamp(1.5rem,4vw,3.5rem)] w-full">
+      <div className="relative z-20 flex-1 flex items-center pt-24 sm:pt-32 pb-8 sm:pb-12 pointer-events-auto">
+        <div className="max-w-[1320px] mx-auto px-[clamp(1rem,4vw,3.5rem)] w-full">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-10 items-center">
 
             {/* Left: Tightly Constrained & Balanced Text Column */}
             <div className="flex flex-col max-w-[460px]">
               
               {/* Shortened Eyebrow Tag */}
-              <div className="eyebrow mb-3 sm:mb-3.5 text-[0.68rem] sm:text-xs tracking-wider">
+              <div className="eyebrow mb-2.5 sm:mb-3.5 text-[0.66rem] sm:text-xs tracking-wider">
                 AI ENGINEER · AGENTIC SYSTEMS · VOICE AI
               </div>
 
               {/* High-Impact Headline */}
-              <h1 className="font-display font-medium text-[clamp(2.2rem,4.2vw,3.8rem)] tracking-[-0.02em] leading-[1.06] text-paper mb-3 sm:mb-3.5">
+              <h1 className="font-display font-medium text-[clamp(1.75rem,5.5vw,3.8rem)] tracking-[-0.02em] leading-[1.08] text-paper mb-3 sm:mb-3.5 break-words">
                 Engineering <span className="text-accent">Autonomous Systems</span> &amp; Production AI.
               </h1>
 
               {/* Shortened, Punchy Statement */}
-              <p className="text-stone-300 mb-6 font-body text-[clamp(0.92rem,1.25vw,1.05rem)] leading-relaxed max-w-[440px]">
+              <p className="text-stone-300 mb-4 sm:mb-6 font-body text-[clamp(0.88rem,1.25vw,1.05rem)] leading-relaxed max-w-[440px]">
                 Architecting self-evaluating agents, sub-200ms voice pipelines, and production systems that make dependable decisions.
               </p>
 
+              {/* ─── Mobile Avatar Stage (Interactive 3D Particle Canvas for mobile) ─── */}
+              <div className="block lg:hidden my-5 self-center w-full max-w-[320px]">
+                <Avatar3DModel />
+              </div>
+
               {/* Primary Action Buttons */}
-              <div className="flex flex-wrap gap-2.5 items-center mb-6">
+              <div className="flex flex-wrap gap-2 sm:gap-2.5 items-center mb-5 sm:mb-6">
                 <Link
                   href="/work"
-                  className="inline-flex items-center justify-center bg-paper text-bg border border-black/10 rounded-full font-body font-medium hover:bg-accent hover:text-paper hover:border-accent transition-all duration-200 text-[0.8rem] sm:text-[0.88rem] px-4 py-2 shadow-sm cursor-pointer"
+                  className="inline-flex items-center justify-center bg-paper text-bg border border-black/10 rounded-full font-body font-medium hover:bg-accent hover:text-paper hover:border-accent transition-all duration-200 text-[0.78rem] sm:text-[0.88rem] px-3.5 sm:px-4 py-2 shadow-sm cursor-pointer"
                 >
                   Explore 16 Systems
                 </Link>
 
                 <a
                   href="#contact"
-                  className="inline-flex items-center justify-center bg-accent text-bg font-medium rounded-full hover:bg-accent/90 hover:shadow-md transition-all text-[0.8rem] sm:text-[0.88rem] px-4 py-2 gap-1.5 cursor-pointer"
+                  className="inline-flex items-center justify-center bg-accent text-bg font-medium rounded-full hover:bg-accent/90 hover:shadow-md transition-all text-[0.78rem] sm:text-[0.88rem] px-3.5 sm:px-4 py-2 gap-1.5 cursor-pointer"
                 >
                   <span>Get in Touch</span>
                   <span className="text-xs">↓</span>
@@ -412,7 +421,7 @@ export function Hero() {
                   href="/resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center text-paper bg-transparent border border-paper/60 rounded-full font-body hover:bg-paper hover:text-bg hover:border-paper transition-all duration-200 text-[0.8rem] sm:text-[0.88rem] px-4 py-2 gap-1.5 cursor-pointer"
+                  className="inline-flex items-center justify-center text-paper bg-transparent border border-paper/60 rounded-full font-body hover:bg-paper hover:text-bg hover:border-paper transition-all duration-200 text-[0.78rem] sm:text-[0.88rem] px-3.5 sm:px-4 py-2 gap-1.5 cursor-pointer"
                 >
                   <span>Resume</span>
                   <span className="text-xs">↗</span>
@@ -420,7 +429,7 @@ export function Hero() {
               </div>
 
               {/* Flagship Project Quick Links */}
-              <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-line/60">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-3 border-t border-line/60">
                 <span className="font-mono text-[0.62rem] uppercase tracking-widest text-stone mr-1">
                   Flagship:
                 </span>
@@ -428,7 +437,7 @@ export function Hero() {
                   <Link
                     key={chip.href}
                     href={chip.href}
-                    className="inline-flex items-center gap-1 font-mono text-[0.7rem] sm:text-xs text-paper/90 bg-bg-raise/90 border border-line/80 hover:border-accent hover:text-accent rounded-lg px-2.5 py-1 transition-all backdrop-blur-sm cursor-pointer"
+                    className="inline-flex items-center gap-1 font-mono text-[0.68rem] sm:text-xs text-paper/90 bg-bg-raise/90 border border-line/80 hover:border-accent hover:text-accent rounded-lg px-2.5 py-1 transition-all backdrop-blur-sm cursor-pointer"
                   >
                     <span>{chip.label}</span>
                     <span className="text-accent text-[0.65rem]">→</span>
@@ -444,8 +453,8 @@ export function Hero() {
         </div>
       </div>
 
-      {/* ─── Dedicated Speaker Button ─── */}
-      <div className="absolute bottom-[18%] sm:bottom-[20%] right-[7%] sm:right-[9%] lg:right-[9.8%] z-30 pointer-events-auto">
+      {/* ─── Dedicated Speaker Button (Desktop lg+ only) ─── */}
+      <div className="hidden lg:flex absolute bottom-[20%] right-[9.8%] z-30 pointer-events-auto">
 
         <button
           onClick={toggleSound}
@@ -485,14 +494,25 @@ export function Hero() {
         </button>
       </div>
 
-      {/* ─── Bottom Bar: Minimal Scroll Indicator ─── */}
+      {/* ─── Bottom Bar: Minimal Scroll Indicator Button ─── */}
       <div className="relative z-20 max-w-[1320px] mx-auto px-[clamp(1.5rem,4vw,3.5rem)] w-full pb-4 sm:pb-6 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-1.5 pointer-events-none select-none">
-          <span className="font-mono text-[0.56rem] tracking-[0.2em] uppercase text-stone">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            const identityEl = document.getElementById("identity");
+            if (identityEl) {
+              identityEl.scrollIntoView({ behavior: "smooth" });
+            }
+          }}
+          type="button"
+          aria-label="Scroll down to identity section"
+          className="flex flex-col items-center gap-1.5 group cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-md p-1 pointer-events-auto"
+        >
+          <span className="font-mono text-[0.56rem] tracking-[0.2em] uppercase text-stone group-hover:text-accent transition-colors">
             Scroll to begin
           </span>
-          <div className="w-[1px] h-5 bg-gradient-to-b from-stone to-transparent" />
-        </div>
+          <div className="w-[1px] h-5 bg-gradient-to-b from-stone to-transparent group-hover:from-accent group-hover:h-6 transition-all" />
+        </button>
       </div>
     </section>
   );

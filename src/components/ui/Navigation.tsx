@@ -164,7 +164,7 @@ export function Navigation() {
 
       {/* ─── Mobile Full-Screen Overlay ─── */}
       <div
-        className={`fixed inset-0 z-40 bg-bg/95 backdrop-blur-2xl flex flex-col justify-between p-8 pt-28 md:hidden transition-all duration-300 ${
+        className={`fixed inset-0 z-40 bg-bg/95 backdrop-blur-2xl flex flex-col justify-between p-8 pt-28 pb-12 md:hidden transition-all duration-300 ${
           mobileOpen
             ? "opacity-100 pointer-events-auto translate-y-0"
             : "opacity-0 pointer-events-none -translate-y-4"

@@ -14,7 +14,7 @@ export function Identity() {
       gsap.from(".identity-reveal", {
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 80%",
+          start: "top 85%",
           once: true,
         },
         opacity: 0,
@@ -29,7 +29,7 @@ export function Identity() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="identity" className="py-[clamp(5rem,9vw,9rem)] border-t border-line relative z-10" aria-labelledby="identity-heading">
+    <section ref={sectionRef} id="identity" className="py-[clamp(5rem,9vw,9rem)] border-t border-line relative z-10 overflow-x-clip max-w-full" aria-labelledby="identity-heading">
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
         <div className="identity-reveal max-w-[760px] mb-10 md:mb-14">
           <div className="eyebrow">01 / Identity &amp; Philosophy</div>
@@ -48,19 +48,19 @@ export function Identity() {
 
           {/* 2x2 Responsive Metric Grid */}
           <div className="identity-reveal grid grid-cols-2 gap-3.5 sm:gap-4">
-            <div className="p-4 sm:p-5 rounded-2xl bg-bg-raise border border-line/80 hover:border-accent/50 shadow-md transition-all flex flex-col justify-between">
+            <div className="p-4 sm:p-5 rounded-2xl bg-bg-raise border border-line/80 hover:border-accent/50 active:scale-[0.98] shadow-md transition-all flex flex-col justify-between">
               <span className="font-serif italic text-3xl sm:text-4xl text-accent font-normal">{PROJECTS.length}</span>
               <span className="font-mono text-[0.68rem] sm:text-xs tracking-wider uppercase text-stone-300 font-semibold mt-2">Shipped Systems</span>
             </div>
-            <div className="p-4 sm:p-5 rounded-2xl bg-bg-raise border border-line/80 hover:border-accent/50 shadow-md transition-all flex flex-col justify-between">
+            <div className="p-4 sm:p-5 rounded-2xl bg-bg-raise border border-line/80 hover:border-accent/50 active:scale-[0.98] shadow-md transition-all flex flex-col justify-between">
               <span className="font-serif italic text-3xl sm:text-4xl text-accent font-normal">{String(SKILL_DOMAINS.length).padStart(2, "0")}</span>
               <span className="font-mono text-[0.68rem] sm:text-xs tracking-wider uppercase text-stone-300 font-semibold mt-2">Skill Domains</span>
             </div>
-            <div className="p-4 sm:p-5 rounded-2xl bg-bg-raise border border-line/80 hover:border-accent/50 shadow-md transition-all flex flex-col justify-between">
+            <div className="p-4 sm:p-5 rounded-2xl bg-bg-raise border border-line/80 hover:border-accent/50 active:scale-[0.98] shadow-md transition-all flex flex-col justify-between">
               <span className="font-serif italic text-3xl sm:text-4xl text-accent font-normal">40+</span>
               <span className="font-mono text-[0.68rem] sm:text-xs tracking-wider uppercase text-stone-300 font-semibold mt-2">Core Technologies</span>
             </div>
-            <div className="p-4 sm:p-5 rounded-2xl bg-bg-raise border border-line/80 hover:border-accent/50 shadow-md transition-all flex flex-col justify-between">
+            <div className="p-4 sm:p-5 rounded-2xl bg-bg-raise border border-line/80 hover:border-accent/50 active:scale-[0.98] shadow-md transition-all flex flex-col justify-between">
               <span className="font-serif italic text-3xl sm:text-4xl text-accent font-normal">1+</span>
               <span className="font-mono text-[0.68rem] sm:text-xs tracking-wider uppercase text-stone-300 font-semibold mt-2">Year Experience</span>
             </div>

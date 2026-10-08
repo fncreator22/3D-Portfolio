@@ -146,7 +146,9 @@ export function HorizontalProjects() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [mobileCardIndex, setMobileCardIndex] = useState<number>(0);
 
   const filteredProjects =
     activeCategory === "All"
@@ -160,52 +162,83 @@ export function HorizontalProjects() {
       ? PROJECTS.slice(0, 8)
       : filteredProjects.slice(0, 8);
 
+  const handleMobileScroll = () => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const cardEl = el.querySelector(".snap-center") as HTMLElement | null;
+    const itemWidth = cardEl ? cardEl.offsetWidth + 16 : 320;
+    const idx = Math.min(
+      displayedProjects.length,
+      Math.max(0, Math.round(el.scrollLeft / itemWidth))
+    );
+    setMobileCardIndex(idx);
+  };
+
   useEffect(() => {
-    // Only apply horizontal GSAP pin on wide desktop (lg+)
-    const isDesktop = window.innerWidth >= 1024;
-    if (!isDesktop) return;
-
-    const track = trackRef.current;
-    const pin = pinRef.current;
-    if (!track || !pin) return;
-
-    const totalWidth = track.scrollWidth;
-    const viewWidth = window.innerWidth;
-    const scrollDistance = Math.max(0, totalWidth - viewWidth + 80);
-
-    if (scrollDistance <= 0) {
-      gsap.set(track, { x: 0 });
-      return;
+    // Reset horizontal scroll position on category switch
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft = 0;
+      setMobileCardIndex(0);
     }
 
-    const tween = gsap.to(track, {
-      x: () => -scrollDistance,
-      ease: "none",
-      scrollTrigger: {
-        trigger: pin,
-        pin: true,
-        scrub: 0.8,
-        start: "top top",
-        end: () => `+=${scrollDistance * 1.1}`,
-        invalidateOnRefresh: true,
-      },
+    const mm = gsap.matchMedia();
+
+    // GSAP horizontal pinning strictly on desktop (lg: >= 1024px)
+    mm.add("(min-width: 1024px)", () => {
+      const track = trackRef.current;
+      const pin = pinRef.current;
+      if (!track || !pin) return;
+
+      const getScrollDistance = () => {
+        return Math.max(0, track.scrollWidth - window.innerWidth + 80);
+      };
+
+      if (getScrollDistance() <= 0) {
+        gsap.set(track, { x: 0 });
+        return;
+      }
+
+      const tween = gsap.to(track, {
+        x: () => -getScrollDistance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: pin,
+          pin: true,
+          scrub: 0.8,
+          start: "top top",
+          end: () => `+=${getScrollDistance()}`,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            const idx = Math.min(
+              displayedProjects.length,
+              Math.max(0, Math.round(progress * displayedProjects.length))
+            );
+            setMobileCardIndex(idx);
+          },
+        },
+      });
+
+      return () => {
+        tween.scrollTrigger?.kill();
+        tween.kill();
+      };
     });
 
     return () => {
-      tween.scrollTrigger?.kill();
-      tween.kill();
+      mm.revert();
     };
   }, [activeCategory, displayedProjects.length]);
 
   return (
-    <section id="projects" ref={sectionRef} className="relative z-10 border-t border-line py-12 lg:py-0" aria-labelledby="projects-heading">
-      <div ref={pinRef} className="lg:h-screen lg:min-h-[700px] flex flex-col justify-between py-6 lg:py-6">
+    <section id="projects" ref={sectionRef} className="relative z-10 border-t border-line py-12 lg:py-0 overflow-x-clip max-w-full" aria-labelledby="projects-heading">
+      <div ref={pinRef} className="lg:h-screen lg:min-h-[700px] flex flex-col justify-between pt-0 lg:pt-8 pb-0 lg:pb-6">
         
         {/* Header Bar */}
-        <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] mb-3 flex-shrink-0 flex flex-col md:flex-row md:items-end justify-between gap-3 relative z-20">
+        <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] mb-3 lg:mb-3 flex-shrink-0 flex flex-col md:flex-row md:items-end justify-between gap-2.5 sm:gap-3 relative z-20">
           <div>
             <div className="eyebrow">04 / Selected Work</div>
-            <h2 id="projects-heading" className="font-display font-medium text-[clamp(1.75rem,3.2vw,2.6rem)] tracking-[-0.01em] mt-1.5 leading-none text-paper">
+            <h2 id="projects-heading" className="font-display font-medium text-[clamp(1.5rem,3.2vw,2.6rem)] tracking-[-0.01em] mt-1 sm:mt-1.5 leading-tight text-paper">
               Engineered for <span className="font-serif italic text-accent font-normal">Autonomy &amp; Scale</span>.
             </h2>
           </div>
@@ -233,10 +266,15 @@ export function HorizontalProjects() {
           - Mobile (< 1024px): Touch-native horizontal snap scroll container with smooth swipe physics
           - Desktop (>= 1024px): GSAP horizontal transform track
         */}
-        <div className="flex-1 flex items-center w-full min-h-0 py-2 overflow-x-auto lg:overflow-x-visible snap-x snap-mandatory lg:snap-none no-scrollbar relative z-10 my-auto">
+        <div
+          id="projects-carousel"
+          ref={scrollContainerRef}
+          onScroll={handleMobileScroll}
+          className="w-full min-h-0 py-3 lg:py-2 overflow-x-auto lg:overflow-hidden snap-x snap-mandatory lg:snap-none no-scrollbar relative z-10 my-auto"
+        >
           <div
             ref={trackRef}
-            className="flex flex-row w-max px-[clamp(1rem,5vw,4rem)] gap-4 sm:gap-6 lg:gap-7 lg:pl-[clamp(1.5rem,5vw,4rem)] items-center"
+            className="flex flex-row w-max px-[clamp(1rem,5vw,4rem)] gap-4 sm:gap-6 lg:gap-7 lg:pl-[clamp(1.5rem,5vw,4rem)] items-stretch"
           >
             {displayedProjects.map((project) => (
               <WorkflowBuilderCard
@@ -259,7 +297,7 @@ export function HorizontalProjects() {
 
             {/* 9th Flagship Card: Archive Explorer */}
             <article
-              className="w-[84vw] sm:w-[350px] lg:w-[390px] xl:w-[410px] h-[430px] sm:h-[450px] lg:h-[465px] snap-center flex-shrink-0 border border-line hover:border-accent bg-gradient-to-b from-bg-raise via-bg to-bg flex flex-col justify-between relative overflow-hidden group rounded-3xl transition-all duration-300 shadow-[0_20px_50px_rgba(0,0,0,0.7)] hover:shadow-[0_28px_70px_rgba(0,0,0,0.85),0_0_35px_rgba(193,99,59,0.2)] p-6 sm:p-7 select-none"
+              className="w-[84vw] sm:w-[350px] lg:w-[390px] xl:w-[410px] min-h-[440px] sm:min-h-[450px] lg:h-[465px] snap-center flex-shrink-0 border border-line hover:border-accent bg-gradient-to-b from-bg-raise via-bg to-bg flex flex-col justify-between relative overflow-hidden group rounded-3xl transition-all duration-300 shadow-[0_20px_50px_rgba(0,0,0,0.7)] hover:shadow-[0_28px_70px_rgba(0,0,0,0.85),0_0_35px_rgba(193,99,59,0.2)] p-6 sm:p-7 select-none"
             >
               <Link
                 href="/work"
@@ -340,9 +378,29 @@ export function HorizontalProjects() {
           <span className="hidden lg:inline">
             Traversing {displayedProjects.length} Flagship Systems + Archive ({PROJECTS.length} Total) →
           </span>
-          <span className="lg:hidden flex items-center gap-1.5 text-accent font-semibold">
-            <span>⇄ Swipe to explore ({displayedProjects.length + 1} cards)</span>
-          </span>
+          <div className="lg:hidden flex items-center gap-2 text-accent font-semibold">
+            <span>⇄ Card {mobileCardIndex + 1} of {displayedProjects.length + 1}</span>
+            <div className="flex items-center gap-1 ml-0.5">
+              {Array.from({ length: displayedProjects.length + 1 }).map((_, dotIdx) => (
+                <button
+                  key={dotIdx}
+                  type="button"
+                  onClick={() => {
+                    const el = scrollContainerRef.current;
+                    if (el) {
+                      const cardEl = el.querySelector(".snap-center") as HTMLElement | null;
+                      const itemWidth = cardEl ? cardEl.offsetWidth + 16 : 320;
+                      el.scrollTo({ left: dotIdx * itemWidth, behavior: "smooth" });
+                    }
+                  }}
+                  aria-label={`Jump to project card ${dotIdx + 1}`}
+                  className={`h-1.5 rounded-full transition-all duration-200 cursor-pointer ${
+                    dotIdx === mobileCardIndex ? "w-3 bg-accent shadow-[0_0_6px_rgba(193,99,59,0.7)]" : "w-1.5 bg-stone/40 hover:bg-stone/70"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
           <Link
             href="/work"
             className="text-accent hover:underline flex items-center gap-1 font-semibold focus-visible:ring-2 focus-visible:ring-accent rounded px-1"
