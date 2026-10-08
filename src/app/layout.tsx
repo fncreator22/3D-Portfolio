@@ -41,6 +41,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${fraunces.variable} ${ibmPlexMono.variable}`}>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(sessionStorage.getItem("sm_entered_session")==="true"){document.documentElement.classList.add("sm-portal-bypassed")}}catch(e){}`,
+          }}
+        />
         <link rel="preload" as="image" href="/images/hero-poster.webp" type="image/webp" />
         <link rel="preload" as="video" href="/videos/hero.mp4" type="video/mp4" />
       </head>

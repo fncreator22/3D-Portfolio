@@ -1,15 +1,22 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef, useCallback, useId } from "react";
+import { createPortal } from "react-dom";
+import { motion } from "framer-motion";
 
 export interface InteractiveEntryPortalProps {
   /**
-   * Callback fired when user enters the experience.
-   * `soundEnabled` is true if the visitor actively clicked/interacted with the portal (granting unmuted audio),
-   * or false if the portal was auto-bypassed after the countdown.
+   * Callback fired immediately when user enters or bypass triggers.
+   * `soundEnabled` is true if the visitor clicked/interacted (authorizing unmuted audio),
+   * or false if the portal was auto-bypassed or skipped.
+   * NOTE: This is called synchronously in the user gesture call stack.
    */
   onEnter: (soundEnabled: boolean) => void;
+  /**
+   * Callback fired after the 1.1s radial aperture expansion concludes,
+   * signaling to the parent that the portal can be completely dismantled.
+   */
+  onComplete?: () => void;
   /**
    * Auto-bypass duration in milliseconds. Defaults to 3800ms (3.8 seconds).
    */
@@ -22,6 +29,7 @@ export interface InteractiveEntryPortalProps {
 
 export function InteractiveEntryPortal({
   onEnter,
+  onComplete,
   autoBypassDelayMs = 3800,
   sessionKey = "sm_entered_session",
 }: InteractiveEntryPortalProps) {
@@ -32,10 +40,18 @@ export function InteractiveEntryPortal({
   const [timeLeft, setTimeLeft] = useState(autoBypassDelayMs);
   const [isMounted, setIsMounted] = useState(false);
 
+  const maskId = useId();
   const hasTriggeredRef = useRef(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const portalRef = useRef<HTMLDivElement>(null);
+  const lensButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Keep stable refs to callbacks to avoid resetting the auto-bypass timer on re-render
+  const onEnterRef = useRef(onEnter);
+  onEnterRef.current = onEnter;
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
 
   // Initialize screen dimensions, viewport diagonal, and session check
   useEffect(() => {
@@ -45,6 +61,8 @@ export function InteractiveEntryPortal({
         const alreadyEntered = sessionStorage.getItem(sessionKey);
         if (alreadyEntered === "true") {
           setIsVisible(false);
+          document.documentElement.classList.add("sm-portal-bypassed");
+          onCompleteRef.current?.();
           return;
         }
       } catch {
@@ -52,23 +70,28 @@ export function InteractiveEntryPortal({
       }
 
       const diag = Math.hypot(window.innerWidth, window.innerHeight);
-      setMaxRadius(Math.ceil(diag) + 160);
+      setMaxRadius(Math.ceil(diag) + 200);
       setOrigin({
         x: Math.round(window.innerWidth / 2),
         y: Math.round(window.innerHeight / 2),
       });
+
+      // Auto-focus portal container for immediate keyboard accessibility
+      requestAnimationFrame(() => {
+        portalRef.current?.focus();
+      });
     }
   }, [sessionKey]);
 
-  // Lock background scrolling while portal is active
+  // Lock background scrolling while portal is active (before expansion)
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible || isExpanding) return;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prevOverflow;
     };
-  }, [isVisible]);
+  }, [isVisible, isExpanding]);
 
   // Execute entrance transition
   const triggerEnter = useCallback(
@@ -76,13 +99,19 @@ export function InteractiveEntryPortal({
       if (hasTriggeredRef.current) return;
       hasTriggeredRef.current = true;
 
-      // Clean up timers
+      // Clean up auto-bypass timers
       if (timerRef.current) clearTimeout(timerRef.current);
       if (intervalRef.current) clearInterval(intervalRef.current);
 
       // Determine aperture expansion origin
       if (clickCoords) {
         setOrigin(clickCoords);
+      } else if (lensButtonRef.current) {
+        const rect = lensButtonRef.current.getBoundingClientRect();
+        setOrigin({
+          x: Math.round(rect.left + rect.width / 2),
+          y: Math.round(rect.top + rect.height / 2),
+        });
       } else if (typeof window !== "undefined") {
         setOrigin({
           x: Math.round(window.innerWidth / 2),
@@ -90,10 +119,16 @@ export function InteractiveEntryPortal({
         });
       }
 
-      // Mark session entered
+      if (typeof window !== "undefined") {
+        const currentDiag = Math.hypot(window.innerWidth, window.innerHeight);
+        setMaxRadius(Math.ceil(currentDiag) + 200);
+      }
+
+      // Mark session entered & add class for smooth CSS transitions
       try {
         if (typeof window !== "undefined") {
           sessionStorage.setItem(sessionKey, "true");
+          document.documentElement.classList.add("sm-portal-bypassed");
         }
       } catch {
         // Ignore storage exceptions
@@ -101,21 +136,29 @@ export function InteractiveEntryPortal({
 
       // CRITICAL: Call onEnter synchronously in the same user gesture call stack
       // to ensure modern browsers grant unmuted audio autoplay permission.
-      onEnter(soundEnabled);
+      onEnterRef.current(soundEnabled);
 
+      // Start radial aperture expansion
       setIsExpanding(true);
 
-      // Smoothly dismantle and unmount after radial expansion concludes
+      // Restore scroll immediately as the website reveals
+      document.body.style.overflow = "";
+
+      // Dismantle portal cleanly after 1.1s radial expansion concludes
       setTimeout(() => {
         setIsVisible(false);
+        onCompleteRef.current?.();
       }, 1150);
     },
-    [onEnter, sessionKey]
+    [sessionKey]
   );
 
-  // 3.8s Auto-bypass countdown logic
+  const triggerEnterRef = useRef(triggerEnter);
+  triggerEnterRef.current = triggerEnter;
+
+  // 3.8s Auto-bypass countdown logic (stable reference)
   useEffect(() => {
-    if (!isVisible || !isMounted) return;
+    if (!isVisible || !isMounted || isExpanding) return;
 
     const startTime = Date.now();
     const endTime = startTime + autoBypassDelayMs;
@@ -129,27 +172,34 @@ export function InteractiveEntryPortal({
     }, 50);
 
     timerRef.current = setTimeout(() => {
-      triggerEnter(false);
+      triggerEnterRef.current(false);
     }, autoBypassDelayMs);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isVisible, isMounted, autoBypassDelayMs, triggerEnter]);
+  }, [isVisible, isMounted, isExpanding, autoBypassDelayMs]);
 
-  // Keyboard accessibility: Enter or Space triggers active entry
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      triggerEnter(true);
-    } else if (e.key === "Escape") {
-      e.preventDefault();
-      triggerEnter(false);
-    }
-  };
+  // Global & Local Keyboard Accessibility: Enter/Space for unmuted entry, Escape for bypass
+  useEffect(() => {
+    if (!isVisible || isExpanding) return;
 
-  // If already entered in this session or animation unmounted, render nothing
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        triggerEnterRef.current(true);
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        triggerEnterRef.current(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+  }, [isVisible, isExpanding]);
+
+  // If already entered in this session or animation concluded, render nothing
   if (!isVisible) return null;
 
   const progressPercent = Math.min(
@@ -157,29 +207,32 @@ export function InteractiveEntryPortal({
     Math.max(0, ((autoBypassDelayMs - timeLeft) / autoBypassDelayMs) * 100)
   );
 
-  return (
+  const portalContent = (
     <div
+      id="interactive-entry-portal"
       ref={portalRef}
       role="dialog"
       aria-modal="true"
       aria-label="Interactive Website Entry Portal"
       tabIndex={0}
-      onKeyDown={handleKeyDown}
       onClick={(e) => {
-        // Any click on the portal counts as an active user gesture
+        // Any click on outer portal backdrop counts as an active user gesture
         triggerEnter(true, { x: e.clientX, y: e.clientY });
       }}
-      className="fixed inset-0 z-[100] select-none flex flex-col justify-between items-center px-4 py-8 sm:py-12 cursor-pointer focus:outline-none overflow-hidden"
-      style={{ backgroundColor: isExpanding ? "transparent" : "#0b0a09" }}
+      className="interactive-entry-portal fixed inset-0 z-[99999] select-none flex flex-col justify-between items-center px-4 py-8 sm:py-12 cursor-pointer focus:outline-none overflow-hidden"
+      style={{
+        backgroundColor: isExpanding ? "transparent" : "#0b0a09",
+        pointerEvents: isExpanding ? "none" : "auto",
+      }}
     >
-      {/* ─── Hardware-Accelerated Iris Mask & Dark Canvas ─── */}
+      {/* ─── Hardware-Accelerated Iris Mask & Dark Base Sheet ─── */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none z-[1]"
         style={{ width: "100%", height: "100%" }}
         aria-hidden="true"
       >
         <defs>
-          <mask id="iris-radial-entry-mask">
+          <mask id={maskId}>
             {/* White reveals the dark backdrop; black creates the expanding aperture cut-out */}
             <rect width="100%" height="100%" fill="white" />
             <motion.circle
@@ -201,7 +254,7 @@ export function InteractiveEntryPortal({
           width="100%"
           height="100%"
           fill="#0b0a09"
-          mask="url(#iris-radial-entry-mask)"
+          mask={`url(#${maskId})`}
         />
 
         {/* ─── Iris Shockwave Perimeter Rings ─── */}
@@ -246,27 +299,29 @@ export function InteractiveEntryPortal({
         )}
       </svg>
 
-      {/* ─── Hardware-Accelerated CSS clip-path Radial Light Burst ─── */}
+      {/* ─── Hardware-Accelerated Framer Motion clip-path Radial Light Burst ─── */}
       <motion.div
         className="absolute inset-0 pointer-events-none z-[2]"
-        style={{
+        initial={{
+          clipPath: `circle(0px at ${origin.x}px ${origin.y}px)`,
+        }}
+        animate={{
           clipPath: isExpanding
             ? `circle(${maxRadius}px at ${origin.x}px ${origin.y}px)`
             : `circle(0px at ${origin.x}px ${origin.y}px)`,
-          WebkitClipPath: isExpanding
-            ? `circle(${maxRadius}px at ${origin.x}px ${origin.y}px)`
-            : `circle(0px at ${origin.x}px ${origin.y}px)`,
-          willChange: "clip-path",
         }}
         transition={{
           duration: 1.1,
           ease: [0.16, 1, 0.3, 1],
         }}
+        style={{
+          willChange: "clip-path",
+        }}
       >
         <div
           className="w-full h-full"
           style={{
-            background: `radial-gradient(circle at ${origin.x}px ${origin.y}px, rgba(193, 99, 59, 0.32) 0%, rgba(107, 111, 176, 0.12) 35%, transparent 70%)`,
+            background: `radial-gradient(circle at ${origin.x}px ${origin.y}px, rgba(193, 99, 59, 0.36) 0%, rgba(107, 111, 176, 0.15) 35%, transparent 70%)`,
           }}
         />
       </motion.div>
@@ -385,10 +440,16 @@ export function InteractiveEntryPortal({
             <div className="absolute inset-0 rounded-full bg-accent/25 animate-ping opacity-40 pointer-events-none" />
 
             <button
+              ref={lensButtonRef}
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                triggerEnter(true, { x: e.clientX, y: e.clientY });
+                // When clicking the button, snap origin to button center for concentric beauty
+                const rect = lensButtonRef.current?.getBoundingClientRect();
+                const coords = rect
+                  ? { x: Math.round(rect.left + rect.width / 2), y: Math.round(rect.top + rect.height / 2) }
+                  : { x: e.clientX, y: e.clientY };
+                triggerEnter(true, coords);
               }}
               aria-label="Click to enter portfolio and initialize unmuted audio"
               className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-[#141311]/95 backdrop-blur-md border border-accent/70 hover:border-accent hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_35px_rgba(193,99,59,0.4)] hover:shadow-[0_0_55px_rgba(193,99,59,0.75)] flex flex-col items-center justify-center group cursor-pointer overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
@@ -468,6 +529,14 @@ export function InteractiveEntryPortal({
       </motion.div>
     </div>
   );
+
+  // If client-side mounted, portal directly to document.body to break free of any parent stacking context
+  if (isMounted && typeof document !== "undefined") {
+    return createPortal(portalContent, document.body);
+  }
+
+  // On SSR/initial hydration pass, render in-place to ensure zero flash of unstyled/unportaled content
+  return portalContent;
 }
 
 export default InteractiveEntryPortal;

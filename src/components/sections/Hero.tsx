@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { InteractiveEntryPortal } from "@/components/ui/InteractiveEntryPortal";
 
@@ -20,9 +20,9 @@ export function Hero() {
   const userMutedRef = useRef(false);
   const transitionTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Interactive Entry Portal session gate state & ref
-  const [showPortal, setShowPortal] = useState(false);
-  const portalActiveRef = useRef(false);
+  // Interactive Entry Portal session gate state & ref (defaults to true for zero FOUC on initial visit)
+  const [showPortal, setShowPortal] = useState(true);
+  const portalActiveRef = useRef(true);
 
   // Active scene state: 'intro' (first presentation), 'idle' (standing weight-shift loop), or 'talk' (standing interactive dialogue)
   const [activeScene, setActiveScene] = useState<"intro" | "idle" | "talk">("intro");
@@ -58,6 +58,9 @@ export function Hero() {
     let removed = false;
 
     const handleGesture = (e: Event) => {
+      // If portal is still awaiting user interaction, let the portal handle initial activation
+      if (portalActiveRef.current) return;
+
       // If the interaction is on or inside the speaker button, let toggleSound handle it directly
       const target = e.target as HTMLElement | null;
       if (target && target.closest?.("button")) {
@@ -155,17 +158,18 @@ export function Hero() {
     }
   }, []);
 
-  // Handle Interactive Entry Portal completion (Option A: Cinematic Iris Aperture)
-  const handlePortalEnter = (soundEnabled: boolean) => {
+  // Handle Interactive Entry Portal trigger (synchronous user gesture start)
+  const handlePortalEnter = useCallback((soundEnabled: boolean) => {
     portalActiveRef.current = false;
-    setShowPortal(false);
 
     const vIntro = videoIntroRef.current;
     if (!vIntro || introCompletedRef.current) return;
 
     if (soundEnabled) {
       // Synchronously un-mute within the user gesture execution context
-      vIntro.currentTime = 0;
+      try {
+        vIntro.currentTime = 0;
+      } catch {}
       vIntro.muted = false;
       userMutedRef.current = false;
       const playPromise = vIntro.play();
@@ -182,14 +186,23 @@ export function Hero() {
           });
       }
     } else {
-      // Auto-bypassed fallback: start playback muted, with [🔊 Click for sound] badge ready
-      vIntro.currentTime = 0;
+      // Auto-bypassed fallback: start playback muted, with [🔊 Click for sound] badge ready.
+      // Keep userMutedRef.current = false so subsequent user gestures anywhere on the page CAN unmute!
+      try {
+        vIntro.currentTime = 0;
+      } catch {}
       vIntro.muted = true;
-      userMutedRef.current = true;
+      userMutedRef.current = false;
       vIntro.play().catch(() => {});
       setIsMuted(true);
     }
-  };
+  }, []);
+
+  // Handle portal unmount after the 1.1s radial expansion animation has finished
+  const handlePortalComplete = useCallback(() => {
+    portalActiveRef.current = false;
+    setShowPortal(false);
+  }, []);
 
   // Autoplay & Scroll-aware Audio/Video IntersectionObserver
   useEffect(() => {
@@ -418,7 +431,10 @@ export function Hero() {
     >
       {/* ─── Interactive Entry Portal (Option A: Cinematic Iris Aperture) ─── */}
       {showPortal && (
-        <InteractiveEntryPortal onEnter={handlePortalEnter} />
+        <InteractiveEntryPortal
+          onEnter={handlePortalEnter}
+          onComplete={handlePortalComplete}
+        />
       )}
 
       {/* ─── Seamless Ambient Video Background (Zero-Dark-Dip Layering Engine) ─── */}
