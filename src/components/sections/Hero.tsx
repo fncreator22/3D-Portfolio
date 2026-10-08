@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { InteractiveEntryPortal } from "@/components/ui/InteractiveEntryPortal";
 
 const PROJECT_CHIPS = [
   { label: "Sentinel MCP Guardrail", href: "/work/sentinel-mcp-guardrail" },
@@ -18,6 +19,10 @@ export function Hero() {
   const introCompletedRef = useRef(false);
   const userMutedRef = useRef(false);
   const transitionTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Interactive Entry Portal session gate state & ref
+  const [showPortal, setShowPortal] = useState(false);
+  const portalActiveRef = useRef(false);
 
   // Active scene state: 'intro' (first presentation), 'idle' (standing weight-shift loop), or 'talk' (standing interactive dialogue)
   const [activeScene, setActiveScene] = useState<"intro" | "idle" | "talk">("intro");
@@ -115,6 +120,77 @@ export function Hero() {
     };
   }, []);
 
+  // Interactive Entry Portal session gate initialization
+  useEffect(() => {
+    let entered = false;
+    try {
+      entered = sessionStorage.getItem("sm_entered_session") === "true";
+    } catch {
+      entered = false;
+    }
+
+    if (!entered) {
+      portalActiveRef.current = true;
+      setShowPortal(true);
+    } else {
+      portalActiveRef.current = false;
+      setShowPortal(false);
+      // Returning visitor in same session: immediately probe unmuted autoplay
+      const vIntro = videoIntroRef.current;
+      if (vIntro && !introCompletedRef.current) {
+        vIntro.muted = false;
+        const initialPromise = vIntro.play();
+        if (initialPromise !== undefined) {
+          initialPromise
+            .then(() => {
+              setIsMuted(false);
+            })
+            .catch(() => {
+              vIntro.muted = true;
+              vIntro.play().catch(() => {});
+              setIsMuted(true);
+            });
+        }
+      }
+    }
+  }, []);
+
+  // Handle Interactive Entry Portal completion (Option A: Cinematic Iris Aperture)
+  const handlePortalEnter = (soundEnabled: boolean) => {
+    portalActiveRef.current = false;
+    setShowPortal(false);
+
+    const vIntro = videoIntroRef.current;
+    if (!vIntro || introCompletedRef.current) return;
+
+    if (soundEnabled) {
+      // Synchronously un-mute within the user gesture execution context
+      vIntro.currentTime = 0;
+      vIntro.muted = false;
+      userMutedRef.current = false;
+      const playPromise = vIntro.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsMuted(false);
+          })
+          .catch((err) => {
+            console.warn("Autoplay audio blocked, falling back to muted:", err);
+            vIntro.muted = true;
+            vIntro.play().catch(() => {});
+            setIsMuted(true);
+          });
+      }
+    } else {
+      // Auto-bypassed fallback: start playback muted, with [🔊 Click for sound] badge ready
+      vIntro.currentTime = 0;
+      vIntro.muted = true;
+      userMutedRef.current = true;
+      vIntro.play().catch(() => {});
+      setIsMuted(true);
+    }
+  };
+
   // Autoplay & Scroll-aware Audio/Video IntersectionObserver
   useEffect(() => {
     const container = containerRef.current;
@@ -127,8 +203,8 @@ export function Hero() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && entry.intersectionRatio > 0.15) {
-            // Hero is in view: play active video
-            if (activeSceneRef.current === "intro" && !introCompletedRef.current && vIntro) {
+            // Hero is in view: play active video (only if portal is not active)
+            if (activeSceneRef.current === "intro" && !introCompletedRef.current && vIntro && !portalActiveRef.current) {
               if (vIntro.paused) {
                 const playPromise = vIntro.play();
                 if (playPromise !== undefined) {
@@ -157,12 +233,8 @@ export function Hero() {
 
     observer.observe(container);
 
-    // Initial play attempt for intro:
-    // 1. First probe if the browser permits unmuted autoplay (e.g. returning visitor or high MEI).
-    // 2. If permitted, sound starts instantly and isMuted = false.
-    // 3. If blocked by browser autoplay policy, immediately roll muted so video never stays frozen,
-    //    and set isMuted = true so the speaker symbol and helper label accurately inform the user.
-    if (vIntro && !introCompletedRef.current) {
+    // Initial play attempt for intro (only for returning visitors where portal is not waiting for user gesture):
+    if (vIntro && !introCompletedRef.current && !portalActiveRef.current) {
       vIntro.muted = false;
       const initialPromise = vIntro.play();
       if (initialPromise !== undefined) {
@@ -344,6 +416,11 @@ export function Hero() {
       className="relative z-10 min-h-svh flex flex-col justify-between overflow-hidden bg-bg"
       aria-label="Hero Introduction"
     >
+      {/* ─── Interactive Entry Portal (Option A: Cinematic Iris Aperture) ─── */}
+      {showPortal && (
+        <InteractiveEntryPortal onEnter={handlePortalEnter} />
+      )}
+
       {/* ─── Seamless Ambient Video Background (Zero-Dark-Dip Layering Engine) ─── */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none bg-[#cbc4ba]">
         {/* Layer 1 (z-[1]): Scene 2 Standing Lifelike Idle (Rock-solid, always 100% opaque underlying canvas) */}
@@ -366,7 +443,6 @@ export function Hero() {
             src="/videos/hero.mp4"
             poster="/images/hero-poster.webp"
             playsInline
-            autoPlay
             muted
             onTimeUpdate={handleIntroTimeUpdate}
             onEnded={transitionToIntroComplete}
