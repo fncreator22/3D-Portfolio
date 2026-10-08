@@ -444,30 +444,8 @@ export function Hero() {
         </div>
       </div>
 
-      {/* ─── Dedicated Speaker Button & Click Anywhere Indicator ─── */}
-      <div className="absolute bottom-[18%] sm:bottom-[20%] right-[7%] sm:right-[9%] lg:right-[9.8%] z-30 pointer-events-auto flex items-center gap-2.5">
-        {/* Helper badge */}
-        {isMuted ? (
-          <button
-            onClick={toggleSound}
-            type="button"
-            className="inline-flex items-center gap-2 font-mono text-[0.68rem] tracking-wider uppercase text-paper bg-bg/90 hover:bg-bg-raise/95 border border-accent/60 px-3.5 py-2 rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.6)] backdrop-blur-md transition-all cursor-pointer group animate-pulse"
-            aria-label="Click anywhere to unmute audio"
-          >
-            <span className="text-accent text-xs">🔊</span>
-            <span className="group-hover:text-accent transition-colors font-medium">Click anywhere for sound</span>
-          </button>
-        ) : (
-          <button
-            onClick={toggleSound}
-            type="button"
-            className="hidden sm:inline-flex items-center gap-1.5 font-mono text-[0.65rem] tracking-wider uppercase text-accent bg-bg/85 hover:bg-bg-raise/95 border border-accent/40 px-3 py-1.5 rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.5)] backdrop-blur-md transition-all cursor-pointer group"
-            aria-label="Audio active · Click anywhere to mute"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
-            <span className="font-medium">Audio Active · Click to mute</span>
-          </button>
-        )}
+      {/* ─── Dedicated Speaker Button ─── */}
+      <div className="absolute bottom-[18%] sm:bottom-[20%] right-[7%] sm:right-[9%] lg:right-[9.8%] z-30 pointer-events-auto">
 
         <button
           onClick={toggleSound}
