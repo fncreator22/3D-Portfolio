@@ -15,6 +15,7 @@ export function JourneyTimeline() {
     const ctx = gsap.context(() => {
       const items = gsap.utils.toArray<HTMLElement>(".role-item");
       const fillLine = document.getElementById("role-fill-line");
+      const laserHead = document.getElementById("role-laser-head");
 
       items.forEach((item, i) => {
         ScrollTrigger.create({
@@ -32,7 +33,12 @@ export function JourneyTimeline() {
           start: "top 65%",
           end: "bottom 65%",
           onUpdate: (self) => {
-            fillLine.style.height = `${self.progress * 100}%`;
+            const p = self.progress;
+            fillLine.style.height = `${p * 100}%`;
+            if (laserHead) {
+              laserHead.style.top = `${p * 100}%`;
+              laserHead.style.opacity = p > 0.005 ? "1" : "0";
+            }
           },
         });
       }
@@ -53,12 +59,26 @@ export function JourneyTimeline() {
 
         <div className="role-track-wrap relative pl-8 md:pl-12">
           {/* Background Conduit Rail */}
-          <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-line/80" />
+          <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-line/60" />
           
           {/* Active 3D Laser Glowing Rail */}
           <div
             id="role-fill-line"
-            className="absolute left-0 top-0 w-[2px] h-0 bg-gradient-to-b from-accent via-accent to-accent-dim shadow-[0_0_12px_#c1633b] transition-all duration-100"
+            className="absolute left-0 top-0 w-[2.5px] h-0 bg-gradient-to-b from-accent via-[#e27d50] to-[#ffaa75] origin-top will-change-[height]"
+            style={{
+              boxShadow:
+                "0 0 10px rgba(255, 170, 117, 0.95), 0 0 22px rgba(193, 99, 59, 0.85), 0 0 35px rgba(193, 99, 59, 0.5)",
+            }}
+          />
+
+          {/* Traveling Photon Light Head (Pop-up light on scroll) */}
+          <div
+            id="role-laser-head"
+            className="absolute -left-[5px] w-[12px] h-[12px] rounded-full bg-paper pointer-events-none -translate-y-1/2 opacity-0 z-20 transition-opacity duration-150"
+            style={{
+              boxShadow:
+                "0 0 12px #ffffff, 0 0 24px #ffaa75, 0 0 38px #c1633b, 0 0 55px rgba(193, 99, 59, 0.9)",
+            }}
           />
 
           {ROLES.map((role, i) => {
@@ -76,16 +96,21 @@ export function JourneyTimeline() {
                 <div
                   className={`absolute -left-[37px] md:-left-[53px] top-10 md:top-12 w-[12px] h-[12px] rounded-full border transition-all duration-300 ${
                     isActive
-                      ? "bg-accent border-paper shadow-[0_0_16px_#c1633b,0_0_0_5px_rgba(193,99,59,0.25)] scale-125"
-                      : "bg-bg border-stone/60"
+                      ? "bg-paper border-accent shadow-[0_0_16px_#ffffff,0_0_32px_#ffaa75,0_0_50px_#c1633b,0_0_0_6px_rgba(193,99,59,0.35)] scale-125 z-10"
+                      : "bg-bg border-stone/50 hover:border-accent/60"
                   }`}
-                />
+                >
+                  {/* Radiant synaptic pulse ripple on active node */}
+                  {isActive && (
+                    <span className="absolute -inset-1.5 rounded-full bg-accent animate-ping opacity-75 pointer-events-none" />
+                  )}
+                </div>
 
                 {/* Role Content Card */}
                 <div
                   className={`p-6 sm:p-8 rounded-2xl border transition-all duration-300 ${
                     isActive
-                      ? "bg-bg-raise/95 border-accent/40 shadow-[0_16px_40px_rgba(0,0,0,0.6),0_0_25px_rgba(193,99,59,0.1)]"
+                      ? "bg-bg-raise/95 border-accent/60 shadow-[0_16px_40px_rgba(0,0,0,0.6),0_0_30px_rgba(193,99,59,0.18)]"
                       : "bg-transparent border-transparent"
                   }`}
                 >
@@ -121,3 +146,5 @@ export function JourneyTimeline() {
     </section>
   );
 }
+
+export default JourneyTimeline;

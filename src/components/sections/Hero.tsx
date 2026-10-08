@@ -333,7 +333,7 @@ export function Hero() {
           className="absolute inset-0 w-full lg:w-[58%] z-10 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to right, #0b0a09 0%, rgba(11, 10, 9, 0.96) 35%, rgba(11, 10, 9, 0.70) 65%, transparent 100%)",
+              "linear-gradient(to right, #0b0a09 0%, rgba(11, 10, 9, 0.92) 28%, rgba(11, 10, 9, 0.45) 54%, rgba(11, 10, 9, 0.12) 75%, transparent 100%)",
           }}
         />
 
@@ -355,12 +355,12 @@ export function Hero() {
           }}
         />
 
-        {/* Bottom edge gradient: blends cleanly into Section 02 */}
+        {/* Bottom edge gradient: Soft, low-profile blend matching original alignment */}
         <div
-          className="absolute inset-x-0 bottom-0 h-40 z-10 pointer-events-none"
+          className="absolute inset-x-0 bottom-0 h-20 sm:h-24 z-10 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to top, #0b0a09 0%, rgba(11, 10, 9, 0.90) 60%, transparent 100%)",
+              "linear-gradient(to top, #0b0a09 0%, rgba(11, 10, 9, 0.65) 25%, rgba(11, 10, 9, 0.20) 55%, transparent 100%)",
           }}
         />
 
