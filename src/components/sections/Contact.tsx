@@ -1,30 +1,8 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { PROFILE } from "@/data/projects";
 import { IDCardLanyard } from "@/components/ui/id-card-lanyard";
 
 export function Contact() {
-  const [istTime, setIstTime] = useState("");
-
-  // Live IST Clock
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const options: Intl.DateTimeFormatOptions = {
-        timeZone: "Asia/Kolkata",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true,
-      };
-      setIstTime(new Intl.DateTimeFormat("en-US", options).format(now));
-    };
-
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <section id="invariants" className="py-[clamp(5rem,9vw,9rem)] border-t border-line relative z-10 overflow-visible" aria-labelledby="invariants-heading">
@@ -61,8 +39,8 @@ export function Contact() {
               </div>
             </div>
 
-            {/* Academic Background & Location Row */}
-            <div className="mt-6 p-4 rounded-xl bg-bg-raise/80 border border-line/80 max-w-[520px] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            {/* Academic Background */}
+            <div className="mt-6 p-4 rounded-xl bg-bg-raise/80 border border-line/80 max-w-[520px]">
               <div>
                 <div className="font-mono text-[0.68rem] text-accent uppercase tracking-wider font-semibold">
                   Academic Background
@@ -73,10 +51,6 @@ export function Contact() {
                 <div className="font-mono text-xs text-stone-300 mt-0.5">
                   {PROFILE.education.school}
                 </div>
-              </div>
-              <div className="flex items-center gap-2 font-mono text-xs text-paper bg-bg px-3 py-1.5 rounded-full border border-line/70 w-fit flex-shrink-0">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
-                <span>IST: <strong className="text-accent font-semibold">{istTime || "Loading..."}</strong></span>
               </div>
             </div>
 

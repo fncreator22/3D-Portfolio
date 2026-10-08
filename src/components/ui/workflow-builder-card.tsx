@@ -145,21 +145,7 @@ export const WorkflowBuilderCard = ({
                 <span>{lastUpdated}</span>
                 <span>•</span>
                 <div className="flex items-center gap-1.5">
-                  <span
-                    className={cn(
-                      "h-2 w-2 rounded-full transition-colors",
-                      isLive
-                        ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.7)]"
-                        : "bg-accent shadow-[0_0_8px_rgba(193,99,59,0.7)]"
-                    )}
-                    aria-label={status}
-                  />
-                  <span
-                    className={cn(
-                      "text-[0.7rem] uppercase tracking-wider font-semibold",
-                      isLive ? "text-emerald-400" : "text-accent"
-                    )}
-                  >
+                  <span className="text-[0.7rem] uppercase tracking-wider font-semibold text-stone-300">
                     {status}
                   </span>
                 </div>

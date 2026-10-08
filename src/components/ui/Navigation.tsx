@@ -96,11 +96,6 @@ export function Navigation() {
             </span>
           </Link>
 
-          {/* Status badge */}
-          <div className="hidden md:flex items-center gap-2 pl-3 border-l border-line font-mono text-[0.68rem] tracking-wider text-stone-300 uppercase">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
-            <span>Available for Engagements</span>
-          </div>
         </div>
 
         {/* ─── Center / Right: Desktop Links + CTA ─── */}
@@ -201,11 +196,7 @@ export function Navigation() {
           </a>
         </nav>
 
-        <div className="pt-6 border-t border-line/60 flex flex-col gap-3">
-          <div className="flex items-center gap-2 font-mono text-xs text-stone-300">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
-            <span>Available for Engagements</span>
-          </div>
+        <div className="pt-6 border-t border-line/60 flex flex-col gap-1">
           <span className="font-mono text-[0.7rem] text-stone-400">
             Hyderabad, India
           </span>
