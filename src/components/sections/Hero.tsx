@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { InteractiveEntryPortal } from "@/components/ui/InteractiveEntryPortal";
 
 const PROJECT_CHIPS = [
   { label: "Sentinel MCP Guardrail", href: "/work/sentinel-mcp-guardrail" },
@@ -20,18 +19,13 @@ export function Hero() {
   const userMutedRef = useRef(false);
   const transitionTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Interactive Entry Portal session gate state & ref (defaults to true for zero FOUC on initial visit)
-  const [showPortal, setShowPortal] = useState(true);
-  const portalActiveRef = useRef(true);
-
   // Active scene state: 'intro' (first presentation), 'idle' (standing weight-shift loop), or 'talk' (standing interactive dialogue)
   const [activeScene, setActiveScene] = useState<"intro" | "idle" | "talk">("intro");
   const activeSceneRef = useRef<"intro" | "idle" | "talk">("intro");
 
   // Audio state: starts muted (isMuted = true) to comply with browser autoplay security policies.
-  // The moment the browser allows unmuted playback (MEI met) OR the visitor interacts
-  // anywhere on the page (click/tap/keydown), audio automatically un-mutes and the speaker
-  // symbol turns into active speaking mode.
+  // The moment the visitor clicks anywhere on the hero screen or clicks the speaker button,
+  // audio immediately un-mutes and Sagar speaks.
   const [isMuted, setIsMuted] = useState(true);
   const [hasTalkVideo, setHasTalkVideo] = useState(true);
 
@@ -49,161 +43,6 @@ export function Hero() {
     setActiveScene(scene);
   };
 
-  // Browser Autoplay Policy Eager Interaction Unmute:
-  // Modern browsers (Chrome, Edge, Safari, Firefox) block unmuted audio until a valid user gesture.
-  // We listen across valid user activation events (click, pointerdown, touchstart, keydown).
-  // As soon as the visitor interacts anywhere on the page (even on navigation or background),
-  // audio un-mutes automatically and the speaker symbol updates to active speaking waves.
-  useEffect(() => {
-    let removed = false;
-
-    const handleGesture = (e: Event) => {
-      // If portal is still awaiting user interaction, let the portal handle initial activation
-      if (portalActiveRef.current) return;
-
-      // If the interaction is on or inside the speaker button, let toggleSound handle it directly
-      const target = e.target as HTMLElement | null;
-      if (target && target.closest?.("button")) {
-        return;
-      }
-
-      if (userMutedRef.current || introCompletedRef.current) return;
-
-      const vIntro = videoIntroRef.current;
-      if (vIntro) {
-        if (!vIntro.muted && !vIntro.paused) {
-          setIsMuted(false);
-          removeListeners();
-          return;
-        }
-
-        vIntro.muted = false;
-        const playPromise = vIntro.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              setIsMuted(false);
-              removeListeners();
-            })
-            .catch(() => {
-              // If browser still requires direct button click, keep rolling muted
-              vIntro.muted = true;
-              vIntro.play().catch(() => {});
-              setIsMuted(true);
-            });
-        }
-      }
-    };
-
-    const events = [
-      "click",
-      "pointerdown",
-      "touchstart",
-      "keydown",
-    ] as const;
-
-    const addListeners = () => {
-      events.forEach((evt) => {
-        window.addEventListener(evt, handleGesture, { passive: true });
-      });
-    };
-
-    const removeListeners = () => {
-      if (removed) return;
-      removed = true;
-      events.forEach((evt) => {
-        window.removeEventListener(evt, handleGesture);
-      });
-    };
-
-    addListeners();
-
-    return () => {
-      removeListeners();
-    };
-  }, []);
-
-  // Interactive Entry Portal session gate initialization
-  useEffect(() => {
-    let entered = false;
-    try {
-      entered = sessionStorage.getItem("sm_entered_session") === "true";
-    } catch {
-      entered = false;
-    }
-
-    if (!entered) {
-      portalActiveRef.current = true;
-      setShowPortal(true);
-    } else {
-      portalActiveRef.current = false;
-      setShowPortal(false);
-      // Returning visitor in same session: immediately probe unmuted autoplay
-      const vIntro = videoIntroRef.current;
-      if (vIntro && !introCompletedRef.current) {
-        vIntro.muted = false;
-        const initialPromise = vIntro.play();
-        if (initialPromise !== undefined) {
-          initialPromise
-            .then(() => {
-              setIsMuted(false);
-            })
-            .catch(() => {
-              vIntro.muted = true;
-              vIntro.play().catch(() => {});
-              setIsMuted(true);
-            });
-        }
-      }
-    }
-  }, []);
-
-  // Handle Interactive Entry Portal trigger (synchronous user gesture start)
-  const handlePortalEnter = useCallback((soundEnabled: boolean) => {
-    portalActiveRef.current = false;
-
-    const vIntro = videoIntroRef.current;
-    if (!vIntro || introCompletedRef.current) return;
-
-    if (soundEnabled) {
-      // Synchronously un-mute within the user gesture execution context
-      try {
-        vIntro.currentTime = 0;
-      } catch {}
-      vIntro.muted = false;
-      userMutedRef.current = false;
-      const playPromise = vIntro.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsMuted(false);
-          })
-          .catch((err) => {
-            console.warn("Autoplay audio blocked, falling back to muted:", err);
-            vIntro.muted = true;
-            vIntro.play().catch(() => {});
-            setIsMuted(true);
-          });
-      }
-    } else {
-      // Auto-bypassed fallback: start playback muted, with [🔊 Click for sound] badge ready.
-      // Keep userMutedRef.current = false so subsequent user gestures anywhere on the page CAN unmute!
-      try {
-        vIntro.currentTime = 0;
-      } catch {}
-      vIntro.muted = true;
-      userMutedRef.current = false;
-      vIntro.play().catch(() => {});
-      setIsMuted(true);
-    }
-  }, []);
-
-  // Handle portal unmount after the 1.1s radial expansion animation has finished
-  const handlePortalComplete = useCallback(() => {
-    portalActiveRef.current = false;
-    setShowPortal(false);
-  }, []);
-
   // Autoplay & Scroll-aware Audio/Video IntersectionObserver
   useEffect(() => {
     const container = containerRef.current;
@@ -216,8 +55,8 @@ export function Hero() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && entry.intersectionRatio > 0.15) {
-            // Hero is in view: play active video (only if portal is not active)
-            if (activeSceneRef.current === "intro" && !introCompletedRef.current && vIntro && !portalActiveRef.current) {
+            // Hero is in view: play active video
+            if (activeSceneRef.current === "intro" && !introCompletedRef.current && vIntro) {
               if (vIntro.paused) {
                 const playPromise = vIntro.play();
                 if (playPromise !== undefined) {
@@ -246,21 +85,15 @@ export function Hero() {
 
     observer.observe(container);
 
-    // Initial play attempt for intro (only for returning visitors where portal is not waiting for user gesture):
-    if (vIntro && !introCompletedRef.current && !portalActiveRef.current) {
-      vIntro.muted = false;
+    // Initial play probe for intro video on load:
+    if (vIntro && !introCompletedRef.current) {
       const initialPromise = vIntro.play();
       if (initialPromise !== undefined) {
-        initialPromise
-          .then(() => {
-            setIsMuted(false);
-          })
-          .catch(() => {
-            // Browser autoplay security blocked unmuted playback on initial launch
-            vIntro.muted = true;
-            vIntro.play().catch(() => {});
-            setIsMuted(true);
-          });
+        initialPromise.catch(() => {
+          vIntro.muted = true;
+          vIntro.play().catch(() => {});
+          setIsMuted(true);
+        });
       }
     }
 
@@ -343,27 +176,29 @@ export function Hero() {
     }
   };
 
-  // Interactive Speaker Button Toggle & 3-Scene State Machine
+  // Interactive Speaker Audio Toggle & 3-Scene State Machine
   const toggleSound = () => {
     const vIntro = videoIntroRef.current;
     const vIdle = videoIdleRef.current;
     const vTalk = videoTalkRef.current;
 
     // 1. Scene 1 (Intro):
-    // Speaker button ONLY toggles mute/unmute of intro audio.
-    // It NEVER skips, pauses, or stops the video. The intro continues speaking to completion.
+    // Toggles mute/unmute of intro audio. It NEVER pauses or resets the video.
     if (!introCompletedRef.current && activeSceneRef.current === "intro") {
       if (vIntro) {
         const nextMuted = !vIntro.muted;
         userMutedRef.current = nextMuted;
         vIntro.muted = nextMuted;
+        if (!nextMuted && vIntro.paused) {
+          vIntro.play().catch(() => {});
+        }
         setIsMuted(nextMuted);
       }
       return;
     }
 
     // 2. Scene 2 (Standing Idle loop):
-    // Clicking speaker at ANY time during idle immediately starts Scene 3 (Talk) unmuted.
+    // Clicking anywhere during idle immediately starts Scene 3 (Talk) unmuted.
     if (activeSceneRef.current === "idle") {
       if (vTalk) {
         vTalk.currentTime = 0;
@@ -386,7 +221,6 @@ export function Hero() {
               }, 180);
             })
             .catch(() => {
-              // Browser requires user gesture fallback
               vTalk.muted = true;
               vTalk.play().catch(() => {});
               setTalkOpacity(1);
@@ -399,7 +233,7 @@ export function Hero() {
     }
 
     // 3. Scene 3 (Speaking):
-    // Clicking speaker while avatar is speaking immediately mutes and smoothly returns to Scene 2 (Idle).
+    // Clicking while avatar is speaking immediately mutes and smoothly returns to Scene 2 (Idle).
     if (activeSceneRef.current === "talk") {
       userMutedRef.current = true;
       if (vTalk) {
@@ -423,20 +257,24 @@ export function Hero() {
     }
   };
 
+  // Click-Anywhere-on-Hero Screen Audio Handler:
+  // If the visitor clicks anywhere on the hero section (stage, text, background),
+  // we toggle the audio. If they clicked a link or interactive button, we let that element execute.
+  const handleHeroStageClick = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement | null;
+    if (target?.closest?.("a, button, [role='button'], input, textarea, select")) {
+      return;
+    }
+    toggleSound();
+  };
+
   return (
     <section
       ref={containerRef}
-      className="relative z-10 min-h-svh flex flex-col justify-between overflow-hidden bg-bg"
+      onClick={handleHeroStageClick}
+      className="relative z-10 min-h-svh flex flex-col justify-between overflow-hidden bg-bg cursor-pointer selection:cursor-auto"
       aria-label="Hero Introduction"
     >
-      {/* ─── Interactive Entry Portal (Option A: Cinematic Iris Aperture) ─── */}
-      {showPortal && (
-        <InteractiveEntryPortal
-          onEnter={handlePortalEnter}
-          onComplete={handlePortalComplete}
-        />
-      )}
-
       {/* ─── Seamless Ambient Video Background (Zero-Dark-Dip Layering Engine) ─── */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none bg-[#cbc4ba]">
         {/* Layer 1 (z-[1]): Scene 2 Standing Lifelike Idle (Rock-solid, always 100% opaque underlying canvas) */}
@@ -459,6 +297,7 @@ export function Hero() {
             src="/videos/hero.mp4"
             poster="/images/hero-poster.webp"
             playsInline
+            autoPlay
             muted
             onTimeUpdate={handleIntroTimeUpdate}
             onEnded={transitionToIntroComplete}
@@ -489,31 +328,55 @@ export function Hero() {
           }}
         />
 
-        {/* Left Obsidian Gradient Mask: Darkens text area so typography is 100% readable */}
-        <div className="absolute inset-0 bg-gradient-to-r from-bg via-bg/95 via-30% to-transparent w-full lg:w-[58%] z-10" />
+        {/* Left Obsidian Gradient Mask: Darkens text area so typography is 100% readable with zero washout */}
+        <div
+          className="absolute inset-0 w-full lg:w-[58%] z-10 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to right, #0b0a09 0%, rgba(11, 10, 9, 0.96) 35%, rgba(11, 10, 9, 0.70) 65%, transparent 100%)",
+          }}
+        />
 
         {/* Right edge feathering: seamless fade on ultra-wide screens */}
-        <div className="absolute inset-y-0 right-0 w-24 sm:w-44 bg-gradient-to-l from-bg via-bg/35 to-transparent z-10" />
+        <div
+          className="absolute inset-y-0 right-0 w-24 sm:w-44 z-10 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to left, #0b0a09 0%, rgba(11, 10, 9, 0.35) 60%, transparent 100%)",
+          }}
+        />
 
         {/* Top edge gradient: Lighter as requested to let studio lighting breathe */}
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-bg/40 via-bg/20 to-transparent z-10" />
+        <div
+          className="absolute inset-x-0 top-0 h-28 z-10 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(11, 10, 9, 0.40) 0%, rgba(11, 10, 9, 0.15) 60%, transparent 100%)",
+          }}
+        />
 
         {/* Bottom edge gradient: blends cleanly into Section 02 */}
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-bg via-bg/90 to-transparent z-10" />
+        <div
+          className="absolute inset-x-0 bottom-0 h-40 z-10 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to top, #0b0a09 0%, rgba(11, 10, 9, 0.90) 60%, transparent 100%)",
+          }}
+        />
 
         {/* Subtle warm amber/terracotta atmosphere tint */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-accent/8 via-transparent to-transparent mix-blend-color-dodge z-10" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-accent/8 via-transparent to-transparent mix-blend-color-dodge z-10 pointer-events-none" />
       </div>
 
       {/* ─── Hero Content Foreground Layer ─── */}
-      <div className="relative z-20 flex-1 flex items-center pt-28 sm:pt-32 pb-12">
+      <div className="relative z-20 flex-1 flex items-center pt-28 sm:pt-32 pb-12 pointer-events-auto">
         <div className="max-w-[1320px] mx-auto px-[clamp(1.5rem,4vw,3.5rem)] w-full">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-10 items-center">
 
             {/* Left: Tightly Constrained & Balanced Text Column */}
             <div className="flex flex-col max-w-[460px]">
               
-              {/* Shortened Eyebrow Tag (prevents collision with avatar's hair) */}
+              {/* Shortened Eyebrow Tag */}
               <div className="eyebrow mb-3 sm:mb-3.5 text-[0.68rem] sm:text-xs tracking-wider">
                 AI ENGINEER · AGENTIC SYSTEMS · VOICE AI
               </div>
@@ -532,14 +395,14 @@ export function Hero() {
               <div className="flex flex-wrap gap-2.5 items-center mb-6">
                 <Link
                   href="/work"
-                  className="inline-flex items-center justify-center bg-paper text-bg border border-black/10 rounded-full font-body font-medium hover:bg-accent hover:text-paper hover:border-accent transition-all duration-200 text-[0.8rem] sm:text-[0.88rem] px-4 py-2 shadow-sm"
+                  className="inline-flex items-center justify-center bg-paper text-bg border border-black/10 rounded-full font-body font-medium hover:bg-accent hover:text-paper hover:border-accent transition-all duration-200 text-[0.8rem] sm:text-[0.88rem] px-4 py-2 shadow-sm cursor-pointer"
                 >
                   Explore 16 Systems
                 </Link>
 
                 <a
                   href="#contact"
-                  className="inline-flex items-center justify-center bg-accent text-bg font-medium rounded-full hover:bg-accent/90 hover:shadow-md transition-all text-[0.8rem] sm:text-[0.88rem] px-4 py-2 gap-1.5"
+                  className="inline-flex items-center justify-center bg-accent text-bg font-medium rounded-full hover:bg-accent/90 hover:shadow-md transition-all text-[0.8rem] sm:text-[0.88rem] px-4 py-2 gap-1.5 cursor-pointer"
                 >
                   <span>Get in Touch</span>
                   <span className="text-xs">↓</span>
@@ -549,7 +412,7 @@ export function Hero() {
                   href="/resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center text-paper bg-transparent border border-paper/60 rounded-full font-body hover:bg-paper hover:text-bg hover:border-paper transition-all duration-200 text-[0.8rem] sm:text-[0.88rem] px-4 py-2 gap-1.5"
+                  className="inline-flex items-center justify-center text-paper bg-transparent border border-paper/60 rounded-full font-body hover:bg-paper hover:text-bg hover:border-paper transition-all duration-200 text-[0.8rem] sm:text-[0.88rem] px-4 py-2 gap-1.5 cursor-pointer"
                 >
                   <span>Resume</span>
                   <span className="text-xs">↗</span>
@@ -565,7 +428,7 @@ export function Hero() {
                   <Link
                     key={chip.href}
                     href={chip.href}
-                    className="inline-flex items-center gap-1 font-mono text-[0.7rem] sm:text-xs text-paper/90 bg-bg-raise/90 border border-line/80 hover:border-accent hover:text-accent rounded-lg px-2.5 py-1 transition-all backdrop-blur-sm"
+                    className="inline-flex items-center gap-1 font-mono text-[0.7rem] sm:text-xs text-paper/90 bg-bg-raise/90 border border-line/80 hover:border-accent hover:text-accent rounded-lg px-2.5 py-1 transition-all backdrop-blur-sm cursor-pointer"
                   >
                     <span>{chip.label}</span>
                     <span className="text-accent text-[0.65rem]">→</span>
@@ -581,18 +444,28 @@ export function Hero() {
         </div>
       </div>
 
-      {/* ─── Dedicated Speaker Button: Positioned Directly Above the 4-Pointed Star ─── */}
+      {/* ─── Dedicated Speaker Button & Click Anywhere Indicator ─── */}
       <div className="absolute bottom-[18%] sm:bottom-[20%] right-[7%] sm:right-[9%] lg:right-[9.8%] z-30 pointer-events-auto flex items-center gap-2.5">
-        {/* Helper prompt when browser autoplay policy blocks unmuted audio on launch */}
-        {activeScene === "intro" && isMuted && (
+        {/* Helper badge */}
+        {isMuted ? (
           <button
             onClick={toggleSound}
             type="button"
-            className="hidden sm:inline-flex items-center gap-1.5 font-mono text-[0.68rem] tracking-wider uppercase text-paper bg-bg/90 hover:bg-bg-raise/95 border border-accent/60 px-3.5 py-2 rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.6)] backdrop-blur-md transition-all cursor-pointer group"
-            aria-label="Click to unmute presentation audio"
+            className="inline-flex items-center gap-2 font-mono text-[0.68rem] tracking-wider uppercase text-paper bg-bg/90 hover:bg-bg-raise/95 border border-accent/60 px-3.5 py-2 rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.6)] backdrop-blur-md transition-all cursor-pointer group animate-pulse"
+            aria-label="Click anywhere to unmute audio"
           >
             <span className="text-accent text-xs">🔊</span>
-            <span className="group-hover:text-accent transition-colors font-medium">Click for sound</span>
+            <span className="group-hover:text-accent transition-colors font-medium">Click anywhere for sound</span>
+          </button>
+        ) : (
+          <button
+            onClick={toggleSound}
+            type="button"
+            className="hidden sm:inline-flex items-center gap-1.5 font-mono text-[0.65rem] tracking-wider uppercase text-accent bg-bg/85 hover:bg-bg-raise/95 border border-accent/40 px-3 py-1.5 rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.5)] backdrop-blur-md transition-all cursor-pointer group"
+            aria-label="Audio active · Click anywhere to mute"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
+            <span className="font-medium">Audio Active · Click to mute</span>
           </button>
         )}
 
@@ -606,14 +479,16 @@ export function Hero() {
           }
           title={
             activeScene === "talk"
-              ? "Avatar speaking · Click to mute"
+              ? "Avatar speaking · Click anywhere to mute"
               : activeScene === "intro"
               ? isMuted
-                ? "Intro muted · Click to unmute"
-                : "Intro audio active · Click to mute"
+                ? "Intro muted · Click anywhere to unmute"
+                : "Intro audio active · Click anywhere to mute"
               : "Click to hear avatar speak"
           }
-          className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-bg/85 hover:bg-bg-raise/95 border border-line hover:border-accent flex items-center justify-center text-paper transition-all backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.7)] group cursor-pointer"
+          className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-bg/85 hover:bg-bg-raise/95 border flex items-center justify-center text-paper transition-all backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.7)] group cursor-pointer ${
+            isMuted ? "border-line hover:border-accent" : "border-accent/80 shadow-[0_0_20px_rgba(193,99,59,0.35)]"
+          }`}
         >
           {isMuted ? (
             <svg className="w-5 h-5 text-stone-400 group-hover:text-paper transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">

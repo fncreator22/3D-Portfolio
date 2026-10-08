@@ -135,14 +135,3 @@ a {
   transform-style: preserve-3d;
 }
 
-/* Interactive Entry Portal FOUC Prevention & Initial Header Concealment */
-html.sm-portal-bypassed #interactive-entry-portal {
-  display: none !important;
-}
-
-html:not(.sm-portal-bypassed) header[role="banner"],
-html:not(.sm-portal-bypassed) [aria-label="Page scroll progress"] {
-  opacity: 0;
-  pointer-events: none;
-}
-

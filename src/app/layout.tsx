@@ -39,17 +39,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${fraunces.variable} ${ibmPlexMono.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${spaceGrotesk.variable} ${fraunces.variable} ${ibmPlexMono.variable}`}
+    >
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{if(sessionStorage.getItem("sm_entered_session")==="true"){document.documentElement.classList.add("sm-portal-bypassed")}}catch(e){}`,
-          }}
-        />
         <link rel="preload" as="image" href="/images/hero-poster.webp" type="image/webp" />
         <link rel="preload" as="video" href="/videos/hero.mp4" type="video/mp4" />
       </head>
-      <body className="bg-bg text-paper antialiased relative selection:bg-accent selection:text-bg">
+      <body
+        suppressHydrationWarning
+        className="bg-bg text-paper antialiased relative selection:bg-accent selection:text-bg"
+      >
         <SmoothScroll>
           <AuroraBackground />
           <CursorSpotlight />

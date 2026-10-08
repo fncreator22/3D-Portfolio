@@ -949,11 +949,11 @@ export function IDCardLanyard({
   }, []);
 
   return (
-    <div className={`idcl-container ${className}`} ref={containerRef}>
+    <div className={`idcl-container ${className}`} ref={containerRef} suppressHydrationWarning>
       <style>{CSS}</style>
 
       {/* Physics stage scoped to container */}
-      <div className="idcl-stage">
+      <div className="idcl-stage" suppressHydrationWarning>
         <canvas className="idcl-rope" ref={canvasRef} />
         <div className="idcl-rail" ref={railRef} />
 
