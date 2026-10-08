@@ -1,23 +1,29 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const SECTIONS = [
-  { id: "hero", label: "Intro" },
-  { id: "identity", label: "Identity" },
-  { id: "journey", label: "Journey" },
-  { id: "skills", label: "Skills" },
-  { id: "projects", label: "Work" },
-  { id: "thinking", label: "Think" },
-  { id: "invariants", label: "Profile" },
-  { id: "connect", label: "Connect" },
+  { id: "hero", label: "Intro", code: "00" },
+  { id: "identity", label: "Identity", code: "01" },
+  { id: "journey", label: "Journey", code: "02" },
+  { id: "skills", label: "Skills", code: "03" },
+  { id: "projects", label: "Work", code: "04" },
+  { id: "thinking", label: "Think", code: "05" },
+  { id: "invariants", label: "Contact", code: "06" },
+  { id: "connect", label: "Connect", code: "07" },
 ];
 
 export function ScrollSpine() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
   const [activeIdx, setActiveIdx] = useState(0);
+  const [scrollPercent, setScrollPercent] = useState(0);
   const spineFillRef = useRef<HTMLDivElement>(null);
+  const horizontalBarRef = useRef<HTMLDivElement>(null);
   const activeIdxRef = useRef(0);
 
   useEffect(() => {
@@ -30,9 +36,20 @@ export function ScrollSpine() {
       const scrollY = window.scrollY || window.pageYOffset;
       const progress = docHeight > 0 ? Math.min(1, Math.max(0, scrollY / docHeight)) : 0;
 
+      // 1. Update Top Horizontal Bar
+      if (horizontalBarRef.current) {
+        horizontalBarRef.current.style.width = `${progress * 100}%`;
+      }
+
+      // 2. Update Right Vertical Spine Fill
       if (spineFillRef.current) {
         spineFillRef.current.style.height = `${progress * 100}%`;
       }
+
+      setScrollPercent(Math.round(progress * 100));
+
+      // Only evaluate section anchors if on the homepage
+      if (!isHome) return;
 
       // Checkpoint at 45% of viewport height
       const checkpoint = window.innerHeight * 0.45;
@@ -94,7 +111,7 @@ export function ScrollSpine() {
       window.removeEventListener("resize", handleScroll);
       clearTimeout(timer);
     };
-  }, []);
+  }, [isHome]);
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -104,41 +121,71 @@ export function ScrollSpine() {
   };
 
   return (
-    <div className="fixed right-[clamp(1rem,3vw,2.6rem)] top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center select-none">
-      <div className="relative w-[1.5px] h-[260px] bg-line/80 rounded-full">
-        {/* Fill bar showing true scroll progression */}
+    <>
+      {/* ───────────────────────────────────────────────────────────── */}
+      {/* 1. TOP HORIZONTAL READING BAR (Fixed 2px, Orange Progress)     */}
+      {/* ───────────────────────────────────────────────────────────── */}
+      <div
+        className="fixed top-0 left-0 w-full h-[2px] pointer-events-none bg-line/25"
+        style={{ zIndex: 100 }}
+        role="progressbar"
+        aria-valuenow={scrollPercent}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label="Page scroll progress"
+      >
         <div
-          ref={spineFillRef}
-          className="absolute top-0 left-0 w-full h-0 bg-accent rounded-full origin-top transition-[height] duration-75 ease-out"
+          ref={horizontalBarRef}
+          className="h-full bg-accent shadow-[0_0_10px_rgba(193,99,59,0.95)] origin-left transition-[width] duration-75 ease-out"
+          style={{ width: "0%" }}
         />
-
-        {/* Section Dots */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-[1px] flex flex-col justify-between py-1">
-          {SECTIONS.map((sec, i) => (
-            <div
-              key={sec.id}
-              onClick={() => scrollTo(sec.id)}
-              className={`w-[8px] h-[8px] rounded-full border cursor-pointer -translate-x-[3.5px] relative transition-all duration-300 group ${
-                activeIdx === i
-                  ? "bg-accent border-accent scale-125 shadow-[0_0_10px_rgba(193,99,59,0.7)]"
-                  : "bg-bg border-line hover:border-accent"
-              }`}
-            >
-              {/* Tooltip Label */}
-              <span
-                className={`absolute right-4 top-1/2 -translate-y-1/2 font-mono text-[0.62rem] tracking-wider uppercase whitespace-nowrap transition-all duration-200 pointer-events-none ${
-                  activeIdx === i
-                    ? "opacity-100 text-paper font-semibold translate-x-0"
-                    : "opacity-0 group-hover:opacity-100 text-stone-400 translate-x-1 group-hover:translate-x-0"
-                }`}
-              >
-                {sec.label}
-              </span>
-            </div>
-          ))}
-        </div>
       </div>
-    </div>
+
+      {isHome && (
+        <>
+
+          {/* ───────────────────────────────────────────────────────── */}
+          {/* 3. RIGHT SIDE STRICT VERTICAL SPINE (8 Interactive Dots)  */}
+          {/* ───────────────────────────────────────────────────────── */}
+          <div className="fixed right-[clamp(1rem,3vw,2.6rem)] top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center select-none">
+            <div className="relative w-[2px] h-[280px] bg-line/80 rounded-full">
+              {/* Fill bar showing true scroll progression */}
+              <div
+                ref={spineFillRef}
+                className="absolute top-0 left-0 w-full h-0 bg-accent rounded-full origin-top transition-[height] duration-75 ease-out shadow-[0_0_10px_rgba(193,99,59,0.7)]"
+              />
+
+              {/* Section Dots */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-[2px] flex flex-col justify-between py-1">
+                {SECTIONS.map((sec, i) => (
+                  <div
+                    key={sec.id}
+                    onClick={() => scrollTo(sec.id)}
+                    className={`w-[9px] h-[9px] rounded-full border cursor-pointer -translate-x-[3.5px] relative transition-all duration-200 group ${
+                      activeIdx === i
+                        ? "bg-accent border-accent scale-125 shadow-[0_0_12px_rgba(193,99,59,0.95)]"
+                        : "bg-bg border-line hover:border-accent hover:scale-110"
+                    }`}
+                  >
+                    {/* Tooltip Label */}
+                    <div
+                      className={`absolute right-5 top-1/2 -translate-y-1/2 font-mono text-[0.62rem] tracking-wider uppercase whitespace-nowrap transition-all duration-200 pointer-events-none flex items-center gap-1.5 ${
+                        activeIdx === i
+                          ? "opacity-100 text-paper font-semibold translate-x-0 bg-bg-raise/95 border border-line px-2 py-0.5 rounded shadow-md"
+                          : "opacity-0 group-hover:opacity-100 text-stone-400 translate-x-1 group-hover:translate-x-0 bg-bg/90 px-1.5 py-0.5 rounded border border-line/60"
+                      }`}
+                    >
+                      <span className="text-accent font-semibold">{sec.code}</span>
+                      <span>{sec.label}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </>
   );
 }
 

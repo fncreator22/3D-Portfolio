@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
@@ -46,11 +47,6 @@ const STYLES = `
   to { transform: translateX(-50%); }
 }
 
-@keyframes footer-emerald-pulse {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px #4ade80); }
-  50% { transform: scale(1.25); filter: drop-shadow(0 0 10px #4ade80); }
-}
-
 .animate-footer-breathe {
   animation: footer-breathe 8s ease-in-out infinite alternate;
 }
@@ -59,9 +55,7 @@ const STYLES = `
   animation: footer-scroll-marquee 35s linear infinite;
 }
 
-.animate-footer-emerald-pulse {
-  animation: footer-emerald-pulse 2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
-}
+
 
 /* Theme-adaptive Grid Background */
 .footer-bg-grid {
@@ -223,9 +217,104 @@ const MarqueeItem = () => (
 );
 
 // -------------------------------------------------------------------------
+// Shared Channel Links & Telemetry
+// -------------------------------------------------------------------------
+const ConnectedChannels = () => (
+  <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full">
+    {/* LinkedIn */}
+    <MagneticButton
+      as="a"
+      href={PROFILE.linkedin}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="footer-glass-pill px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-paper font-mono text-xs sm:text-sm font-semibold flex items-center gap-3 group"
+      aria-label="Connect on LinkedIn"
+    >
+      <svg className="w-4 h-4 text-accent group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.28 1.64 1.64 0 0 0 0 3.28m1.4 9.74v-8.37H5.06v8.37h2.8z"/>
+      </svg>
+      <span>Connect on LinkedIn</span>
+      <span className="text-accent text-xs">↗</span>
+    </MagneticButton>
+
+    {/* GitHub */}
+    <MagneticButton
+      as="a"
+      href={PROFILE.github}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="footer-glass-pill px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-paper font-mono text-xs sm:text-sm font-semibold flex items-center gap-3 group"
+      aria-label="View GitHub Repositories"
+    >
+      <svg className="w-4 h-4 text-accent group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+      </svg>
+      <span>GitHub Source Code</span>
+      <span className="text-accent text-xs">↗</span>
+    </MagneticButton>
+
+    {/* X (Twitter) */}
+    <MagneticButton
+      as="a"
+      href={PROFILE.x}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="footer-glass-pill px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-paper font-mono text-xs sm:text-sm font-semibold flex items-center gap-3 group"
+      aria-label="Connect on X Twitter"
+    >
+      <svg className="w-4 h-4 text-accent group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+      <span>X (Twitter)</span>
+      <span className="text-accent text-xs">↗</span>
+    </MagneticButton>
+
+  </div>
+);
+
+const SecondaryNavigation = () => (
+  <div className="flex flex-wrap justify-center gap-2.5 sm:gap-4 w-full mt-2 font-mono text-xs">
+    <MagneticButton as={Link} href="/#journey" className="footer-glass-pill px-5 py-2 rounded-full text-stone-300 hover:text-paper">
+      Trajectory
+    </MagneticButton>
+    <MagneticButton as={Link} href="/#skills" className="footer-glass-pill px-5 py-2 rounded-full text-stone-300 hover:text-paper">
+      Technical Matrix
+    </MagneticButton>
+    <MagneticButton as={Link} href="/work" className="footer-glass-pill px-5 py-2 rounded-full text-stone-300 hover:text-paper">
+      Systems Archive (16)
+    </MagneticButton>
+    <MagneticButton as={Link} href="/#thinking" className="footer-glass-pill px-5 py-2 rounded-full text-stone-300 hover:text-paper">
+      Engineering Philosophy
+    </MagneticButton>
+  </div>
+);
+
+const FooterStatusBar = ({ onScrollTop }: { onScrollTop: () => void }) => (
+  <div className="relative z-20 w-full px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-5 border-t border-line/50 pt-6 mt-8">
+    <div className="text-stone-300 font-mono text-[0.68rem] sm:text-xs tracking-wider uppercase order-2 md:order-1 text-center md:text-left">
+      © 2026 Sagar Mahajan. All rights reserved.
+    </div>
+
+    <MagneticButton
+      as="button"
+      onClick={onScrollTop}
+      className="w-11 h-11 rounded-full footer-glass-pill flex items-center justify-center text-stone-300 hover:text-paper hover:border-accent group order-3 focus-visible:ring-2 focus-visible:ring-accent"
+      aria-label="Scroll back to top of page"
+    >
+      <svg className="w-4 h-4 transform group-hover:-translate-y-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+      </svg>
+    </MagneticButton>
+  </div>
+);
+
+// -------------------------------------------------------------------------
 // 4. MAIN CINEMATIC FOOTER COMPONENT
 // -------------------------------------------------------------------------
 export function CinematicFooter() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
   const wrapperRef = useRef<HTMLDivElement>(null);
   const giantTextRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -233,14 +322,14 @@ export function CinematicFooter() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (!wrapperRef.current) return;
+    if (!isHome || !wrapperRef.current) return;
 
     // React strict mode compatible GSAP context cleanup
     const ctx = gsap.context(() => {
       // Parallax Scrub for Giant Background Text
       gsap.fromTo(
         giantTextRef.current,
-        { y: "12vh", scale: 0.85, opacity: 0 },
+        { y: "10vh", scale: 0.85, opacity: 0.2 },
         {
           y: "0vh",
           scale: 1,
@@ -248,56 +337,108 @@ export function CinematicFooter() {
           ease: "power1.out",
           scrollTrigger: {
             trigger: wrapperRef.current,
-            start: "top 85%",
+            start: "top 95%",
             end: "bottom bottom",
             scrub: 1,
           },
         }
       );
 
-      // Staggered Content Elevation
+      // Staggered Content Elevation: Trigger early (top 85% to top 30%) with opacity fallback
       gsap.fromTo(
         [headingRef.current, linksRef.current],
-        { y: 40, opacity: 0 },
+        { y: 30, opacity: 0.3 },
         {
           y: 0,
           opacity: 1,
-          stagger: 0.12,
-          ease: "power3.out",
+          stagger: 0.08,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: wrapperRef.current,
-            start: "top 45%",
-            end: "bottom bottom",
-            scrub: 1,
+            start: "top 85%",
+            end: "top 30%",
+            scrub: 0.6,
           },
         }
       );
     }, wrapperRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [isHome]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // -----------------------------------------------------------------------
+  // NON-HOME PAGES (/work, /work/[slug]):
+  // Clean, static, non-fixed footer with 100% visible text, zero ScrollTrigger
+  // freeze, and no irrelevant "07 /" prefix.
+  // -----------------------------------------------------------------------
+  if (!isHome) {
+    return (
+      <>
+        <style dangerouslySetInnerHTML={{ __html: STYLES }} />
+        <footer className="relative w-full overflow-hidden bg-bg text-paper cinematic-footer-wrapper py-12 lg:py-16 border-t border-line">
+          {/* Ambient Light & Grid Background */}
+          <div className="footer-aurora absolute left-1/2 top-1/2 h-[50vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[90px] pointer-events-none z-0" />
+          <div className="footer-bg-grid absolute inset-0 z-0 pointer-events-none" />
+
+          {/* Giant background typography watermark */}
+          <div
+            className="footer-giant-bg-text absolute -bottom-[2vh] left-1/2 -translate-x-1/2 whitespace-nowrap z-0 pointer-events-none select-none text-center opacity-30"
+            aria-hidden="true"
+          >
+            SAGAR
+          </div>
+
+          {/* 1. Diagonal Sleek Marquee Strip */}
+          <div className="relative w-full overflow-hidden border-y border-line/60 bg-bg-raise/80 backdrop-blur-md py-3.5 z-10 -rotate-1 scale-105 shadow-2xl mb-10">
+            <div className="flex w-max animate-footer-scroll-marquee font-mono text-[0.68rem] sm:text-xs font-semibold tracking-[0.25em] text-stone-300 uppercase">
+              <MarqueeItem />
+              <MarqueeItem />
+            </div>
+          </div>
+
+          {/* 2. Main Center Content (100% Visible) */}
+          <div className="relative z-10 flex flex-col items-center justify-center px-6 my-6 w-full max-w-5xl mx-auto text-center">
+            <div className="eyebrow mb-4 text-[0.68rem] sm:text-xs">
+              Terminal Connection
+            </div>
+
+            <h2 className="font-display font-medium text-4xl sm:text-6xl lg:text-7xl footer-text-glow tracking-tight text-center max-w-4xl leading-[1.08] opacity-100">
+              Initiate Transmission. <br />
+              <span className="font-serif italic text-accent font-normal">Let&apos;s build autonomous scale.</span>
+            </h2>
+
+            <div className="flex flex-col items-center gap-5 w-full mt-10 opacity-100">
+              <ConnectedChannels />
+              <SecondaryNavigation />
+            </div>
+          </div>
+
+          {/* 3. Bottom Status Bar */}
+          <FooterStatusBar onScrollTop={scrollToTop} />
+        </footer>
+      </>
+    );
+  }
+
+  // -----------------------------------------------------------------------
+  // HOMEPAGE (/):
+  // High-craft curtain reveal with early trigger and zero dead-scroll gap.
+  // -----------------------------------------------------------------------
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
       
-      {/* 
-        The Curtain Reveal Container:
-        Sits in standard page flow. On desktop, clip-path allows the
-        fixed footer underneath to be revealed cinematically.
-      */}
       <div
         ref={wrapperRef}
         id="connect"
-        className="relative min-h-[720px] lg:h-screen w-full"
+        className="relative min-h-[680px] lg:h-screen w-full"
         style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
       >
-        <footer className="relative lg:fixed bottom-0 left-0 flex min-h-[720px] lg:h-screen w-full flex-col justify-between overflow-hidden bg-bg text-paper cinematic-footer-wrapper py-10 lg:py-14 border-t border-line">
-          
+        <footer className="relative lg:fixed bottom-0 left-0 flex min-h-[680px] lg:h-screen w-full flex-col justify-between overflow-hidden bg-bg text-paper cinematic-footer-wrapper py-8 lg:py-12 border-t border-line">
           {/* Ambient Light & Grid Background */}
           <div className="footer-aurora absolute left-1/2 top-1/2 h-[65vh] w-[85vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[90px] pointer-events-none z-0" />
           <div className="footer-bg-grid absolute inset-0 z-0 pointer-events-none" />
@@ -320,7 +461,7 @@ export function CinematicFooter() {
           </div>
 
           {/* 2. Main Center Content */}
-          <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 my-8 w-full max-w-5xl mx-auto">
+          <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 my-6 w-full max-w-5xl mx-auto text-center">
             <div className="eyebrow mb-4 text-[0.68rem] sm:text-xs">
               07 / Terminal Connection
             </div>
@@ -334,120 +475,14 @@ export function CinematicFooter() {
             </h2>
 
             {/* Interactive Magnetic Glass Pills Layout */}
-            <div ref={linksRef} className="flex flex-col items-center gap-5 w-full mt-10">
-              
-              {/* Primary Connected Channels */}
-              <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full">
-                
-                {/* LinkedIn */}
-                <MagneticButton
-                  as="a"
-                  href={PROFILE.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="footer-glass-pill px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-paper font-mono text-xs sm:text-sm font-semibold flex items-center gap-3 group"
-                  aria-label="Connect on LinkedIn"
-                >
-                  <svg className="w-4 h-4 text-accent group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.28 1.64 1.64 0 0 0 0 3.28m1.4 9.74v-8.37H5.06v8.37h2.8z"/>
-                  </svg>
-                  <span>Connect on LinkedIn</span>
-                  <span className="text-accent text-xs">↗</span>
-                </MagneticButton>
-
-                {/* GitHub */}
-                <MagneticButton
-                  as="a"
-                  href={PROFILE.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="footer-glass-pill px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-paper font-mono text-xs sm:text-sm font-semibold flex items-center gap-3 group"
-                  aria-label="View GitHub Repositories"
-                >
-                  <svg className="w-4 h-4 text-accent group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-                  </svg>
-                  <span>GitHub Source Code</span>
-                  <span className="text-accent text-xs">↗</span>
-                </MagneticButton>
-
-                {/* X (Twitter) */}
-                <MagneticButton
-                  as="a"
-                  href={PROFILE.x}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="footer-glass-pill px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-paper font-mono text-xs sm:text-sm font-semibold flex items-center gap-3 group"
-                  aria-label="Connect on X Twitter"
-                >
-                  <svg className="w-4 h-4 text-accent group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                  </svg>
-                  <span>X (Twitter)</span>
-                  <span className="text-accent text-xs">↗</span>
-                </MagneticButton>
-
-                {/* Verified Resume */}
-                <MagneticButton
-                  as="a"
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="footer-glass-pill px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-paper font-mono text-xs sm:text-sm font-semibold flex items-center gap-3 group border-accent/40"
-                  aria-label="Download Resume PDF"
-                >
-                  <span>Resume (PDF)</span>
-                  <span className="text-accent text-xs">↗</span>
-                </MagneticButton>
-              </div>
-
-              {/* Secondary Navigation Traversal Pills */}
-              <div className="flex flex-wrap justify-center gap-2.5 sm:gap-4 w-full mt-2 font-mono text-xs">
-                <MagneticButton as={Link} href="/#journey" className="footer-glass-pill px-5 py-2 rounded-full text-stone-300 hover:text-paper">
-                  Trajectory
-                </MagneticButton>
-                <MagneticButton as={Link} href="/#skills" className="footer-glass-pill px-5 py-2 rounded-full text-stone-300 hover:text-paper">
-                  Technical Matrix
-                </MagneticButton>
-                <MagneticButton as={Link} href="/work" className="footer-glass-pill px-5 py-2 rounded-full text-stone-300 hover:text-paper">
-                  Systems Archive (16)
-                </MagneticButton>
-                <MagneticButton as={Link} href="/#thinking" className="footer-glass-pill px-5 py-2 rounded-full text-stone-300 hover:text-paper">
-                  Engineering Philosophy
-                </MagneticButton>
-              </div>
+            <div ref={linksRef} className="flex flex-col items-center gap-5 w-full mt-8">
+              <ConnectedChannels />
+              <SecondaryNavigation />
             </div>
           </div>
 
           {/* 3. Bottom Status Bar & Credits */}
-          <div className="relative z-20 w-full px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-5 border-t border-line/50 pt-6">
-            
-            {/* Copyright & Architecture Note */}
-            <div className="text-stone-300 font-mono text-[0.68rem] sm:text-xs tracking-wider uppercase order-2 md:order-1 text-center md:text-left">
-              © 2026 Sagar Mahajan. All rights reserved.
-            </div>
-
-            {/* Live Telemetry Pill */}
-            <div className="footer-glass-pill px-5 py-2 rounded-full flex items-center gap-2.5 order-1 md:order-2 cursor-default">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-footer-emerald-pulse" aria-hidden="true" />
-              <span className="font-mono text-[0.68rem] sm:text-xs text-paper uppercase tracking-wider font-semibold">
-                Greater Hyderabad Area · Available for Engagements
-              </span>
-            </div>
-
-            {/* Back to Top Magnetic Button */}
-            <MagneticButton
-              as="button"
-              onClick={scrollToTop}
-              className="w-11 h-11 rounded-full footer-glass-pill flex items-center justify-center text-stone-300 hover:text-paper hover:border-accent group order-3 focus-visible:ring-2 focus-visible:ring-accent"
-              aria-label="Scroll back to top of page"
-            >
-              <svg className="w-4 h-4 transform group-hover:-translate-y-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-              </svg>
-            </MagneticButton>
-
-          </div>
+          <FooterStatusBar onScrollTop={scrollToTop} />
         </footer>
       </div>
     </>

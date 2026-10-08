@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 
@@ -87,7 +87,6 @@ export function SentinelSimulator() {
           </span>
         </div>
         <div className="flex items-center gap-2 text-[0.65rem] text-accent">
-          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
           Gateway Active
         </div>
       </div>

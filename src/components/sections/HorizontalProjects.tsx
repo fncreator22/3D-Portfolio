@@ -153,6 +153,13 @@ export function HorizontalProjects() {
       ? PROJECTS
       : PROJECTS.filter((p) => p.cat === activeCategory);
 
+  // Cap visible projects on homepage to 8 flagship items + 1 Archive Explorer card
+  // This reduces trapped scroll distance from 8,000px down to ~3,200px
+  const displayedProjects =
+    activeCategory === "All"
+      ? PROJECTS.slice(0, 8)
+      : filteredProjects.slice(0, 8);
+
   useEffect(() => {
     // Only apply horizontal GSAP pin on wide desktop (lg+)
     const isDesktop = window.innerWidth >= 1024;
@@ -164,7 +171,12 @@ export function HorizontalProjects() {
 
     const totalWidth = track.scrollWidth;
     const viewWidth = window.innerWidth;
-    const scrollDistance = totalWidth - viewWidth + 80;
+    const scrollDistance = Math.max(0, totalWidth - viewWidth + 80);
+
+    if (scrollDistance <= 0) {
+      gsap.set(track, { x: 0 });
+      return;
+    }
 
     const tween = gsap.to(track, {
       x: () => -scrollDistance,
@@ -183,7 +195,7 @@ export function HorizontalProjects() {
       tween.scrollTrigger?.kill();
       tween.kill();
     };
-  }, [activeCategory]);
+  }, [activeCategory, displayedProjects.length]);
 
   return (
     <section id="projects" ref={sectionRef} className="relative z-10 border-t border-line py-12 lg:py-0" aria-labelledby="projects-heading">
@@ -205,10 +217,10 @@ export function HorizontalProjects() {
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
                 className={`font-mono text-[0.68rem] uppercase tracking-wider px-3 py-1 rounded-full border whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-accent ${
-                  activeCategory === cat
-                    ? "bg-accent text-bg border-accent font-semibold shadow-md shadow-accent/20"
-                    : "border-line text-stone-300 hover:text-paper hover:border-paper/40 bg-bg/50"
-                }`}
+                activeCategory === cat
+                  ? "bg-accent text-bg border-accent font-semibold shadow-md shadow-accent/20"
+                  : "border-line text-stone-300 hover:text-paper hover:border-paper/40 bg-bg/50"
+              }`}
               >
                 {cat}
               </button>
@@ -226,7 +238,7 @@ export function HorizontalProjects() {
             ref={trackRef}
             className="flex flex-row w-max px-[clamp(1rem,5vw,4rem)] gap-4 sm:gap-6 lg:gap-7 lg:pl-[clamp(1.5rem,5vw,4rem)] items-center"
           >
-            {filteredProjects.map((project) => (
+            {displayedProjects.map((project) => (
               <WorkflowBuilderCard
                 key={project.slug}
                 imageUrl={project.image}
@@ -244,16 +256,92 @@ export function HorizontalProjects() {
                 liveUrl={project.live}
               />
             ))}
+
+            {/* 9th Flagship Card: Archive Explorer */}
+            <article
+              className="w-[84vw] sm:w-[350px] lg:w-[390px] xl:w-[410px] h-[430px] sm:h-[450px] lg:h-[465px] snap-center flex-shrink-0 border border-line hover:border-accent bg-gradient-to-b from-bg-raise via-bg to-bg flex flex-col justify-between relative overflow-hidden group rounded-3xl transition-all duration-300 shadow-[0_20px_50px_rgba(0,0,0,0.7)] hover:shadow-[0_28px_70px_rgba(0,0,0,0.85),0_0_35px_rgba(193,99,59,0.2)] p-6 sm:p-7 select-none"
+            >
+              <Link
+                href="/work"
+                className="absolute inset-0 z-20 focus-visible:ring-2 focus-visible:ring-accent rounded-3xl"
+                aria-label="Open systems archive with all 16 projects"
+              />
+
+              {/* Decorative Background Glow & Grid Watermark */}
+              <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-accent/15 blur-3xl pointer-events-none group-hover:bg-accent/25 transition-all duration-500" />
+              <div
+                className="absolute inset-0 pointer-events-none opacity-10 group-hover:opacity-20 transition-opacity"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle at 70% 30%, rgba(193,99,59,0.3) 0%, transparent 60%), linear-gradient(to right, rgba(42,40,34,0.3) 1px, transparent 1px), linear-gradient(to bottom, rgba(42,40,34,0.3) 1px, transparent 1px)",
+                  backgroundSize: "100% 100%, 32px 32px, 32px 32px",
+                }}
+              />
+
+              {/* Card Top: Badges */}
+              <div className="relative z-10 flex items-center justify-between">
+                <span className="font-mono text-accent text-[0.68rem] tracking-widest uppercase font-semibold">
+                  ARCHIVE // 16 SYSTEMS
+                </span>
+                <span className="bg-bg/90 border border-line px-2.5 py-0.5 rounded font-mono text-[0.62rem] text-stone-300 uppercase tracking-wider">
+                  Full Catalog
+                </span>
+              </div>
+
+              {/* Card Center: Core Narrative */}
+              <div className="relative z-10 my-auto py-4">
+                <div className="w-12 h-12 rounded-2xl bg-accent/10 border border-accent/30 flex items-center justify-center text-accent mb-4 group-hover:scale-110 group-hover:border-accent transition-all duration-300">
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                  </svg>
+                </div>
+
+                <h3 className="font-display font-medium text-2xl sm:text-3xl text-paper group-hover:text-accent transition-colors leading-tight">
+                  Explore Full Systems Archive
+                </h3>
+
+                <p className="mt-2 text-stone-300 font-light text-xs sm:text-sm leading-relaxed line-clamp-3">
+                  Traverse all 16 autonomous systems, sub-200ms voice orchestrations, computer vision pipelines, and production case studies with category filtering and search.
+                </p>
+
+                {/* Metric Signals */}
+                <div className="mt-4 pt-3 border-t border-line/60 space-y-1 font-mono text-[0.7rem] text-paper/80">
+                  <div className="flex items-center gap-2">
+                    <span className="text-accent">•</span>
+                    <span>16 Shipped Production Systems</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-accent">•</span>
+                    <span>09 Technical Domain Specializations</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-accent">•</span>
+                    <span>100% Empirical Verification Logs</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card Bottom: Action CTA */}
+              <div className="relative z-10 pt-2">
+                <div className="w-full bg-accent text-bg font-semibold rounded-full px-5 py-3 hover:bg-accent/90 transition-all font-mono text-xs uppercase tracking-wider flex items-center justify-between group-hover:shadow-[0_0_20px_rgba(193,99,59,0.4)]">
+                  <span>Launch Archive Explorer</span>
+                  <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+              </div>
+            </article>
           </div>
         </div>
 
         {/* Bottom Helper Bar with Guaranteed Breathing Room */}
         <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] mt-3 pt-3 pb-1 flex justify-between items-center text-stone-300 font-mono text-[0.68rem] tracking-wider uppercase flex-shrink-0 border-t border-line/40 relative z-20">
           <span className="hidden lg:inline">
-            Scroll vertically to traverse 3D Case Studies →
+            Traversing {displayedProjects.length} Flagship Systems + Archive ({PROJECTS.length} Total) →
           </span>
           <span className="lg:hidden flex items-center gap-1.5 text-accent font-semibold">
-            <span>⇄ Swipe to explore systems ({filteredProjects.length})</span>
+            <span>⇄ Swipe to explore ({displayedProjects.length + 1} cards)</span>
           </span>
           <Link
             href="/work"

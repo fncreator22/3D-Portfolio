@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 
@@ -177,7 +177,6 @@ export function Avatar3DCanvas() {
 
         {/* Live HUD Status Indicator */}
         <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 [transform:translateX(-50%)_translateZ(50px)] bg-bg/95 backdrop-blur-md border border-accent px-4 py-1.5 rounded-full font-mono text-[0.65rem] tracking-[0.1em] uppercase text-paper flex items-center gap-2 whitespace-nowrap shadow-[0_12px_30px_rgba(0,0,0,0.65)]">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#4ade80] animate-pulse" />
           <span>{statusText}</span>
         </div>
       </div>

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
@@ -365,7 +365,6 @@ export function Avatar3DModel() {
 
         {/* Live HUD Status Badge */}
         <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 bg-bg/95 backdrop-blur-md border border-accent px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full font-mono text-[0.6rem] sm:text-[0.65rem] tracking-[0.12em] uppercase text-paper flex items-center gap-1.5 sm:gap-2 whitespace-nowrap shadow-[0_12px_30px_rgba(0,0,0,0.7)] z-20">
-          <span className={`w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full ${dispersionMode ? "bg-accent shadow-[0_0_10px_#c1633b]" : "bg-emerald-400 shadow-[0_0_8px_#4ade80]"} animate-pulse`} />
           <span>{hudStatus}</span>
         </div>
       </div>

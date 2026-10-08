@@ -91,7 +91,6 @@ export default async function ProjectPage({
                     className="font-mono text-xs uppercase tracking-wider px-5 py-3 border border-line text-paper rounded-xl hover:border-accent hover:text-accent transition-all flex items-center gap-2 font-medium focus-visible:ring-2 focus-visible:ring-accent"
                     aria-label={`Open live production deployment for ${project.title}`}
                   >
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
                     Live Production ↗
                   </a>
                 )}

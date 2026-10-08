@@ -58,7 +58,7 @@ export function JourneyTimeline() {
           {/* Active 3D Laser Glowing Rail */}
           <div
             id="role-fill-line"
-            className="absolute left-0 top-0 w-[2px] h-0 bg-gradient-to-b from-accent via-accent to-emerald-400 shadow-[0_0_12px_#c1633b] transition-all duration-100"
+            className="absolute left-0 top-0 w-[2px] h-0 bg-gradient-to-b from-accent via-accent to-accent-dim shadow-[0_0_12px_#c1633b] transition-all duration-100"
           />
 
           {ROLES.map((role, i) => {
@@ -100,9 +100,6 @@ export function JourneyTimeline() {
 
                   <div className="font-mono text-xs tracking-wider uppercase text-stone-300 mt-1.5 flex items-center gap-2">
                     <span>{role.meta}</span>
-                    {isActive && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    )}
                   </div>
 
                   <p className="mt-4 max-w-[720px] text-stone-300 font-light text-[clamp(0.95rem,1.2vw,1.05rem)] leading-relaxed">

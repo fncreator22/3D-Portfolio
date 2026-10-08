@@ -5,6 +5,7 @@ import { AuroraBackground } from "@/components/effects/AuroraBackground";
 import { CursorSpotlight } from "@/components/effects/CursorSpotlight";
 import { SmoothScroll } from "@/components/effects/SmoothScroll";
 import { Navigation } from "@/components/ui/Navigation";
+import { ScrollSpine } from "@/components/ui/ScrollSpine";
 import { Footer } from "@/components/ui/Footer";
 
 const spaceGrotesk = Space_Grotesk({
@@ -43,6 +44,7 @@ export default function RootLayout({
         <SmoothScroll>
           <AuroraBackground />
           <CursorSpotlight />
+          <ScrollSpine />
           <Navigation />
           <main className="relative z-10">{children}</main>
           <Footer />
