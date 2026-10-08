@@ -23,9 +23,11 @@ export function Hero() {
   const [activeScene, setActiveScene] = useState<"intro" | "idle" | "talk">("intro");
   const activeSceneRef = useRef<"intro" | "idle" | "talk">("intro");
 
-  // Scene 1 intro sound starts ON by default (isMuted = false).
-  // Only the viewer's explicit click can mute it, or else it continues speaking.
-  const [isMuted, setIsMuted] = useState(false);
+  // Audio state: starts muted (isMuted = true) to comply with browser autoplay security policies.
+  // The moment the browser allows unmuted playback (MEI met) OR the visitor interacts
+  // anywhere on the page (click/tap/keydown), audio automatically un-mutes and the speaker
+  // symbol turns into active speaking mode.
+  const [isMuted, setIsMuted] = useState(true);
   const [hasTalkVideo, setHasTalkVideo] = useState(true);
 
   // Zero-Dark-Dip Layering Engine:
@@ -43,17 +45,15 @@ export function Hero() {
   };
 
   // Browser Autoplay Policy Eager Interaction Unmute:
-  // Modern browsers block audio until user activation.
-  // We keep audio ON by default (isMuted = false) and eagerly listen across
-  // all user interaction events (click, pointerdown, touchstart, keydown, wheel, scroll, pointermove).
-  // As soon as any user gesture occurs, audio un-mutes automatically without requiring
-  // the user to click the speaker button. If unmuted playback is temporarily blocked,
-  // the video continues playing muted without ever freezing.
+  // Modern browsers (Chrome, Edge, Safari, Firefox) block unmuted audio until a valid user gesture.
+  // We listen across valid user activation events (click, pointerdown, touchstart, keydown).
+  // As soon as the visitor interacts anywhere on the page (even on navigation or background),
+  // audio un-mutes automatically and the speaker symbol updates to active speaking waves.
   useEffect(() => {
     let removed = false;
 
     const handleGesture = (e: Event) => {
-      // If the interaction is on or inside a button (e.g. speaker button), let its onClick handle it
+      // If the interaction is on or inside the speaker button, let toggleSound handle it directly
       const target = e.target as HTMLElement | null;
       if (target && target.closest?.("button")) {
         return;
@@ -64,6 +64,7 @@ export function Hero() {
       const vIntro = videoIntroRef.current;
       if (vIntro) {
         if (!vIntro.muted && !vIntro.paused) {
+          setIsMuted(false);
           removeListeners();
           return;
         }
@@ -77,10 +78,10 @@ export function Hero() {
               removeListeners();
             })
             .catch(() => {
-              // Critical: If browser blocked unmuted playback (e.g. pointermove before click activation),
-              // restore muted = true so video keeps playing smoothly and does not freeze!
+              // If browser still requires direct button click, keep rolling muted
               vIntro.muted = true;
               vIntro.play().catch(() => {});
+              setIsMuted(true);
             });
         }
       }
@@ -89,13 +90,8 @@ export function Hero() {
     const events = [
       "click",
       "pointerdown",
-      "mousedown",
       "touchstart",
-      "touchend",
       "keydown",
-      "wheel",
-      "scroll",
-      "pointermove",
     ] as const;
 
     const addListeners = () => {
@@ -139,6 +135,7 @@ export function Hero() {
                   playPromise.catch(() => {
                     vIntro.muted = true;
                     vIntro.play().catch(() => {});
+                    setIsMuted(true);
                   });
                 }
               }
@@ -161,31 +158,25 @@ export function Hero() {
     observer.observe(container);
 
     // Initial play attempt for intro:
-    // Start muted to guarantee video immediately rolls and never stays paused.
-    // Then attempt unmuting. If allowed (MEI met), sound plays instantly.
-    // If blocked, it remains rolling muted, and eager listeners unmute upon first interaction.
+    // 1. First probe if the browser permits unmuted autoplay (e.g. returning visitor or high MEI).
+    // 2. If permitted, sound starts instantly and isMuted = false.
+    // 3. If blocked by browser autoplay policy, immediately roll muted so video never stays frozen,
+    //    and set isMuted = true so the speaker symbol and helper label accurately inform the user.
     if (vIntro && !introCompletedRef.current) {
-      vIntro.muted = true;
-      vIntro
-        .play()
-        .then(() => {
-          if (!userMutedRef.current) {
-            vIntro.muted = false;
-            const p = vIntro.play();
-            if (p !== undefined) {
-              p.then(() => {
-                setIsMuted(false);
-              }).catch(() => {
-                // Autoplay policy blocked unmuted playback without gesture:
-                // Restore muted so video rolls smoothly without interruption
-                vIntro.muted = true;
-                vIntro.play().catch(() => {});
-                setIsMuted(false);
-              });
-            }
-          }
-        })
-        .catch(() => {});
+      vIntro.muted = false;
+      const initialPromise = vIntro.play();
+      if (initialPromise !== undefined) {
+        initialPromise
+          .then(() => {
+            setIsMuted(false);
+          })
+          .catch(() => {
+            // Browser autoplay security blocked unmuted playback on initial launch
+            vIntro.muted = true;
+            vIntro.play().catch(() => {});
+            setIsMuted(true);
+          });
+      }
     }
 
     return () => {
@@ -359,6 +350,7 @@ export function Hero() {
         <video
           ref={videoIdleRef}
           src="/videos/hero-idle.mp4"
+          poster="/images/hero-idle-poster.webp"
           playsInline
           muted
           loop
@@ -372,6 +364,7 @@ export function Hero() {
           <video
             ref={videoIntroRef}
             src="/videos/hero.mp4"
+            poster="/images/hero-poster.webp"
             playsInline
             autoPlay
             muted
@@ -497,7 +490,20 @@ export function Hero() {
       </div>
 
       {/* ─── Dedicated Speaker Button: Positioned Directly Above the 4-Pointed Star ─── */}
-      <div className="absolute bottom-[18%] sm:bottom-[20%] right-[7%] sm:right-[9%] lg:right-[9.8%] z-30 pointer-events-auto">
+      <div className="absolute bottom-[18%] sm:bottom-[20%] right-[7%] sm:right-[9%] lg:right-[9.8%] z-30 pointer-events-auto flex items-center gap-2.5">
+        {/* Helper prompt when browser autoplay policy blocks unmuted audio on launch */}
+        {activeScene === "intro" && isMuted && (
+          <button
+            onClick={toggleSound}
+            type="button"
+            className="hidden sm:inline-flex items-center gap-1.5 font-mono text-[0.68rem] tracking-wider uppercase text-paper bg-bg/90 hover:bg-bg-raise/95 border border-accent/60 px-3.5 py-2 rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.6)] backdrop-blur-md transition-all cursor-pointer group"
+            aria-label="Click to unmute presentation audio"
+          >
+            <span className="text-accent text-xs">🔊</span>
+            <span className="group-hover:text-accent transition-colors font-medium">Click for sound</span>
+          </button>
+        )}
+
         <button
           onClick={toggleSound}
           type="button"
