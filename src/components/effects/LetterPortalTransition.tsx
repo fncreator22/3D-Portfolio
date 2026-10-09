@@ -44,9 +44,9 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
         },
       });
 
-      // Initial resting state
+      // Initial resting state: 0% opacity prevents ghost bleed inside resting aperture hole
       gsap.set(shaderVignetteRef.current, { opacity: 0 });
-      gsap.set(contentWrapperRef.current, { scale: 0.88, opacity: 0.35 });
+      gsap.set(contentWrapperRef.current, { scale: 0.88, opacity: 0 });
       if (conduitBeamRef.current) {
         gsap.set(conduitBeamRef.current, { scaleY: 0 });
       }
@@ -97,11 +97,20 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
         0.08
       );
 
-      // 5. Revealed Section Content (The REAL Section 01) expands into full focus inside the expanding aperture
-      tl.to(
+      // 5. Revealed Section Content (The REAL Section 01) emerges only after aperture expands past >0.25
+      tl.fromTo(
         contentWrapperRef.current,
-        { scale: 1, opacity: 1, duration: 0.65, ease: "power2.out" },
-        0.18
+        { scale: 0.88, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.55, ease: "power2.out" },
+        0.28
+      );
+
+      // Stagger internal Identity elements to align with aperture reveal
+      tl.fromTo(
+        ".identity-reveal",
+        { y: 24, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.45, stagger: 0.05, ease: "power2.out" },
+        0.34
       );
 
       // 6. As 'O' expands past viewport bounds, shader vignette and aperture overlay dissolve smoothly
@@ -188,7 +197,7 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
                   transformOrigin: "center",
                 }}
               >
-                <ellipse cx="50%" cy="50%" rx="32" ry="46" fill="black" />
+                <ellipse cx="50%" cy="50%" rx="40" ry="40" fill="black" />
               </g>
             </mask>
           </defs>
@@ -212,39 +221,53 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
             <span>AUTONOMOUS SYSTEMS ARCHITECTURE</span>
           </div>
 
-          {/* The Word with Focal Aperture Letter 'O' */}
-          <div className="flex items-center justify-center font-display font-medium tracking-[0.06em] sm:tracking-[0.14em] text-[clamp(2.4rem,7vw,6.5rem)] text-paper uppercase">
-            {/* Left Block: AUTON */}
-            <span
-              ref={leftLettersRef}
-              className="inline-block tracking-tight text-paper will-change-transform"
-            >
-              AUTON
-            </span>
-
-            {/* Focal Letter 'O' Rim (Terracotta stroked lens perfectly aligned with the mask hole) */}
-            <span
-              ref={focalLetterRef}
-              className="inline-flex items-center justify-center relative mx-[0.04em] will-change-transform"
-              style={{ transformOrigin: "50% 50%" }}
-            >
-              <span className="font-display font-semibold text-accent relative z-10">
-                O
-              </span>
-              {/* Concentric aperture glowing ring inside letter counter */}
+          {/* The Word with Focal Aperture Letter 'O' - Perfectly Symmetric and Concentric */}
+          <div className="flex items-center justify-center w-full font-display font-medium tracking-[0.06em] sm:tracking-[0.14em] text-[clamp(2.4rem,7vw,6.5rem)] text-paper uppercase">
+            {/* Left Block: AUTON (pinned right-aligned to center) */}
+            <div className="flex-1 flex justify-end">
               <span
-                className="absolute inset-0 rounded-full border border-accent/60 scale-95 pointer-events-none shadow-[0_0_20px_rgba(193,99,59,0.5)]"
-                aria-hidden="true"
-              />
-            </span>
+                ref={leftLettersRef}
+                className="inline-block tracking-tight text-paper will-change-transform pr-[0.04em]"
+              >
+                AUTON
+              </span>
+            </div>
 
-            {/* Right Block: MOUS */}
-            <span
-              ref={rightLettersRef}
-              className="inline-block tracking-tight text-paper will-change-transform"
-            >
-              MOUS
-            </span>
+            {/* Focal Letter 'O' Rim (Terracotta circular lens concentric with mask hole) */}
+            <div className="shrink-0 flex items-center justify-center">
+              <span
+                ref={focalLetterRef}
+                className="w-[1.08em] h-[1.08em] aspect-square inline-flex items-center justify-center relative mx-[0.04em] will-change-transform"
+                style={{ transformOrigin: "50% 50%" }}
+              >
+                {/* Geometrically Perfect Circular Lens Ring representing 'O' */}
+                <svg
+                  className="w-[0.92em] h-[0.92em] text-accent select-none relative z-10"
+                  viewBox="0 0 100 100"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="13"
+                  aria-hidden="true"
+                >
+                  <circle cx="50" cy="50" r="42" />
+                </svg>
+                {/* Concentric aperture glowing ring - 100% symmetric circle */}
+                <span
+                  className="absolute inset-0 rounded-full border border-accent/70 scale-95 pointer-events-none shadow-[0_0_24px_rgba(193,99,59,0.55)]"
+                  aria-hidden="true"
+                />
+              </span>
+            </div>
+
+            {/* Right Block: MOUS (pinned left-aligned to center) */}
+            <div className="flex-1 flex justify-start">
+              <span
+                ref={rightLettersRef}
+                className="inline-block tracking-tight text-paper will-change-transform pl-[0.04em]"
+              >
+                MOUS
+              </span>
+            </div>
           </div>
         </div>
       </div>

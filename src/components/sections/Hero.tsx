@@ -2,7 +2,11 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Avatar3DModel } from "@/components/ui/Avatar3DModel";
+
+const SUBTITLE_TEXT =
+  "AI Systems & Autonomous Agent Engineer. Building production-grade agentic architectures, real-time voice intelligence, and scalable AI that solves real-world problems.";
 
 const PROJECT_CHIPS = [
   { label: "Sentinel MCP Guardrail", href: "/work/sentinel-mcp-guardrail" },
@@ -24,6 +28,10 @@ export function Hero() {
   const [activeScene, setActiveScene] = useState<"intro" | "idle" | "talk">("intro");
   const activeSceneRef = useRef<"intro" | "idle" | "talk">("intro");
 
+  // Typewriter Letter-by-Letter Reveal State
+  const [displayedSubtitle, setDisplayedSubtitle] = useState("");
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+
   // Audio state: starts muted (isMuted = true) to comply with browser autoplay security policies.
   // The moment the visitor clicks anywhere on the hero screen or clicks the speaker button,
   // audio immediately un-mutes and Sagar speaks.
@@ -43,6 +51,31 @@ export function Hero() {
     activeSceneRef.current = scene;
     setActiveScene(scene);
   };
+
+  // Cinematic Typewriter Text Reveal Effect
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setDisplayedSubtitle(SUBTITLE_TEXT);
+      setIsTypingComplete(true);
+      return;
+    }
+
+    let currentIndex = 0;
+    const startDelay = setTimeout(() => {
+      const interval = setInterval(() => {
+        currentIndex++;
+        setDisplayedSubtitle(SUBTITLE_TEXT.slice(0, currentIndex));
+        if (currentIndex >= SUBTITLE_TEXT.length) {
+          clearInterval(interval);
+          setIsTypingComplete(true);
+        }
+      }, 22);
+
+      return () => clearInterval(interval);
+    }, 450);
+
+    return () => clearTimeout(startDelay);
+  }, []);
 
   // Autoplay & Scroll-aware Audio/Video IntersectionObserver
   useEffect(() => {
@@ -350,12 +383,12 @@ export function Hero() {
           }}
         />
 
-        {/* Top edge gradient: Rich obsidian blend ensuring header typography clarity and cinematic studio lighting transition */}
+        {/* Top edge gradient: Balanced translucent obsidian fade matching stage symmetry and lightness */}
         <div
-          className="absolute inset-x-0 top-0 h-36 sm:h-40 z-10 pointer-events-none"
+          className="absolute inset-x-0 top-0 h-24 sm:h-28 z-10 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to bottom, #0b0a09 0%, rgba(11, 10, 9, 0.96) 15%, rgba(11, 10, 9, 0.86) 30%, rgba(11, 10, 9, 0.68) 46%, rgba(11, 10, 9, 0.45) 62%, rgba(11, 10, 9, 0.22) 78%, rgba(11, 10, 9, 0.06) 90%, transparent 100%)",
+              "linear-gradient(to bottom, rgba(11, 10, 9, 0.70) 0%, rgba(11, 10, 9, 0.52) 22%, rgba(11, 10, 9, 0.32) 48%, rgba(11, 10, 9, 0.12) 75%, transparent 100%)",
           }}
         />
 
@@ -386,13 +419,27 @@ export function Hero() {
               </div>
 
               {/* High-Impact Headline */}
-              <h1 className="font-display font-medium text-[clamp(1.75rem,5.2vw,3.8rem)] tracking-[-0.02em] leading-[1.08] text-paper mb-2.5 sm:mb-3.5 break-words">
+              <motion.h1
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                className="font-display font-medium text-[clamp(1.75rem,5.2vw,3.8rem)] tracking-[-0.02em] leading-[1.08] text-paper mb-2.5 sm:mb-3.5 break-words"
+              >
                 Engineering <span className="text-accent">Autonomous Systems</span> &amp; Production AI.
-              </h1>
+              </motion.h1>
 
-              {/* Shortened, Punchy Statement */}
-              <p className="text-stone-300 mb-3 sm:mb-5 font-body text-[clamp(0.85rem,1.2vw,1.05rem)] leading-relaxed max-w-[440px]">
-                Architecting self-evaluating agents, sub-200ms voice pipelines, and production systems that make dependable decisions.
+              {/* Typewriter Letter-by-Letter Brand Statement */}
+              <p
+                aria-label={SUBTITLE_TEXT}
+                className="text-stone-300 mb-3 sm:mb-5 font-body text-[clamp(0.85rem,1.2vw,1.05rem)] leading-relaxed max-w-[440px] min-h-[4rem]"
+              >
+                <span>{displayedSubtitle}</span>
+                {!isTypingComplete && (
+                  <span
+                    className="inline-block w-[2px] h-[1.05em] bg-accent ml-0.5 align-middle animate-pulse shadow-[0_0_8px_rgba(193,99,59,0.8)]"
+                    aria-hidden="true"
+                  />
+                )}
               </p>
 
               {/* ─── Mobile Avatar Stage (Interactive 3D Particle Canvas for mobile) ─── */}

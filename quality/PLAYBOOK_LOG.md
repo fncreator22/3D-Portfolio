@@ -81,3 +81,28 @@ To deactivate any transition without touching component code:
   ```powershell
   git revert b119679
   ```
+
+---
+
+## 5. Visual Refinements & Surface De-boxification Batch
+
+| Area | Issue Identified | Engineering Remediation | Verification |
+| :--- | :--- | :--- | :--- |
+| **Hero Top Gradient** | Overly heavy, gloomy `h-36 sm:h-40` gradient starting at solid `#0b0a09 0%` causing dark shader bar at the top of hero. | Thinned to balanced `h-24 sm:h-28` starting with translucent obsidian fade `rgba(11, 10, 9, 0.70)` easing to transparent. Matches bottom gradient height and lightness symmetrically. | Verified via `test-hero-typing-complete.png`. |
+| **Hero Subtitle & Reveal** | Technical jargon ("sub-200ms") rather than high-conviction personal brand selling; static subtitle. | Updated copy: `"AI Systems & Autonomous Agent Engineer. Building production-grade agentic architectures, real-time voice intelligence, and scalable AI that solves real-world problems."` Implemented letter-by-letter typewriter reveal (~22ms/char) with glowing terracotta pulsing cursor, plus kinetic headline word glide. | Verified via `test-hero-typing-start.png` & `test-hero-typing-complete.png`. |
+| **Aperture Lens Symmetry** | Oval mask hole (`rx="32" ry="46"`) and oblong font glyph 'O' produced asymmetric lens during expansion. | Converted SVG counter mask to symmetric circle (`rx="40" ry="40"`), centered focal lens at exact 50% horizontal midpoint with 3-column layout, and replaced font glyph with geometric circular lens SVG. | Verified via `test-zoom-02-mid.png` and `test-aperture-zoom-symmetric.png`. |
+| **Aperture Ghost Text Bleed** | Text from `<Identity />` was faintly visible inside counter hole before zoom commenced (`opacity: 0.35` resting). | Changed resting opacity to strictly `0.0`. Delayed content emergence in GSAP timeline to `progress > 0.28`, keeping portal interior pure obsidian until zoom opens. | Verified via `test-aperture-resting-no-ghost.png` (`contentWrapperRef` opacity = 0). |
+| **Section 01 (Identity) De-boxification** | Rigid rectangular border (`border border-line/80`) clashed with circular portal opening. | Removed harsh box borders. Styled with seamless obsidian gradient surface blend (`from-[#141210]/70 via-[#0e0d0b]/45 to-transparent`) and tactile glass metric tiles. Staggered `.identity-reveal` children inside aperture timeline. | Verified via `test-zoom-04-landed.png`. |
+| **Section 05 (Philosophy) De-boxification** | Rectangular double-nested card container created rigid box look. | Replaced harsh outer border with seamless organic obsidian surface blend and frameless floating principle cards. | Verified via `test-deboxified-philosophy.png`. |
+
+---
+
+## 6. Future Phase Animation Concepts (Experience & Skills)
+
+1. **Section 02 (JourneyTimeline - Experience)**:
+   - *Orbital Chrono-Pulse*: As each milestone arrives in the viewport, the node pulse can emit a dual-ring radar ripple along the SVG rail with a frequency keyed to the duration/recency of the role.
+   - *Split-Flap Metric Counter*: Metric chips inside each role card (e.g. `100k+ users`, `<150ms`) can roll like airport split-flap mechanical displays upon card focus.
+2. **Section 03 (SkillsDomain - Technologies)**:
+   - *Axonal Synaptic Discharge*: When hovering a technology domain chip, send a directional laser pulse through the WebGL axon cluster connecting directly to that technology's specific node in the Three.js 3D space.
+   - *Frequency Waveform Shader*: Integrate an ambient audio-reactive frequency ribbon behind the Voice AI skill cluster that subtly undulates as the user hovers over speech tools.
+

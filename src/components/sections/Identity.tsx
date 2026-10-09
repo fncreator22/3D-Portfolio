@@ -61,16 +61,17 @@ export function Identity() {
       aria-labelledby="identity-heading"
     >
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
-        {/* ─── 3D Card Deck: Section Card 01 ─── */}
+        {/* ─── De-boxified Organic Architecture: Section Card 01 ─── */}
         <div
           ref={cardRef}
-          className="rounded-[28px] sm:rounded-[36px] bg-bg-raise/95 border border-line/80 shadow-[0_24px_60px_rgba(0,0,0,0.7),0_0_35px_rgba(193,99,59,0.08)] p-6 sm:p-10 lg:p-14 transition-all duration-300 relative overflow-hidden will-change-transform"
+          className="rounded-[32px] sm:rounded-[44px] bg-gradient-to-b from-[#141210]/70 via-[#0e0d0b]/45 to-transparent p-6 sm:p-10 lg:p-14 transition-all duration-300 relative overflow-hidden will-change-transform"
         >
-          {/* Subtle Ambient Rim Glow */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-accent/8 rounded-full blur-[90px] pointer-events-none" />
+          {/* Subtle Ambient Rim Glows for Seamless Depth */}
+          <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-3/4 h-48 bg-accent/[0.04] blur-[100px] pointer-events-none rounded-full" />
+          <div className="absolute top-0 right-0 w-80 h-80 bg-accent/[0.07] rounded-full blur-[90px] pointer-events-none" />
 
           {/* Section Header */}
-          <div className="identity-reveal max-w-[820px] mb-8 sm:mb-12">
+          <div className="identity-reveal max-w-[820px] mb-8 sm:mb-12 relative z-10">
             <div className="eyebrow text-accent font-semibold flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
               <span>01 / Identity &amp; Architecture</span>
@@ -85,7 +86,7 @@ export function Identity() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-8 lg:gap-14 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-8 lg:gap-14 items-start relative z-10">
             {/* Left: Focused Architecture Summary & Telemetry Chips */}
             <div className="identity-reveal space-y-6">
               <p className="text-[clamp(0.95rem,1.25vw,1.1rem)] font-light text-stone-300 leading-relaxed">
@@ -93,24 +94,24 @@ export function Identity() {
               </p>
 
               {/* Empirical Telemetry Architecture Chips */}
-              <div className="pt-2 border-t border-line/60">
+              <div className="pt-2 border-t border-white/[0.06]">
                 <div className="font-mono text-[0.65rem] uppercase tracking-widest text-stone-400 font-semibold mb-2.5">
                   Verified Engineering Invariants:
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <span className="font-mono text-[0.68rem] sm:text-xs px-2.5 py-1 rounded-lg bg-bg border border-line text-stone-300 flex items-center gap-1.5">
+                  <span className="font-mono text-[0.68rem] sm:text-xs px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm">
                     <span className="text-accent font-bold">•</span>
                     <span>&lt;150ms P99 Voice Latency</span>
                   </span>
-                  <span className="font-mono text-[0.68rem] sm:text-xs px-2.5 py-1 rounded-lg bg-bg border border-line text-stone-300 flex items-center gap-1.5">
+                  <span className="font-mono text-[0.68rem] sm:text-xs px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm">
                     <span className="text-accent font-bold">•</span>
                     <span>Deterministic Agent Evals</span>
                   </span>
-                  <span className="font-mono text-[0.68rem] sm:text-xs px-2.5 py-1 rounded-lg bg-bg border border-line text-stone-300 flex items-center gap-1.5">
+                  <span className="font-mono text-[0.68rem] sm:text-xs px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm">
                     <span className="text-accent font-bold">•</span>
                     <span>Multi-Agent Sandboxing</span>
                   </span>
-                  <span className="font-mono text-[0.68rem] sm:text-xs px-2.5 py-1 rounded-lg bg-bg border border-line text-stone-300 flex items-center gap-1.5">
+                  <span className="font-mono text-[0.68rem] sm:text-xs px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm">
                     <span className="text-accent font-bold">•</span>
                     <span>Zero-Breakdown CI Gates</span>
                   </span>
@@ -118,9 +119,9 @@ export function Identity() {
               </div>
             </div>
 
-            {/* Right: 2x2 Metric Grid with high-conviction typography */}
+            {/* Right: 2x2 Metric Grid with Frameless Obsidian Elevation */}
             <div className="identity-reveal grid grid-cols-2 gap-3.5 sm:gap-4">
-              <div className="p-4 sm:p-5 rounded-2xl bg-bg border border-line/90 hover:border-accent/60 active:scale-[0.98] shadow-md transition-all flex flex-col justify-between">
+              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/[0.06] hover:border-accent/40 active:scale-[0.98] shadow-[0_6px_24px_rgba(0,0,0,0.3)] backdrop-blur-sm transition-all flex flex-col justify-between">
                 <span className="font-display font-semibold text-3xl sm:text-4xl text-accent tracking-tight">
                   {PROJECTS.length}
                 </span>
@@ -129,7 +130,7 @@ export function Identity() {
                 </span>
               </div>
 
-              <div className="p-4 sm:p-5 rounded-2xl bg-bg border border-line/90 hover:border-accent/60 active:scale-[0.98] shadow-md transition-all flex flex-col justify-between">
+              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/[0.06] hover:border-accent/40 active:scale-[0.98] shadow-[0_6px_24px_rgba(0,0,0,0.3)] backdrop-blur-sm transition-all flex flex-col justify-between">
                 <span className="font-display font-semibold text-3xl sm:text-4xl text-accent tracking-tight">
                   {String(SKILL_DOMAINS.length).padStart(2, "0")}
                 </span>
@@ -138,7 +139,7 @@ export function Identity() {
                 </span>
               </div>
 
-              <div className="p-4 sm:p-5 rounded-2xl bg-bg border border-line/90 hover:border-accent/60 active:scale-[0.98] shadow-md transition-all flex flex-col justify-between">
+              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/[0.06] hover:border-accent/40 active:scale-[0.98] shadow-[0_6px_24px_rgba(0,0,0,0.3)] backdrop-blur-sm transition-all flex flex-col justify-between">
                 <span className="font-display font-semibold text-3xl sm:text-4xl text-accent tracking-tight">
                   40+
                 </span>
@@ -147,7 +148,7 @@ export function Identity() {
                 </span>
               </div>
 
-              <div className="p-4 sm:p-5 rounded-2xl bg-bg border border-line/90 hover:border-accent/60 active:scale-[0.98] shadow-md transition-all flex flex-col justify-between">
+              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/[0.06] hover:border-accent/40 active:scale-[0.98] shadow-[0_6px_24px_rgba(0,0,0,0.3)] backdrop-blur-sm transition-all flex flex-col justify-between">
                 <span className="font-display font-semibold text-3xl sm:text-4xl text-accent tracking-tight">
                   1+
                 </span>

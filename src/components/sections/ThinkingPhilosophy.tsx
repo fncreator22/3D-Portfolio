@@ -83,13 +83,14 @@ export function ThinkingPhilosophy() {
       aria-labelledby="thinking-heading"
     >
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
-        {/* ─── 3D Card Deck: Section Card 05 ─── */}
+        {/* ─── De-boxified Organic Architecture: Section Card 05 ─── */}
         <div
           ref={cardRef}
-          className="rounded-[28px] sm:rounded-[36px] bg-bg-raise/95 border border-line/90 shadow-[0_30px_70px_rgba(0,0,0,0.8),0_0_35px_rgba(193,99,59,0.1)] p-6 sm:p-10 lg:p-14 relative overflow-hidden will-change-transform"
+          className="rounded-[32px] sm:rounded-[44px] bg-gradient-to-b from-[#141210]/70 via-[#0e0d0b]/45 to-transparent p-6 sm:p-10 lg:p-14 relative overflow-hidden will-change-transform"
         >
-          {/* Subtle Ambient Rim Glow */}
-          <div className="absolute top-0 left-0 w-80 h-80 bg-accent/6 rounded-full blur-[90px] pointer-events-none" />
+          {/* Subtle Ambient Atmospheric Glows */}
+          <div className="absolute -top-24 left-1/4 w-96 h-48 bg-accent/[0.05] blur-[100px] pointer-events-none rounded-full" />
+          <div className="absolute bottom-0 right-0 w-80 h-80 bg-accent/[0.05] rounded-full blur-[100px] pointer-events-none" />
 
           <div id="thinking-heading" className="eyebrow text-accent font-semibold flex items-center gap-2 relative z-10">
             <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
@@ -126,7 +127,7 @@ export function ThinkingPhilosophy() {
           </p>
 
           <div className="principles-grid mt-10 sm:mt-14 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 relative z-10">
-            <div className="principle-card p-6 rounded-2xl bg-bg border border-line/80 hover:border-accent shadow-lg transition-colors">
+            <div className="principle-card p-6 rounded-2xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/[0.06] hover:border-accent/40 shadow-[0_8px_30px_rgba(0,0,0,0.4)] backdrop-blur-sm transition-all duration-300">
               <div className="font-mono text-accent text-xs font-semibold">01</div>
               <h3 className="font-display font-medium text-base sm:text-lg mt-2.5 text-paper">
                 Verify before you trust
@@ -136,7 +137,7 @@ export function ThinkingPhilosophy() {
               </p>
             </div>
 
-            <div className="principle-card p-6 rounded-2xl bg-bg border border-line/80 hover:border-accent shadow-lg transition-colors">
+            <div className="principle-card p-6 rounded-2xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/[0.06] hover:border-accent/40 shadow-[0_8px_30px_rgba(0,0,0,0.4)] backdrop-blur-sm transition-all duration-300">
               <div className="font-mono text-accent text-xs font-semibold">02</div>
               <h3 className="font-display font-medium text-base sm:text-lg mt-2.5 text-paper">
                 Latency is a feature
@@ -146,7 +147,7 @@ export function ThinkingPhilosophy() {
               </p>
             </div>
 
-            <div className="principle-card p-6 rounded-2xl bg-bg border border-line/80 hover:border-accent shadow-lg transition-colors">
+            <div className="principle-card p-6 rounded-2xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/[0.06] hover:border-accent/40 shadow-[0_8px_30px_rgba(0,0,0,0.4)] backdrop-blur-sm transition-all duration-300">
               <div className="font-mono text-accent text-xs font-semibold">03</div>
               <h3 className="font-display font-medium text-base sm:text-lg mt-2.5 text-paper">
                 Ship the whole stack
