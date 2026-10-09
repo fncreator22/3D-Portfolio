@@ -32,7 +32,7 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
 
     const ctx = gsap.context(() => {
       const isMobile = window.innerWidth < 768;
-      const targetRadius = isMobile ? 850 : 1400;
+      const targetRadius = isMobile ? Math.max(window.innerWidth, window.innerHeight) * 1.6 : 1400;
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -48,7 +48,11 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
 
       // Initial resting state: 0% opacity prevents ghost bleed inside resting aperture hole
       gsap.set(shaderVignetteRef.current, { opacity: 0 });
-      gsap.set(contentWrapperRef.current, { scale: 0.84, opacity: 0, transformOrigin: "50% 45%" });
+      gsap.set(contentWrapperRef.current, {
+        scale: isMobile ? 0.98 : 0.84,
+        opacity: 0,
+        transformOrigin: isMobile ? "50% 25%" : "50% 45%",
+      });
       if (conduitBeamRef.current) {
         gsap.set(conduitBeamRef.current, { scaleY: 0 });
       }
@@ -132,7 +136,7 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
       tl.fromTo(
         shaderVignetteRef.current,
         { opacity: 0, scale: 1.15 },
-        { opacity: 0.5, scale: 1, duration: 0.35, ease: "power1.inOut" },
+        { opacity: 0.4, scale: 1, duration: 0.30, ease: "power1.inOut" },
         0.08
       );
 
@@ -140,29 +144,39 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
       // Smoothly emerges from within the expanding aperture hole, zooming organically into view!
       tl.fromTo(
         contentWrapperRef.current,
-        { scale: 0.84, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.60, ease: "power2.out" },
-        0.18
+        { scale: isMobile ? 0.98 : 0.84, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.45, ease: "power2.out" },
+        0.12
       );
 
       // Stagger internal Identity elements to align with aperture reveal
       tl.fromTo(
         ".identity-reveal",
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.45, stagger: 0.06, ease: "power2.out" },
-        0.26
+        { y: 16, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.35, stagger: 0.05, ease: "power2.out" },
+        0.18
       );
 
-      // 8. As portal opens fully, shader vignette and aperture overlay dissolve smoothly
+      // 8. As portal opens fully, shader vignette and aperture overlay dissolve cleanly to 100% full clarity
       tl.to(
         shaderVignetteRef.current,
-        { opacity: 0, duration: 0.22, ease: "power1.out" },
-        0.72
+        { opacity: 0, duration: 0.15, ease: "power1.out" },
+        0.44
       );
       tl.to(
         overlayRef.current,
-        { opacity: 0, duration: 0.18, ease: "power1.out" },
-        0.78
+        {
+          opacity: 0,
+          duration: 0.14,
+          ease: "power1.out",
+          onComplete: () => {
+            if (overlayRef.current) overlayRef.current.style.visibility = "hidden";
+          },
+          onReverseComplete: () => {
+            if (overlayRef.current) overlayRef.current.style.visibility = "visible";
+          },
+        },
+        0.48
       );
     }, containerRef);
 
@@ -191,7 +205,7 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
       {/* Fullscreen Aperture Overlay: Pinned on top of Identity */}
       <div
         ref={overlayRef}
-        className="absolute inset-0 z-30 pointer-events-none flex items-center justify-center overflow-hidden will-change-[opacity]"
+        className="absolute top-0 left-0 w-full h-[100svh] lg:h-full lg:inset-0 z-30 pointer-events-none flex items-center justify-center overflow-hidden will-change-[opacity]"
       >
         {/* Top Connecting Conduit Beam */}
         <div

@@ -54,7 +54,10 @@ export function Hero() {
 
   // Cinematic Typewriter Text Reveal Effect with robust timer lifecycle cleanup
   useEffect(() => {
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    // On mobile (< 1024px) or if reduced motion is requested, display subtitle immediately
+    // to prevent blank void under headline and maintain stable mobile layout
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 1024;
+    if (isMobile || (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
       setDisplayedSubtitle(SUBTITLE_TEXT);
       setIsTypingComplete(true);
       return;
@@ -408,15 +411,15 @@ export function Hero() {
       </div>
 
       {/* ─── Hero Content Foreground Layer ─── */}
-      <div className="relative z-20 flex-1 flex flex-col justify-between lg:justify-center pt-16 sm:pt-20 lg:pt-32 pb-4 sm:pb-8 lg:pb-12 pointer-events-auto">
-        <div className="max-w-[1320px] mx-auto px-[clamp(1rem,4vw,3.5rem)] w-full my-auto lg:my-0">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 sm:gap-6 lg:gap-10 items-center">
+      <div className="relative z-20 flex-1 flex flex-col justify-between pt-[4.5rem] sm:pt-20 lg:pt-32 pb-2 sm:pb-6 lg:pb-12 pointer-events-auto">
+        <div className="max-w-[1320px] mx-auto px-[clamp(1rem,4vw,3.5rem)] w-full flex-1 flex flex-col justify-between lg:justify-center lg:my-0">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-3 sm:gap-6 lg:gap-10 items-center flex-1 lg:flex-initial">
 
-            {/* Left: Tightly Constrained & Balanced Text Column */}
-            <div className="flex flex-col max-w-[460px]">
+            {/* Left: Balanced Text & Mobile Avatar Column */}
+            <div className="flex flex-col max-w-[460px] justify-between flex-1 lg:flex-initial h-full lg:h-auto py-1 sm:py-2 lg:py-0">
               
               {/* Shortened Eyebrow Tag */}
-              <div className="eyebrow mb-1.5 sm:mb-3 text-[0.65rem] sm:text-xs tracking-wider">
+              <div className="eyebrow mb-1.5 sm:mb-3 text-[0.68rem] sm:text-xs tracking-wider">
                 AI ENGINEER · AGENTIC SYSTEMS · VOICE AI
               </div>
 
@@ -425,7 +428,7 @@ export function Hero() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-                className="font-display font-medium text-[clamp(1.75rem,5.2vw,3.8rem)] tracking-[-0.02em] leading-[1.08] text-paper mb-2 sm:mb-3.5 break-words [text-wrap:balance]"
+                className="font-display font-medium text-[clamp(1.9rem,5.6vw,3.8rem)] tracking-[-0.02em] leading-[1.08] text-paper mb-2 sm:mb-3.5 break-words [text-wrap:balance]"
               >
                 Engineering <span className="text-accent">Autonomous Systems</span> &amp; Production AI.
               </motion.h1>
@@ -433,7 +436,7 @@ export function Hero() {
               {/* Typewriter Letter-by-Letter Brand Statement */}
               <p
                 aria-label={SUBTITLE_TEXT}
-                className="text-stone-300 mb-2.5 sm:mb-4 font-body text-[clamp(0.82rem,1.15vw,1.05rem)] leading-relaxed max-w-[440px] min-h-[3.2rem] sm:min-h-[4rem]"
+                className="text-stone-300 mb-2 sm:mb-4 font-body text-[clamp(0.85rem,1.15vw,1.05rem)] leading-relaxed max-w-[440px] min-h-[3rem] sm:min-h-[4rem]"
               >
                 <span>{displayedSubtitle}</span>
                 {!isTypingComplete && (
@@ -444,13 +447,13 @@ export function Hero() {
                 )}
               </p>
 
-              {/* ─── Mobile Avatar Stage (Scaled for balanced 100svh viewport fit) ─── */}
-              <div className="block lg:hidden my-1.5 sm:my-3 self-center w-full max-w-[200px] sm:max-w-[250px] aspect-square">
+              {/* ─── Mobile Avatar Stage (Comfortably proportioned with healthy breathing room) ─── */}
+              <div className="block lg:hidden my-3 sm:my-4 self-center w-full max-w-[230px] sm:max-w-[260px] aspect-square">
                 <Avatar3DModel />
               </div>
 
               {/* Primary Action Buttons with Emil Kowalski active tactile feedback */}
-              <div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-2.5 items-center mb-3 sm:mb-5">
+              <div className="flex flex-wrap sm:flex-nowrap gap-2.5 items-center mb-3 sm:mb-4">
                 <Link
                   href="/work"
                   className="inline-flex items-center justify-center bg-paper text-bg border border-black/10 rounded-full font-body font-medium hover:bg-accent hover:text-paper hover:border-accent active:scale-[0.97] transition-all duration-160 text-[0.74rem] sm:text-[0.88rem] px-3.5 sm:px-4 py-2 sm:py-2.5 shadow-sm cursor-pointer whitespace-nowrap"
@@ -478,7 +481,7 @@ export function Hero() {
               </div>
 
               {/* Flagship Project Quick Links */}
-              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-2.5 border-t border-line/60">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-3 pb-1 border-t border-line/60">
                 <span className="font-mono text-[0.62rem] uppercase tracking-widest text-stone mr-1">
                   Flagship:
                 </span>

@@ -31,20 +31,43 @@ export function Identity() {
 
       // 2. Transition 02: 3D Deck Card Stacking & Tilt
       if (isTransitionEnabled("IDENTITY_TO_TRAJECTORY_STACK") && cardRef.current) {
-        gsap.to(cardRef.current, {
-          scale: 0.94,
-          rotateX: 3.5,
-          y: -24,
-          filter: "brightness(0.75)",
-          opacity: 0.85,
-          transformOrigin: "center top",
-          ease: "power1.out",
-          scrollTrigger: {
-            trigger: "#journey",
-            start: "top 95%",
-            end: "top 30%",
-            scrub: 0.8,
-          },
+        const mm = gsap.matchMedia();
+
+        // Desktop: 3D card tilt & subtle stack perspective (only triggers once Journey ascends near the center)
+        mm.add("(min-width: 1024px)", () => {
+          gsap.to(cardRef.current, {
+            scale: 0.95,
+            rotateX: 3.0,
+            y: -20,
+            filter: "brightness(0.8)",
+            opacity: 0.9,
+            transformOrigin: "center top",
+            ease: "power1.out",
+            scrollTrigger: {
+              trigger: "#journey",
+              start: "top 45%",
+              end: "top 15%",
+              scrub: 0.8,
+            },
+          });
+        });
+
+        // Mobile: Preserve 100% brightness, full opacity, and clean scale without premature dimming
+        mm.add("(max-width: 1023px)", () => {
+          gsap.to(cardRef.current, {
+            scale: 1,
+            y: 0,
+            filter: "none",
+            opacity: 1,
+            transformOrigin: "center top",
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#journey",
+              start: "top 40%",
+              end: "top 10%",
+              scrub: 0.8,
+            },
+          });
         });
       }
     }, sectionRef);
@@ -56,7 +79,7 @@ export function Identity() {
     <section
       ref={sectionRef}
       id="identity"
-      className="py-[clamp(3.5rem,7vw,7rem)] relative z-10 overflow-visible max-w-full"
+      className="pt-32 pb-16 sm:pt-36 sm:pb-24 lg:py-[clamp(4.5rem,7vw,7rem)] relative z-10 overflow-visible max-w-full"
       style={{ perspective: "1200px" }}
       aria-labelledby="identity-heading"
     >
