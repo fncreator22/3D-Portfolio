@@ -3,15 +3,22 @@
 import React, { useState } from "react";
 import { PROFILE } from "@/data/projects";
 import { IDCardLanyard } from "@/components/ui/id-card-lanyard";
-import { Copy, Check, Terminal, Activity, ShieldCheck, Zap } from "lucide-react";
+import { Copy, Check, Terminal, Mail, MapPin } from "lucide-react";
 
 export function Contact() {
-  const [copied, setCopied] = useState(false);
+  const [copiedCurl, setCopiedCurl] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
 
   const copyCurl = () => {
     navigator.clipboard.writeText("curl -s https://sagarmahajan.cloud/api/v1/health");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setCopiedCurl(true);
+    setTimeout(() => setCopiedCurl(false), 2000);
+  };
+
+  const copyEmail = () => {
+    navigator.clipboard.writeText(PROFILE.email);
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 2000);
   };
 
   return (
@@ -32,44 +39,47 @@ export function Contact() {
               I engineer autonomous AI agents, conversational voice systems, and reliable full-stack applications. Focused on clean architecture, sub-second responsiveness, and software that delivers real-world value.
             </p>
 
-            {/* Production Telemetry HUD (Anti-AI-Slop Architecture) */}
+            {/* Direct Communication & Developer Gateway */}
             <div className="mt-6 max-w-[520px] rounded-xl bg-bg-raise/80 border border-line/80 p-4 relative overflow-hidden backdrop-blur-sm">
               <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
                 <div className="flex items-center gap-2 font-mono text-[0.68rem] text-accent font-semibold uppercase tracking-wider">
-                  <Activity className="w-3.5 h-3.5" />
-                  <span>Production Telemetry HUD</span>
+                  <Mail className="w-3.5 h-3.5" />
+                  <span>Direct Dispatch &amp; Engineering Gateway</span>
                 </div>
-                <span className="inline-flex items-center gap-1.5 font-mono text-[0.62rem] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  STATUS: HEALTHY
+                <span className="inline-flex items-center gap-1.5 font-mono text-[0.62rem] text-stone-300 bg-white/[0.04] border border-white/[0.08] px-2.5 py-0.5 rounded-full">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                  AVAILABLE FOR HIRE / COLLAB
                 </span>
               </div>
 
-              <div className="mt-3.5 grid grid-cols-3 gap-2.5 sm:gap-3 text-center">
-                <div className="p-2 sm:p-2.5 rounded-lg bg-black/40 border border-white/[0.04]">
-                  <div className="font-mono text-sm sm:text-base font-bold text-paper">16+</div>
-                  <div className="font-mono text-[0.62rem] sm:text-[0.68rem] text-stone-400 mt-0.5 leading-tight">
-                    Shipped Agents
+              {/* Direct Email Channel */}
+              <div className="mt-3 flex items-center justify-between gap-3 p-3 rounded-lg bg-black/40 border border-white/[0.04]">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-7 h-7 rounded-md bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+                    <Mail className="w-3.5 h-3.5 text-accent" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-mono text-[0.62rem] text-stone-400 uppercase tracking-wider">Direct Email</div>
+                    <a
+                      href={`mailto:${PROFILE.email}`}
+                      className="font-mono text-xs sm:text-sm text-paper hover:text-accent truncate font-medium block transition-colors"
+                    >
+                      {PROFILE.email}
+                    </a>
                   </div>
                 </div>
-
-                <div className="p-2 sm:p-2.5 rounded-lg bg-black/40 border border-white/[0.04]">
-                  <div className="font-mono text-sm sm:text-base font-bold text-accent">&lt; 4.8ms</div>
-                  <div className="font-mono text-[0.62rem] sm:text-[0.68rem] text-stone-400 mt-0.5 leading-tight">
-                    P99 Gateway
-                  </div>
-                </div>
-
-                <div className="p-2 sm:p-2.5 rounded-lg bg-black/40 border border-white/[0.04]">
-                  <div className="font-mono text-sm sm:text-base font-bold text-emerald-400">99.98%</div>
-                  <div className="font-mono text-[0.62rem] sm:text-[0.68rem] text-stone-400 mt-0.5 leading-tight">
-                    Guardrail SLA
-                  </div>
-                </div>
+                <button
+                  onClick={copyEmail}
+                  className="shrink-0 inline-flex items-center gap-1 font-mono text-[0.62rem] text-stone-300 hover:text-paper bg-white/[0.05] hover:bg-white/[0.1] px-2.5 py-1.5 rounded border border-white/[0.05] transition-colors active:scale-[0.95]"
+                  title="Copy email address"
+                >
+                  {copiedEmail ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                  <span>{copiedEmail ? "Copied" : "Copy"}</span>
+                </button>
               </div>
 
               {/* Developer CLI Terminal Snippet */}
-              <div className="mt-3.5 pt-3 border-t border-white/[0.06] flex items-center justify-between gap-2 bg-black/60 px-3 py-2 rounded-lg border border-white/[0.04]">
+              <div className="mt-2.5 pt-2.5 border-t border-white/[0.06] flex items-center justify-between gap-2 bg-black/60 px-3 py-2 rounded-lg border border-white/[0.04]">
                 <div className="flex items-center gap-2 overflow-x-auto font-mono text-[0.68rem] sm:text-xs text-stone-300">
                   <Terminal className="w-3.5 h-3.5 text-accent shrink-0" />
                   <span className="text-stone-500 select-none">$</span>
@@ -77,26 +87,42 @@ export function Contact() {
                 </div>
                 <button
                   onClick={copyCurl}
-                  className="shrink-0 inline-flex items-center gap-1 font-mono text-[0.62rem] text-stone-400 hover:text-paper bg-white/[0.05] hover:bg-white/[0.1] px-2 py-1 rounded transition-colors active:scale-[0.95]"
+                  className="shrink-0 inline-flex items-center gap-1 font-mono text-[0.62rem] text-stone-300 hover:text-paper bg-white/[0.05] hover:bg-white/[0.1] px-2.5 py-1 rounded border border-white/[0.05] transition-colors active:scale-[0.95]"
                   title="Copy command"
                 >
-                  {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                  <span>{copied ? "Copied" : "Copy"}</span>
+                  {copiedCurl ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                  <span>{copiedCurl ? "Copied" : "Copy"}</span>
                 </button>
               </div>
             </div>
 
-            {/* Academic Background */}
+            {/* Academic Background & Location */}
             <div className="mt-4 p-4 rounded-xl bg-bg-raise/80 border border-line/80 max-w-[520px]">
-              <div>
-                <div className="font-mono text-[0.68rem] text-accent uppercase tracking-wider font-semibold">
-                  Academic Background
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="font-mono text-[0.68rem] text-accent uppercase tracking-wider font-semibold">
+                    Academic Background
+                  </div>
+                  <div className="font-display font-medium text-sm text-paper mt-0.5">
+                    {PROFILE.education.degree}
+                  </div>
+                  <div className="font-mono text-xs text-stone-300 mt-0.5">
+                    {PROFILE.education.school}
+                  </div>
+                  <div className="font-mono text-[0.68rem] text-stone-400 mt-0.5">
+                    {PROFILE.education.period}
+                  </div>
                 </div>
-                <div className="font-display font-medium text-sm text-paper mt-0.5">
-                  {PROFILE.education.degree}
-                </div>
-                <div className="font-mono text-xs text-stone-300 mt-0.5">
-                  {PROFILE.education.school}
+                <div className="text-right shrink-0">
+                  <div className="font-mono text-[0.68rem] text-accent uppercase tracking-wider font-semibold">
+                    Base
+                  </div>
+                  <div className="font-mono text-xs text-stone-300 mt-0.5">
+                    Hyderabad, India
+                  </div>
+                  <div className="font-mono text-[0.68rem] text-stone-400 mt-0.5">
+                    IST (UTC+5:30)
+                  </div>
                 </div>
               </div>
             </div>

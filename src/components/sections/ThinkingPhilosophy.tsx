@@ -184,36 +184,43 @@ export function ThinkingPhilosophy() {
             id="thinking-heading"
             className="eyebrow text-accent font-semibold flex items-center gap-2 relative z-10 mb-6 sm:mb-8"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-accent/90 shadow-[0_0_6px_rgba(193,99,59,0.5)]" />
             <span>05 / Engineering Conviction</span>
           </div>
 
           {/* Monumental Kinetic Creed (Clean, Classic, Under 25 Words) */}
           <div
             ref={textContainerRef}
-            className="max-w-[960px] relative z-10 space-y-3 sm:space-y-4"
+            className="max-w-[960px] relative z-10 space-y-3 sm:space-y-4 select-text pointer-events-auto"
+            style={{ userSelect: "text", WebkitUserSelect: "text" }}
           >
-            <h2 className="font-display font-medium text-[clamp(2rem,4.6vw,3.6rem)] leading-[1.12] tracking-[-0.02em] text-paper">
+            <h2 
+              className="font-display font-medium text-[clamp(2rem,4.6vw,3.6rem)] leading-[1.12] tracking-[-0.02em] text-paper select-text cursor-text"
+              style={{ userSelect: "text", WebkitUserSelect: "text" }}
+            >
               {MANIFESTO_LINES[0].text.split(" ").map((w, i) => (
                 <span
                   key={i}
-                  className="creed-word opacity-40 transition-opacity inline-block mr-[0.25em]"
+                  className="creed-word opacity-40 transition-opacity inline-block mr-[0.25em] select-text"
                 >
                   {w}
                 </span>
               ))}
             </h2>
 
-            <p className="font-display font-light text-[clamp(1.3rem,2.8vw,2.1rem)] leading-[1.28] tracking-[-0.01em] text-stone-300">
+            <p 
+              className="font-display font-light text-[clamp(1.3rem,2.8vw,2.1rem)] leading-[1.28] tracking-[-0.01em] text-stone-300 select-text cursor-text"
+              style={{ userSelect: "text", WebkitUserSelect: "text" }}
+            >
               {MANIFESTO_LINES[1].text.split(" ").map((w, i) => (
                 <span
                   key={i}
-                  className="creed-word opacity-40 transition-opacity inline-block mr-[0.25em]"
+                  className="creed-word opacity-40 transition-opacity inline-block mr-[0.25em] select-text"
                 >
                   {w}
                 </span>
               ))}
-              <span className="text-accent font-medium inline">
+              <span className="text-accent font-medium inline select-text">
                 {" " + MANIFESTO_LINES[2].text}
               </span>
             </p>
@@ -266,7 +273,7 @@ export function ThinkingPhilosophy() {
 
               {/* Right: Dynamic Single Monospace Precision Readout (No boxes, no cards) */}
               <div className="flex items-center gap-2 font-mono text-[0.72rem] sm:text-xs text-stone-300 py-1.5 px-3 rounded-full bg-white/[0.02] border border-line/50 w-fit backdrop-blur-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
+                <span className="w-1.5 h-1.5 rounded-full bg-accent/90 shadow-[0_0_6px_rgba(193,99,59,0.5)]" />
                 <span className="text-accent font-semibold uppercase tracking-wider">
                   [{activeBeacon.tag}]
                 </span>

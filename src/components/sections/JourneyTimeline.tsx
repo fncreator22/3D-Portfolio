@@ -136,7 +136,7 @@ export function JourneyTimeline() {
           {/* Section Header */}
           <div className="max-w-[820px] mb-10 sm:mb-14">
             <div className="eyebrow text-accent font-semibold flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-accent/90 shadow-[0_0_6px_rgba(193,99,59,0.5)]" />
               <span>02 / Trajectory &amp; Evolution</span>
             </div>
             {/* Space Grotesk 500 headline without heavy italic serif flourishes */}
@@ -178,7 +178,7 @@ export function JourneyTimeline() {
               id="trajectory-shockwave-pulse"
               className="absolute -left-[14px] bottom-0 w-[30px] h-[30px] rounded-full pointer-events-none -translate-y-1/2 opacity-0 z-30 flex items-center justify-center transition-all duration-150 will-change-transform"
             >
-              <div className="absolute inset-0 rounded-full bg-accent/40 animate-ping pointer-events-none" />
+              <div className="absolute -inset-1 rounded-full bg-accent/25 blur-[3px] pointer-events-none" />
               <div className="w-[14px] h-[14px] rounded-full bg-paper shadow-[0_0_20px_#ffffff,0_0_40px_#ffaa75,0_0_60px_#c1633b]" />
             </div>
 
@@ -204,7 +204,7 @@ export function JourneyTimeline() {
                   >
                     {/* Radiant synaptic pulse ripple on active node */}
                     {isActive && (
-                      <span className="absolute -inset-1.5 rounded-full bg-accent animate-ping opacity-75 pointer-events-none" />
+                      <span className="absolute -inset-1.5 rounded-full bg-accent/35 blur-[2px] pointer-events-none" />
                     )}
                   </div>
 

@@ -171,7 +171,7 @@ export function GlyphPortal({
 
         {/* Bottom Traversal Status Cue */}
         <div className="absolute bottom-10 z-20 font-mono text-[0.58rem] tracking-[0.25em] uppercase text-stone-400 flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
+          <span className="w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_6px_rgba(193,99,59,0.5)]" />
           <span>Traverse Portal ↓</span>
         </div>
       </div>

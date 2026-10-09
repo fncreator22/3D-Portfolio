@@ -23,22 +23,31 @@ export function Navigation() {
       setScrolled(window.scrollY > 20);
 
       if (pathname === "/") {
-        const sections = ["journey", "skills", "projects", "contact"];
-        const scrollPosition = window.scrollY + 200;
+        const checkpoint = window.innerHeight * 0.42;
+        const sections = [
+          { id: "contact", navId: "" },
+          { id: "thinking", navId: "" },
+          { id: "projects", navId: "work" },
+          { id: "skills", navId: "skills" },
+          { id: "journey", navId: "journey" },
+          { id: "identity", navId: "" },
+          { id: "hero", navId: "" },
+        ];
 
-        for (const section of sections) {
-          const el = document.getElementById(section);
+        if (window.scrollY < 200) {
+          setActiveSection("");
+          return;
+        }
+
+        for (const sec of sections) {
+          const el = document.getElementById(sec.id);
           if (el) {
-            const top = el.offsetTop;
-            const height = el.offsetHeight;
-            if (scrollPosition >= top && scrollPosition < top + height) {
-              setActiveSection(section);
+            const rect = el.getBoundingClientRect();
+            if (rect.top <= checkpoint && rect.bottom >= checkpoint) {
+              setActiveSection(sec.navId);
               return;
             }
           }
-        }
-        if (window.scrollY < 400) {
-          setActiveSection("");
         }
       } else if (pathname.startsWith("/work")) {
         setActiveSection("work");

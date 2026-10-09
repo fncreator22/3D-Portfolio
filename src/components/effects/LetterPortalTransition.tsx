@@ -43,6 +43,16 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
           scrub: 0.8,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            if (overlayRef.current) {
+              // Completely remove overlay from hit testing once aperture opens (progress >= 0.40)
+              if (self.progress >= 0.40) {
+                overlayRef.current.style.display = "none";
+              } else {
+                overlayRef.current.style.display = "flex";
+              }
+            }
+          },
         },
       });
 
@@ -170,10 +180,16 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
           duration: 0.14,
           ease: "power1.out",
           onComplete: () => {
-            if (overlayRef.current) overlayRef.current.style.visibility = "hidden";
+            if (overlayRef.current) {
+              overlayRef.current.style.visibility = "hidden";
+              overlayRef.current.style.display = "none";
+            }
           },
           onReverseComplete: () => {
-            if (overlayRef.current) overlayRef.current.style.visibility = "visible";
+            if (overlayRef.current) {
+              overlayRef.current.style.visibility = "visible";
+              overlayRef.current.style.display = "flex";
+            }
           },
         },
         0.48
@@ -191,13 +207,14 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
     <div
       ref={containerRef}
       id="identity-portal"
-      className="relative w-full overflow-hidden bg-bg select-none"
+      className="relative w-full overflow-hidden bg-bg select-text"
       aria-label="Typographic Aperture Portal Transition"
     >
       {/* Target Content: The REAL Section 01 (Identity) rendered directly without duplication */}
       <div
         ref={contentWrapperRef}
-        className="relative z-10 w-full will-change-[transform,opacity]"
+        className="relative z-30 w-full select-text pointer-events-auto will-change-[transform,opacity]"
+        style={{ userSelect: "text", WebkitUserSelect: "text" }}
       >
         {children}
       </div>
@@ -205,7 +222,7 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
       {/* Fullscreen Aperture Overlay: Pinned on top of Identity */}
       <div
         ref={overlayRef}
-        className="absolute top-0 left-0 w-full h-[100svh] lg:h-full lg:inset-0 z-30 pointer-events-none flex items-center justify-center overflow-hidden will-change-[opacity]"
+        className="absolute top-0 left-0 w-full h-[100svh] lg:h-full lg:inset-0 z-20 pointer-events-none flex items-center justify-center overflow-hidden will-change-[opacity]"
       >
         {/* Top Connecting Conduit Beam */}
         <div
@@ -278,7 +295,7 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
             ref={badgeRef}
             className="absolute bottom-full mb-3.5 sm:mb-5 left-1/2 -translate-x-1/2 font-mono text-[0.65rem] sm:text-xs tracking-[0.25em] text-accent uppercase font-semibold flex items-center gap-2 will-change-transform whitespace-nowrap"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
             <span>AUTONOMOUS SYSTEMS ARCHITECTURE</span>
           </div>
 

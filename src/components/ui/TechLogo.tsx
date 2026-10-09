@@ -50,7 +50,7 @@ export function TechLogo({ name, className = "w-4 h-4", showName = true }: TechL
     if (norm.includes("next")) {
       return (
         <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-          <circle cx="12" cy="12" r="11" fill="#000000" stroke="#FFFFFF" strokeWidth="1.2"/>
+          <circle cx="12" cy="12" r="10.5" fill="#141416" stroke="#FFFFFF" strokeWidth="1.5"/>
           <path d="M8 8v8h2.2v-5.2l6.2 5.2H18V8h-2.2v5.2L9.6 8H8z" fill="#FFFFFF"/>
         </svg>
       );
@@ -248,6 +248,14 @@ export function TechLogo({ name, className = "w-4 h-4", showName = true }: TechL
       </svg>
     );
   };
+
+  if (!showName) {
+    return (
+      <span className="flex items-center justify-center w-full h-full">
+        {renderIcon()}
+      </span>
+    );
+  }
 
   return (
     <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-bg-raise/95 border border-line/90 hover:border-accent/70 hover:shadow-[0_0_16px_rgba(193,99,59,0.22)] transition-all font-mono text-xs text-paper font-medium group select-none">

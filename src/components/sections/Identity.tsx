@@ -79,67 +79,46 @@ export function Identity() {
     <section
       ref={sectionRef}
       id="identity"
-      className="pt-32 pb-16 sm:pt-36 sm:pb-24 lg:py-[clamp(4.5rem,7vw,7rem)] relative z-10 overflow-visible max-w-full"
-      style={{ perspective: "1200px" }}
+      className="relative z-10 w-full min-h-[100svh] flex flex-col justify-center overflow-visible pt-24 pb-16 sm:pt-28 sm:pb-20 lg:py-24 select-text pointer-events-auto"
+      style={{ perspective: "1200px", userSelect: "text", WebkitUserSelect: "text" }}
       aria-labelledby="identity-heading"
     >
-      <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
+      <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)] w-full select-text">
         {/* ─── De-boxified Organic Architecture: Section 01 Stage ─── */}
         <div
           ref={cardRef}
-          className="relative transition-all duration-300 will-change-transform"
+          className="relative transition-all duration-300 will-change-transform select-text"
         >
           {/* Subtle Ambient Radial Lighting for Seamless Canvas Depth */}
           <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-full max-w-[840px] h-72 bg-accent/[0.035] blur-[120px] pointer-events-none rounded-full" />
           <div className="absolute top-1/3 -right-24 w-80 h-80 bg-accent/[0.04] rounded-full blur-[100px] pointer-events-none" />
 
           {/* Section Header */}
-          <div className="identity-reveal max-w-[820px] mb-8 sm:mb-12 relative z-10">
-            <div className="eyebrow text-accent font-semibold flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+          <div className="identity-reveal max-w-[820px] mb-8 sm:mb-12 relative z-10 select-text">
+            <div className="eyebrow text-accent font-semibold flex items-center gap-2 select-text">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent" />
               <span>01 / Identity &amp; Architecture</span>
             </div>
             {/* Space Grotesk 500 high-conviction headline */}
             <h2
               id="identity-heading"
-              className="font-display font-medium text-[clamp(1.85rem,4.2vw,3.1rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.1] text-paper"
+              className="font-display font-medium text-[clamp(1.85rem,4.2vw,3.1rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.1] text-paper select-text cursor-text"
+              style={{ userSelect: "text", WebkitUserSelect: "text" }}
             >
               Taking systems from vague asks to{" "}
-              <span className="text-accent font-medium">live production</span>.
+              <span className="text-accent font-medium select-text">live production</span>.
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-8 lg:gap-14 items-start relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-8 lg:gap-14 items-start relative z-10 select-text">
             {/* Left: Focused Architecture Summary & Telemetry Chips */}
-            <div className="identity-reveal space-y-6">
-              <p className="text-[clamp(0.95rem,1.25vw,1.1rem)] font-light text-stone-300 leading-relaxed">
+            <div className="identity-reveal space-y-6 select-text">
+              <p 
+                className="text-[clamp(0.95rem,1.25vw,1.1rem)] font-light text-stone-300 leading-relaxed select-text cursor-text"
+                style={{ userSelect: "text", WebkitUserSelect: "text" }}
+              >
                 {PROFILE.summary}
               </p>
-
-              {/* Empirical Telemetry Architecture Chips */}
-              <div className="pt-2 border-t border-white/[0.06]">
-                <div className="font-mono text-[0.65rem] uppercase tracking-widest text-stone-400 font-semibold mb-2.5">
-                  Verified Engineering Invariants:
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <span className="font-mono text-[0.68rem] sm:text-xs px-3 py-1.5 rounded-full bg-white/[0.02] border border-white/[0.05] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm hover:border-accent/30 transition-colors">
-                    <span className="text-accent font-bold">•</span>
-                    <span>&lt;150ms P99 Voice Latency</span>
-                  </span>
-                  <span className="font-mono text-[0.68rem] sm:text-xs px-3 py-1.5 rounded-full bg-white/[0.02] border border-white/[0.05] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm hover:border-accent/30 transition-colors">
-                    <span className="text-accent font-bold">•</span>
-                    <span>Deterministic Agent Evals</span>
-                  </span>
-                  <span className="font-mono text-[0.68rem] sm:text-xs px-3 py-1.5 rounded-full bg-white/[0.02] border border-white/[0.05] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm hover:border-accent/30 transition-colors">
-                    <span className="text-accent font-bold">•</span>
-                    <span>Multi-Agent Sandboxing</span>
-                  </span>
-                  <span className="font-mono text-[0.68rem] sm:text-xs px-3 py-1.5 rounded-full bg-white/[0.02] border border-white/[0.05] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm hover:border-accent/30 transition-colors">
-                    <span className="text-accent font-bold">•</span>
-                    <span>Zero-Breakdown CI Gates</span>
-                  </span>
-                </div>
-              </div>
             </div>
 
             {/* Right: 2x2 Sleek Architectural Telemetry Stats */}

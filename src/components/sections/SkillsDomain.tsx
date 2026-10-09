@@ -1,144 +1,51 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SKILL_DOMAINS } from "@/data/projects";
-import { TechLogo } from "@/components/ui/TechLogo";
 import { isTransitionEnabled } from "@/lib/motion-flags";
+import ScrollMorphSkills from "@/components/ui/scroll-morph-hero";
 
 export function SkillsDomain() {
-  const [activeDomain, setActiveDomain] = useState<number>(0);
   const sectionRef = useRef<HTMLElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const mountRef = useRef<HTMLDivElement>(null);
   const flareRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    const mount = mountRef.current;
-    if (!mount) return;
+    if (typeof window === "undefined") return;
+    gsap.registerPlugin(ScrollTrigger);
 
-    if (typeof window !== "undefined") {
-      gsap.registerPlugin(ScrollTrigger);
-    }
-
-    const width = mount.clientWidth || 300;
-    const height = mount.clientHeight || 300;
-
-    // 1. Three.js Synaptic Cluster Scene
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
-    camera.position.z = 18;
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    mount.appendChild(renderer.domElement);
-
-    // 2. Synaptic Nodes
-    const nodeCount = 36;
-    const nodePositions = new Float32Array(nodeCount * 3);
-    const nodeColors = new Float32Array(nodeCount * 3);
-
-    const colorTerracotta = new THREE.Color(0xc1633b);
-    const colorCool = new THREE.Color(0x6b6fb0);
-
-    for (let i = 0; i < nodeCount; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(Math.random() * 2 - 1);
-      const r = 5.5 + Math.random() * 2.5;
-
-      nodePositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      nodePositions[i * 3 + 1] = r * Math.cos(phi);
-      nodePositions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
-
-      const c = i % 2 === 0 ? colorTerracotta : colorCool;
-      nodeColors[i * 3] = c.r;
-      nodeColors[i * 3 + 1] = c.g;
-      nodeColors[i * 3 + 2] = c.b;
-    }
-
-    const nodeGeo = new THREE.BufferGeometry();
-    nodeGeo.setAttribute("position", new THREE.BufferAttribute(nodePositions, 3));
-    nodeGeo.setAttribute("color", new THREE.BufferAttribute(nodeColors, 3));
-
-    const nodeMat = new THREE.PointsMaterial({
-      size: 0.45,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.9,
-      blending: THREE.AdditiveBlending,
-    });
-
-    const nodes = new THREE.Points(nodeGeo, nodeMat);
-    scene.add(nodes);
-
-    // 3. Synaptic Electrical Axons (Lines)
-    const lineMat = new THREE.LineBasicMaterial({
-      color: 0xc1633b,
-      transparent: true,
-      opacity: 0.25,
-      blending: THREE.AdditiveBlending,
-    });
-
-    const linePositions: number[] = [];
-    for (let i = 0; i < nodeCount; i++) {
-      for (let j = i + 1; j < nodeCount; j++) {
-        const dx = nodePositions[i * 3] - nodePositions[j * 3];
-        const dy = nodePositions[i * 3 + 1] - nodePositions[j * 3 + 1];
-        const dz = nodePositions[i * 3 + 2] - nodePositions[j * 3 + 2];
-        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-        if (dist < 4.2) {
-          linePositions.push(
-            nodePositions[i * 3],
-            nodePositions[i * 3 + 1],
-            nodePositions[i * 3 + 2],
-            nodePositions[j * 3],
-            nodePositions[j * 3 + 1],
-            nodePositions[j * 3 + 2]
-          );
-        }
-      }
-    }
-
-    const lineGeo = new THREE.BufferGeometry();
-    lineGeo.setAttribute(
-      "position",
-      new THREE.Float32BufferAttribute(linePositions, 3)
-    );
-    const lines = new THREE.LineSegments(lineGeo, lineMat);
-    scene.add(lines);
-
-    // 4. Transition 03: Traveling Laser Photon Shockwave Mechanics
-    let burstExpansion = 0;
-    const triggerBurst = (intensity = 1) => {
-      burstExpansion = Math.min(2.2, intensity * 2.0);
-      if (flareRef.current) {
-        flareRef.current.style.opacity = `${Math.min(0.85, intensity)}`;
-      }
-    };
-
+    // 1. Transition 03: Traveling Laser Photon Shockwave Mechanics
     const handlePhotonBurst = (e: Event) => {
       if (!isTransitionEnabled("TRAJECTORY_TO_SKILLS_PHOTON")) return;
       const customEvent = e as CustomEvent<{ intensity?: number }>;
       const intensity = customEvent.detail?.intensity ?? 1;
-      triggerBurst(intensity);
+      if (flareRef.current) {
+        flareRef.current.style.opacity = `${Math.min(0.85, intensity)}`;
+        setTimeout(() => {
+          if (flareRef.current) flareRef.current.style.opacity = "0";
+        }, 800);
+      }
     };
 
     window.addEventListener("trajectory-photon-burst", handlePhotonBurst);
 
     const ctx = gsap.context(() => {
-      // Synchronize Transition 03: Excite cluster when Skills arrives in viewport from Journey
+      // Synchronize Transition 03: Excite flare when Skills arrives in viewport from Journey
       if (isTransitionEnabled("TRAJECTORY_TO_SKILLS_PHOTON") && sectionRef.current) {
         ScrollTrigger.create({
           trigger: sectionRef.current,
           start: "top 85%",
           end: "top 35%",
-          onEnter: () => triggerBurst(1.0),
-          onEnterBack: () => triggerBurst(0.75),
+          onEnter: () => {
+            if (flareRef.current) {
+              flareRef.current.style.opacity = "0.75";
+              setTimeout(() => {
+                if (flareRef.current) flareRef.current.style.opacity = "0";
+              }, 800);
+            }
+          },
         });
       }
 
@@ -147,9 +54,9 @@ export function SkillsDomain() {
         gsap.fromTo(
           cardRef.current,
           {
-            y: 55,
-            scale: 0.96,
-            rotateX: -3.2,
+            y: 40,
+            scale: 0.97,
+            rotateX: -2.5,
             transformOrigin: "center bottom",
           },
           {
@@ -160,122 +67,50 @@ export function SkillsDomain() {
             scrollTrigger: {
               trigger: sectionRef.current,
               start: "top 95%",
-              end: "top 45%",
+              end: "top 55%",
               scrub: 0.8,
             },
           }
         );
       }
+
+      // Page-driven scroll driver with pin for ScrollMorphSkills
+      if (sectionRef.current) {
+        const isMobile = window.innerWidth < 768;
+        ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: "top top",
+          end: isMobile ? "+=1400" : "+=2400",
+          pin: true,
+          scrub: 0.6,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            setScrollProgress(self.progress);
+          },
+        });
+      }
     }, sectionRef);
 
-    // 5. Interactive Orbital Motion with Mouse & Touch Gestures
-    let animId: number;
-    let targetRotY = 0;
-    let targetRotX = 0;
-
-    const handlePointerMove = (e: MouseEvent | TouchEvent) => {
-      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
-      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
-      const rect = mount.getBoundingClientRect();
-      const x = ((clientX - rect.left) / rect.width) * 2 - 1;
-      const y = -((clientY - rect.top) / rect.height) * 2 + 1;
-      targetRotY = x * 0.7;
-      targetRotX = -y * 0.7;
-    };
-
-    window.addEventListener("mousemove", handlePointerMove, { passive: true });
-    mount.parentElement?.addEventListener("touchstart", handlePointerMove, { passive: true });
-    mount.parentElement?.addEventListener("touchmove", handlePointerMove, { passive: true });
-
-    const animate = () => {
-      animId = requestAnimationFrame(animate);
-
-      // Damp burst expansion smoothly
-      if (burstExpansion > 0.005) {
-        burstExpansion *= 0.94;
-        const scaleFactor = 1 + burstExpansion * 0.35;
-        nodes.scale.set(scaleFactor, scaleFactor, scaleFactor);
-        lines.scale.set(scaleFactor, scaleFactor, scaleFactor);
-        nodeMat.size = 0.45 + burstExpansion * 0.3;
-        lineMat.opacity = 0.25 + burstExpansion * 0.45;
-        if (flareRef.current) {
-          flareRef.current.style.opacity = `${burstExpansion * 0.5}`;
-        }
-      } else {
-        nodes.scale.set(1, 1, 1);
-        lines.scale.set(1, 1, 1);
-        nodeMat.size = 0.45;
-        lineMat.opacity = 0.25;
-        if (flareRef.current) {
-          flareRef.current.style.opacity = "0";
-        }
-      }
-
-      nodes.rotation.y += 0.003;
-      lines.rotation.y += 0.003;
-
-      nodes.rotation.y += (targetRotY - nodes.rotation.y) * 0.05;
-      nodes.rotation.x += (targetRotX - nodes.rotation.x) * 0.05;
-      lines.rotation.y = nodes.rotation.y;
-      lines.rotation.x = nodes.rotation.x;
-
-      renderer.render(scene, camera);
-    };
-
-    animate();
-
-    // Throttled Resize with requestAnimationFrame
-    let resizeFrameId: number | null = null;
-    const handleResize = () => {
-      if (resizeFrameId) cancelAnimationFrame(resizeFrameId);
-      resizeFrameId = requestAnimationFrame(() => {
-        if (!mount) return;
-        const newW = mount.clientWidth;
-        const newH = mount.clientHeight;
-        camera.aspect = newW / newH;
-        camera.updateProjectionMatrix();
-        renderer.setSize(newW, newH);
-      });
-    };
-
-    window.addEventListener("resize", handleResize, { passive: true });
-
     return () => {
-      cancelAnimationFrame(animId);
-      if (resizeFrameId) cancelAnimationFrame(resizeFrameId);
       ctx.revert();
       window.removeEventListener("trajectory-photon-burst", handlePhotonBurst);
-      window.removeEventListener("mousemove", handlePointerMove);
-      mount.parentElement?.removeEventListener("touchstart", handlePointerMove);
-      mount.parentElement?.removeEventListener("touchmove", handlePointerMove);
-      window.removeEventListener("resize", handleResize);
-      renderer.dispose();
-      if (mount.contains(renderer.domElement)) {
-        mount.removeChild(renderer.domElement);
-      }
     };
   }, []);
-
-  const handleKeyDown = (e: React.KeyboardEvent, idx: number) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      setActiveDomain(idx);
-    }
-  };
 
   return (
     <section
       ref={sectionRef}
       id="skills"
-      className="py-[clamp(3.5rem,7vw,7rem)] relative z-10 overflow-visible max-w-full"
+      className="relative z-10 w-full min-h-[100svh] flex flex-col justify-center items-center py-6 sm:py-8"
       style={{ perspective: "1200px" }}
       aria-labelledby="skills-heading"
     >
-      <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
+      <div className="w-full max-w-[1240px] mx-auto px-3 sm:px-6 lg:px-8 pt-14 sm:pt-16">
         {/* ─── 3D Card Deck: Section Card 03 ─── */}
         <div
           ref={cardRef}
-          className="rounded-[28px] sm:rounded-[36px] bg-bg-raise/95 border border-line/90 shadow-[0_30px_70px_rgba(0,0,0,0.8),0_0_35px_rgba(193,99,59,0.1)] p-6 sm:p-10 lg:p-14 relative overflow-hidden will-change-transform"
+          className="rounded-[28px] sm:rounded-[36px] bg-bg-raise/95 border border-line/90 shadow-[0_30px_70px_rgba(0,0,0,0.8),0_0_35px_rgba(193,99,59,0.1)] p-3 sm:p-6 lg:p-8 relative overflow-hidden will-change-transform"
         >
           {/* Subtle Ambient Rim Glow */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-accent/6 rounded-full blur-[90px] pointer-events-none" />
@@ -287,117 +122,8 @@ export function SkillsDomain() {
             aria-hidden="true"
           />
 
-          {/* Header */}
-          <div className="max-w-[760px] mb-8 sm:mb-14 relative z-10">
-            <div className="eyebrow text-accent font-semibold flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-              <span>03 / Technical Matrix</span>
-            </div>
-            <h2
-              id="skills-heading"
-              className="font-display font-medium text-[clamp(1.85rem,4.5vw,3.2rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.08] text-paper"
-            >
-              Core Domains &amp;{" "}
-              <span className="text-accent font-medium">Production Toolchains</span>.
-            </h2>
-            <p className="mt-3.5 text-stone-300 font-light text-base sm:text-lg max-w-[620px] leading-relaxed">
-              Drag or tap to explore the live 3D neural graph and inspect production toolchains with verified badges.
-            </p>
-          </div>
-
-          {/* 2-Column Matrix */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-14 items-start relative z-10">
-            {/* Left: Interactive Domain Accordion Cards */}
-            <div
-              className="order-2 lg:order-1 space-y-3.5 sm:space-y-4"
-              role="tablist"
-              aria-label="Technical Skill Domains"
-            >
-              {SKILL_DOMAINS.map((domain, idx) => {
-                const isActive = activeDomain === idx;
-                return (
-                  <div
-                    key={domain.idx}
-                    role="tab"
-                    tabIndex={0}
-                    aria-selected={isActive}
-                    aria-expanded={isActive}
-                    aria-controls={`domain-panel-${idx}`}
-                    onClick={() => setActiveDomain(idx)}
-                    onKeyDown={(e) => handleKeyDown(e, idx)}
-                    className={`p-5 sm:p-6 rounded-2xl border transition-all duration-300 cursor-pointer focus-visible:ring-2 focus-visible:ring-accent ${
-                      isActive
-                        ? "bg-bg border-accent shadow-[0_10px_30px_rgba(0,0,0,0.6),0_0_20px_rgba(193,99,59,0.15)]"
-                        : "bg-bg/40 border-line/70 hover:border-accent/40 hover:bg-bg/70"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono text-xs text-accent font-semibold">
-                          {domain.idx}
-                        </span>
-                        <h3 className="font-display font-medium text-base sm:text-xl text-paper">
-                          {domain.name}
-                        </h3>
-                      </div>
-                      <span
-                        className="font-mono text-xs text-stone-300 font-semibold"
-                        aria-hidden="true"
-                      >
-                        {isActive ? "▼" : "▶"}
-                      </span>
-                    </div>
-
-                    {/* Skills badges with Logos inside active domain */}
-                    {isActive && (
-                      <div
-                        id={`domain-panel-${idx}`}
-                        className="mt-5 pt-4 border-t border-line/60 flex flex-wrap gap-2 animate-fadeIn"
-                      >
-                        {domain.items.map((skill) => (
-                          <TechLogo key={skill} name={skill} />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Right: Three.js Interactive Synaptic WebGL Cluster Canvas */}
-            <div className="order-1 lg:order-2 flex flex-col items-center">
-              <div
-                ref={mountRef}
-                className="w-full aspect-square max-w-[420px] rounded-2xl border border-line/80 bg-bg/80 backdrop-blur-sm relative overflow-hidden flex items-center justify-center cursor-grab active:cursor-grabbing shadow-[inset_0_0_40px_rgba(0,0,0,0.8),0_16px_40px_rgba(0,0,0,0.5)]"
-                aria-label="3D Synaptic Neural Graph Visualization"
-                role="img"
-              >
-                <div className="absolute top-3.5 left-4 z-10 flex items-center gap-2 font-mono text-[0.62rem] sm:text-xs text-stone-300 uppercase tracking-widest pointer-events-none">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
-                  <span>Interactive Synaptic Cluster</span>
-                </div>
-
-                <div className="absolute bottom-3.5 right-4 z-10 font-mono text-[0.58rem] sm:text-[0.65rem] text-stone-400 pointer-events-none">
-                  Drag to rotate · Touch responsive
-                </div>
-              </div>
-
-              {/* Active Category Quick View */}
-              <div className="mt-4 p-4 rounded-xl border border-line/60 bg-bg/60 w-full max-w-[420px] backdrop-blur-sm">
-                <div className="font-mono text-[0.65rem] text-accent font-semibold uppercase tracking-wider mb-1">
-                  Active Domain Inspector
-                </div>
-                <div className="font-display font-medium text-paper text-sm mb-2">
-                  {SKILL_DOMAINS[activeDomain].name}
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {SKILL_DOMAINS[activeDomain].items.slice(0, 8).map((item) => (
-                    <TechLogo key={item} name={item} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* ScrollMorphSkills Component (Pure Logo Cards with 3D Flip & Scroll Morph) */}
+          <ScrollMorphSkills externalProgress={scrollProgress} />
         </div>
       </div>
     </section>
