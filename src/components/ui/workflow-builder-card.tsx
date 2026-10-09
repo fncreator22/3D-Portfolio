@@ -1,14 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { MoreHorizontal } from "lucide-react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 export interface WorkflowBuilderCardProps {
   imageUrl: string;
@@ -31,67 +28,19 @@ export interface WorkflowBuilderCardProps {
 
 export const WorkflowBuilderCard = ({
   imageUrl,
-  status = "Active",
-  lastUpdated = "Production Ready",
   title,
-  tagline,
-  description,
-  points,
-  tags = [],
   className,
   slug,
   idx,
   total,
   category,
-  metrics = [],
   githubUrl,
   liveUrl,
 }: WorkflowBuilderCardProps) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  // Compute 1-2 (max 3) concise, punchy bullet points without text bloat
-  const displayPoints: string[] = React.useMemo(() => {
-    if (points && points.length > 0) {
-      return points.slice(0, 3);
-    }
-    if (metrics && metrics.length > 0) {
-      return metrics.slice(0, 2);
-    }
-    if (tagline) {
-      return [tagline];
-    }
-    if (description) {
-      return [description.split(". ")[0] + "."];
-    }
-    return [];
-  }, [points, metrics, tagline, description]);
-
-  // Animation variants for the collapsible details section
-  const detailVariants = {
-    hidden: {
-      opacity: 0,
-      height: 0,
-      marginTop: 0,
-      transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] },
-    },
-    visible: {
-      opacity: 1,
-      height: "auto",
-      marginTop: "0.75rem",
-      transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] },
-    },
-  };
-
-  const isLive =
-    status.toLowerCase().includes("active") ||
-    status.toLowerCase().includes("prod") ||
-    status.toLowerCase().includes("live");
 
   return (
     <motion.div
       layout
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
       whileHover={{ y: -6 }}
       transition={{ duration: 0.28, ease: [0.25, 1, 0.5, 1] }}
       className={cn(
@@ -136,103 +85,11 @@ export const WorkflowBuilderCard = ({
           )}
         </div>
 
-        {/* Card Body */}
-        <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
-          {/* Always-visible header content */}
-          <div className="flex items-start justify-between">
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 font-mono text-xs text-stone-400">
-                <span>{lastUpdated}</span>
-                <span>•</span>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[0.7rem] uppercase tracking-wider font-semibold text-stone-300">
-                    {status}
-                  </span>
-                </div>
-              </div>
-              <h3 className="mt-1 font-display text-lg sm:text-xl font-medium text-paper group-hover:text-accent transition-colors leading-snug">
-                {title}
-              </h3>
-            </div>
-            <button
-              aria-label="More options"
-              className="text-stone-400 transition-colors group-hover:text-accent p-1"
-            >
-              <MoreHorizontal size={18} />
-            </button>
-          </div>
-
-          {/* On Mobile (< 1024px): Highlights & tech stack badges always visible */}
-          <div className="lg:hidden space-y-2 pt-2 border-t border-line/40">
-            {displayPoints.length > 0 && (
-              <ul className="space-y-1 text-stone-300 font-light text-xs leading-snug">
-                {displayPoints.slice(0, 2).map((point, pIdx) => (
-                  <li key={pIdx} className="flex items-start gap-1.5">
-                    <span className="text-accent font-bold text-xs leading-none mt-0.5 select-none">•</span>
-                    <span className="line-clamp-2">{point}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-            {tags && tags.length > 0 && (
-              <div className="pt-1.5 flex flex-wrap gap-1">
-                {tags.slice(0, 3).map((tag) => (
-                  <Badge
-                    key={tag}
-                    variant="secondary"
-                    className="font-mono text-[0.62rem] px-2 py-0.5 bg-bg border border-line text-stone-300"
-                  >
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* On Desktop (>= 1024px): Animated Collapsible Details on Hover */}
-          <div className="hidden lg:block">
-            <AnimatePresence initial={false}>
-              {isHovered && (
-                <motion.div
-                  key="details"
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                  variants={detailVariants}
-                  className="overflow-hidden space-y-2 pt-0.5"
-                >
-                  {/* 1 to 2 Crisp Highlights */}
-                  {displayPoints.length > 0 && (
-                    <ul className="space-y-1.5 text-stone-300 font-light text-xs sm:text-[0.78rem] leading-snug">
-                      {displayPoints.map((point, pIdx) => (
-                        <li key={pIdx} className="flex items-start gap-2">
-                          <span className="text-accent font-bold text-xs leading-none mt-0.5 select-none">
-                            •
-                          </span>
-                          <span className="line-clamp-2">{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  {/* Tech Stack Badges (Top 3 badges) */}
-                  {tags && tags.length > 0 && (
-                    <div className="pt-2 border-t border-line/40 flex flex-wrap gap-1.5">
-                      {tags.slice(0, 3).map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="secondary"
-                          className="font-mono text-[0.62rem] px-2 py-0.5 bg-bg border border-line text-stone-300"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+        {/* Card Body: Clean Single Project Name Only */}
+        <div className="p-4 sm:p-5 flex-1 flex flex-col justify-center">
+          <h3 className="font-display text-xl sm:text-2xl font-medium text-paper group-hover:text-accent transition-colors leading-snug">
+            {title.split(":")[0].trim()}
+          </h3>
         </div>
 
         {/* Card Footer: Arrow like earlier cards */}

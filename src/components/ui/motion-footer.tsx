@@ -338,43 +338,41 @@ export function CinematicFooter() {
 
     const mm = gsap.matchMedia();
 
-    mm.add("(min-width: 1024px)", () => {
-      // Parallax Scrub for Giant Background Text
-      gsap.fromTo(
-        giantTextRef.current,
-        { y: "10vh", scale: 0.85, opacity: 0.2 },
-        {
-          y: "0vh",
-          scale: 1,
-          opacity: 1,
-          ease: "power1.out",
-          scrollTrigger: {
-            trigger: wrapperRef.current,
-            start: "top 95%",
-            end: "bottom bottom",
-            scrub: 1,
-          },
-        }
-      );
+    // Parallax Scrub for Giant Background Text on all viewports
+    gsap.fromTo(
+      giantTextRef.current,
+      { y: "10vh", scale: 0.85, opacity: 0.2 },
+      {
+        y: "0vh",
+        scale: 1,
+        opacity: 1,
+        ease: "power1.out",
+        scrollTrigger: {
+          trigger: wrapperRef.current,
+          start: "top 95%",
+          end: "bottom bottom",
+          scrub: 1,
+        },
+      }
+    );
 
-      // Staggered Content Elevation: Trigger early (top 85% to top 30%) with opacity fallback
-      gsap.fromTo(
-        [headingRef.current, linksRef.current],
-        { y: 30, opacity: 0.3 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.08,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: wrapperRef.current,
-            start: "top 85%",
-            end: "top 30%",
-            scrub: 0.6,
-          },
-        }
-      );
-    });
+    // Staggered Content Elevation
+    gsap.fromTo(
+      [headingRef.current, linksRef.current],
+      { y: 30, opacity: 0.3 },
+      {
+        y: 0,
+        opacity: 1,
+        stagger: 0.08,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: wrapperRef.current,
+          start: "top 85%",
+          end: "top 30%",
+          scrub: 0.6,
+        },
+      }
+    );
 
     return () => mm.revert();
   }, [isHome]);
@@ -447,56 +445,13 @@ export function CinematicFooter() {
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
       
       <div id="connect" className="w-full">
-        {/* ─── MOBILE IN-FLOW FOOTER (lg:hidden): Natural flow, zero clipping, 100% visible & touch friendly ─── */}
-        <footer className="lg:hidden relative w-full overflow-hidden bg-bg text-paper cinematic-footer-wrapper py-10 sm:py-14 border-t border-line">
-          {/* Ambient Light & Grid Background */}
-          <div className="footer-aurora absolute left-1/2 top-1/2 h-[50vh] w-[90vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[90px] pointer-events-none z-0" />
-          <div className="footer-bg-grid absolute inset-0 z-0 pointer-events-none" />
-
-          {/* Giant background typography watermark */}
-          <div
-            className="footer-giant-bg-text absolute -bottom-[2vh] left-1/2 -translate-x-1/2 whitespace-nowrap z-0 pointer-events-none select-none text-center opacity-30"
-            aria-hidden="true"
-          >
-            SAGAR
-          </div>
-
-          {/* 1. Diagonal Sleek Marquee */}
-          <div className="relative w-full overflow-hidden border-y border-line/60 bg-bg-raise/80 backdrop-blur-md py-3 z-10 -rotate-1 scale-105 shadow-2xl mb-8">
-            <div className="flex w-max animate-footer-scroll-marquee font-mono text-[0.68rem] font-semibold tracking-[0.25em] text-stone-300 uppercase">
-              <MarqueeItem />
-              <MarqueeItem />
-            </div>
-          </div>
-
-          {/* 2. Main Center Content */}
-          <div className="relative z-10 flex flex-col items-center justify-center px-4 w-full max-w-xl mx-auto text-center">
-            <div className="eyebrow mb-3 text-[0.68rem]">
-              07 / Terminal Connection
-            </div>
-
-            <h2 className="font-display font-medium text-3xl sm:text-5xl footer-text-glow tracking-tight text-center max-w-xl leading-[1.12]">
-              Initiate Transmission. <br />
-              <span className="font-serif italic text-accent font-normal">Let&apos;s build autonomous scale.</span>
-            </h2>
-
-            <div className="flex flex-col items-center gap-4 w-full mt-7">
-              <ConnectedChannels />
-              <SecondaryNavigation />
-            </div>
-          </div>
-
-          {/* 3. Bottom Status Bar */}
-          <FooterStatusBar onScrollTop={scrollToTop} />
-        </footer>
-
-        {/* ─── DESKTOP CURTAIN REVEAL FOOTER (hidden lg:block) ─── */}
+        {/* ─── UNIFIED CURTAIN REVEAL FOOTER (Desktop + Mobile) ─── */}
         <div
           ref={wrapperRef}
-          className="hidden lg:block relative min-h-[640px] h-screen w-full max-w-full overflow-hidden"
+          className="relative min-h-[580px] lg:min-h-[640px] h-screen w-full max-w-full overflow-hidden"
           style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
         >
-          <footer className="fixed bottom-0 left-0 flex min-h-[640px] h-screen w-full max-w-full flex-col justify-between overflow-hidden bg-bg text-paper cinematic-footer-wrapper py-8 lg:py-12 border-t border-line">
+          <footer className="fixed bottom-0 left-0 flex min-h-[580px] lg:min-h-[640px] h-screen w-full max-w-full flex-col justify-between overflow-hidden bg-bg text-paper cinematic-footer-wrapper py-6 sm:py-8 lg:py-12 border-t border-line">
             {/* Ambient Light & Grid Background */}
             <div className="footer-aurora absolute left-1/2 top-1/2 h-[65vh] w-[85vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[90px] pointer-events-none z-0" />
             <div className="footer-bg-grid absolute inset-0 z-0 pointer-events-none" />
@@ -511,29 +466,29 @@ export function CinematicFooter() {
             </div>
 
             {/* 1. Diagonal Sleek Marquee (Top of Footer) */}
-            <div className="relative w-full overflow-hidden border-y border-line/60 bg-bg-raise/80 backdrop-blur-md py-3.5 z-10 -rotate-1 scale-105 shadow-2xl">
-              <div className="flex w-max animate-footer-scroll-marquee font-mono text-xs font-semibold tracking-[0.25em] text-stone-300 uppercase">
+            <div className="relative w-full overflow-hidden border-y border-line/60 bg-bg-raise/80 backdrop-blur-md py-2.5 sm:py-3.5 z-10 -rotate-1 scale-105 shadow-2xl">
+              <div className="flex w-max animate-footer-scroll-marquee font-mono text-[0.68rem] sm:text-xs font-semibold tracking-[0.25em] text-stone-300 uppercase">
                 <MarqueeItem />
                 <MarqueeItem />
               </div>
             </div>
 
             {/* 2. Main Center Content */}
-            <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 my-6 w-full max-w-5xl mx-auto text-center">
-              <div className="eyebrow mb-4 text-xs">
+            <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 sm:px-6 my-4 sm:my-6 w-full max-w-5xl mx-auto text-center">
+              <div className="eyebrow mb-2.5 sm:mb-4 text-[0.68rem] sm:text-xs">
                 07 / Terminal Connection
               </div>
 
               <h2
                 ref={headingRef}
-                className="font-display font-medium text-4xl sm:text-6xl lg:text-7xl footer-text-glow tracking-tight text-center max-w-4xl leading-[1.08]"
+                className="font-display font-medium text-3xl sm:text-5xl lg:text-7xl footer-text-glow tracking-tight text-center max-w-4xl leading-[1.1] sm:leading-[1.08]"
               >
                 Initiate Transmission. <br />
                 <span className="font-serif italic text-accent font-normal">Let&apos;s build autonomous scale.</span>
               </h2>
 
               {/* Interactive Magnetic Glass Pills Layout */}
-              <div ref={linksRef} className="flex flex-col items-center gap-5 w-full mt-8">
+              <div ref={linksRef} className="flex flex-col items-center gap-3.5 sm:gap-5 w-full mt-6 sm:mt-8">
                 <ConnectedChannels />
                 <SecondaryNavigation />
               </div>

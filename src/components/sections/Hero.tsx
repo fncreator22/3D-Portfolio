@@ -350,21 +350,21 @@ export function Hero() {
           }}
         />
 
-        {/* Top edge gradient: Lighter as requested to let studio lighting breathe */}
+        {/* Top edge gradient: Rich obsidian blend ensuring header typography clarity and cinematic studio lighting transition */}
         <div
-          className="absolute inset-x-0 top-0 h-28 z-10 pointer-events-none"
+          className="absolute inset-x-0 top-0 h-36 sm:h-40 z-10 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(11, 10, 9, 0.40) 0%, rgba(11, 10, 9, 0.15) 60%, transparent 100%)",
+              "linear-gradient(to bottom, #0b0a09 0%, rgba(11, 10, 9, 0.96) 15%, rgba(11, 10, 9, 0.86) 30%, rgba(11, 10, 9, 0.68) 46%, rgba(11, 10, 9, 0.45) 62%, rgba(11, 10, 9, 0.22) 78%, rgba(11, 10, 9, 0.06) 90%, transparent 100%)",
           }}
         />
 
-        {/* Bottom edge gradient: Soft, low-profile blend matching original alignment */}
+        {/* Bottom edge gradient: Seamless eased obsidian fade into Identity section */}
         <div
-          className="absolute inset-x-0 bottom-0 h-20 sm:h-24 z-10 pointer-events-none"
+          className="absolute inset-x-0 bottom-0 h-24 sm:h-28 z-10 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to top, #0b0a09 0%, rgba(11, 10, 9, 0.65) 25%, rgba(11, 10, 9, 0.20) 55%, transparent 100%)",
+              "linear-gradient(to top, #0b0a09 0%, rgba(11, 10, 9, 0.94) 14%, rgba(11, 10, 9, 0.80) 28%, rgba(11, 10, 9, 0.58) 45%, rgba(11, 10, 9, 0.35) 62%, rgba(11, 10, 9, 0.16) 78%, rgba(11, 10, 9, 0.04) 90%, transparent 100%)",
           }}
         />
 
@@ -453,8 +453,8 @@ export function Hero() {
         </div>
       </div>
 
-      {/* ─── Dedicated Speaker Button (Desktop lg+ only) ─── */}
-      <div className="hidden lg:flex absolute bottom-[20%] right-[9.8%] z-30 pointer-events-auto">
+      {/* ─── Dedicated Speaker Button (Desktop lg+ only) - Positioned directly over star watermark ─── */}
+      <div className="hidden lg:flex absolute bottom-[16.7%] right-[8.5%] translate-x-1/2 translate-y-1/2 z-30 pointer-events-auto">
 
         <button
           onClick={toggleSound}
@@ -473,7 +473,7 @@ export function Hero() {
                 : "Intro audio active · Click anywhere to mute"
               : "Click to hear avatar speak"
           }
-          className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-bg/85 hover:bg-bg-raise/95 border flex items-center justify-center text-paper transition-all backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.7)] group cursor-pointer ${
+          className={`w-14 h-14 rounded-full bg-bg/90 hover:bg-bg-raise/95 border flex items-center justify-center text-paper transition-all backdrop-blur-md shadow-[0_10px_35px_rgba(0,0,0,0.8)] group cursor-pointer ${
             isMuted ? "border-line hover:border-accent" : "border-accent/80 shadow-[0_0_20px_rgba(193,99,59,0.35)]"
           }`}
         >
@@ -494,8 +494,8 @@ export function Hero() {
         </button>
       </div>
 
-      {/* ─── Bottom Bar: Minimal Scroll Indicator Button ─── */}
-      <div className="relative z-20 max-w-[1320px] mx-auto px-[clamp(1.5rem,4vw,3.5rem)] w-full pb-4 sm:pb-6 flex items-center justify-center">
+      {/* ─── Bottom Bar: Minimal Non-Intrusive Scroll Indicator (Zero clashing text) ─── */}
+      <div className="relative z-20 max-w-[1320px] mx-auto px-[clamp(1.5rem,4vw,3.5rem)] w-full pb-4 sm:pb-5 flex items-center justify-center">
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -506,12 +506,9 @@ export function Hero() {
           }}
           type="button"
           aria-label="Scroll down to identity section"
-          className="flex flex-col items-center gap-1.5 group cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-md p-1 pointer-events-auto"
+          className="flex flex-col items-center group cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-full p-2 pointer-events-auto"
         >
-          <span className="font-mono text-[0.56rem] tracking-[0.2em] uppercase text-stone group-hover:text-accent transition-colors">
-            Scroll to begin
-          </span>
-          <div className="w-[1px] h-5 bg-gradient-to-b from-stone to-transparent group-hover:from-accent group-hover:h-6 transition-all" />
+          <div className="w-[1px] h-6 bg-gradient-to-b from-stone-400/80 via-accent/80 to-transparent group-hover:h-8 group-hover:from-accent transition-all duration-300" />
         </button>
       </div>
     </section>

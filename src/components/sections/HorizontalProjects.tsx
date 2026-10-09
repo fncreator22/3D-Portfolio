@@ -183,7 +183,7 @@ export function HorizontalProjects() {
 
     const mm = gsap.matchMedia();
 
-    // GSAP horizontal pinning strictly on desktop (lg: >= 1024px)
+    // GSAP horizontal pinning on Desktop (lg: >= 1024px)
     mm.add("(min-width: 1024px)", () => {
       const track = trackRef.current;
       const pin = pinRef.current;
@@ -208,6 +208,50 @@ export function HorizontalProjects() {
           start: "top top",
           end: () => `+=${getScrollDistance()}`,
           invalidateOnRefresh: true,
+          anticipatePin: 1,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            const idx = Math.min(
+              displayedProjects.length,
+              Math.max(0, Math.round(progress * displayedProjects.length))
+            );
+            setMobileCardIndex(idx);
+          },
+        },
+      });
+
+      return () => {
+        tween.scrollTrigger?.kill();
+        tween.kill();
+      };
+    });
+
+    // GSAP horizontal pinning on Mobile & Tablet (< 1024px)
+    mm.add("(max-width: 1023px)", () => {
+      const track = trackRef.current;
+      const pin = pinRef.current;
+      if (!track || !pin) return;
+
+      const getScrollDistance = () => {
+        return Math.max(0, track.scrollWidth - window.innerWidth + 32);
+      };
+
+      if (getScrollDistance() <= 0) {
+        gsap.set(track, { x: 0 });
+        return;
+      }
+
+      const tween = gsap.to(track, {
+        x: () => -getScrollDistance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: pin,
+          pin: true,
+          scrub: 0.8,
+          start: "top top",
+          end: () => `+=${getScrollDistance()}`,
+          invalidateOnRefresh: true,
+          anticipatePin: 1,
           onUpdate: (self) => {
             const progress = self.progress;
             const idx = Math.min(
@@ -231,11 +275,11 @@ export function HorizontalProjects() {
   }, [activeCategory, displayedProjects.length]);
 
   return (
-    <section id="projects" ref={sectionRef} className="relative z-10 border-t border-line py-12 lg:py-0 overflow-x-clip max-w-full" aria-labelledby="projects-heading">
-      <div ref={pinRef} className="lg:h-screen lg:min-h-[700px] flex flex-col justify-between pt-0 lg:pt-8 pb-0 lg:pb-6">
+    <section id="projects" ref={sectionRef} className="relative z-10 border-t border-line py-0 overflow-x-clip max-w-full" aria-labelledby="projects-heading">
+      <div ref={pinRef} className="h-[100svh] min-h-[580px] lg:min-h-[700px] flex flex-col justify-between pt-4 sm:pt-6 lg:pt-8 pb-3 sm:pb-4 lg:pb-6">
         
         {/* Header Bar */}
-        <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] mb-3 lg:mb-3 flex-shrink-0 flex flex-col md:flex-row md:items-end justify-between gap-2.5 sm:gap-3 relative z-20">
+        <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] mb-2 lg:mb-3 flex-shrink-0 flex flex-col md:flex-row md:items-end justify-between gap-2.5 sm:gap-3 relative z-20">
           <div>
             <div className="eyebrow">04 / Selected Work</div>
             <h2 id="projects-heading" className="font-display font-medium text-[clamp(1.5rem,3.2vw,2.6rem)] tracking-[-0.01em] mt-1 sm:mt-1.5 leading-tight text-paper">
@@ -263,14 +307,13 @@ export function HorizontalProjects() {
 
         {/* 
           Horizontal Track:
-          - Mobile (< 1024px): Touch-native horizontal snap scroll container with smooth swipe physics
-          - Desktop (>= 1024px): GSAP horizontal transform track
+          - Universal GSAP scroll-driven horizontal pinned stream for both desktop & mobile
         */}
         <div
           id="projects-carousel"
           ref={scrollContainerRef}
           onScroll={handleMobileScroll}
-          className="w-full min-h-0 py-3 lg:py-2 overflow-x-auto lg:overflow-hidden snap-x snap-mandatory lg:snap-none no-scrollbar relative z-10 my-auto"
+          className="w-full min-h-0 py-2 sm:py-3 lg:py-2 overflow-hidden relative z-10 my-auto"
         >
           <div
             ref={trackRef}
@@ -297,7 +340,7 @@ export function HorizontalProjects() {
 
             {/* 9th Flagship Card: Archive Explorer */}
             <article
-              className="w-[84vw] sm:w-[350px] lg:w-[390px] xl:w-[410px] min-h-[440px] sm:min-h-[450px] lg:h-[465px] snap-center flex-shrink-0 border border-line hover:border-accent bg-gradient-to-b from-bg-raise via-bg to-bg flex flex-col justify-between relative overflow-hidden group rounded-3xl transition-all duration-300 shadow-[0_20px_50px_rgba(0,0,0,0.7)] hover:shadow-[0_28px_70px_rgba(0,0,0,0.85),0_0_35px_rgba(193,99,59,0.2)] p-6 sm:p-7 select-none"
+              className="w-[84vw] sm:w-[350px] lg:w-[380px] xl:w-[400px] snap-center flex-shrink-0 border border-line hover:border-accent bg-gradient-to-b from-bg-raise via-bg to-bg flex flex-col justify-between relative overflow-hidden group rounded-2xl transition-all duration-300 shadow-[0_16px_40px_rgba(0,0,0,0.65)] p-5 sm:p-6 select-none"
             >
               <Link
                 href="/work"
