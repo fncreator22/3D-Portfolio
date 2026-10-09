@@ -44,7 +44,7 @@ async function verifyCinematicTransitions() {
     console.log(`- Engineering Architecture badge detected: ${badgeCount > 0}`);
 
     // Verify SVG Mask Aperture Hole element exists in DOM
-    const svgMaskHole = await page.locator("#letter-o-aperture-mask ellipse").count();
+    const svgMaskHole = await page.locator("#letter-o-aperture-mask circle, #letter-o-aperture-mask ellipse").count();
     console.log(`- SVG aperture mask hole (<mask id='letter-o-aperture-mask'>) present: ${svgMaskHole > 0}`);
 
     // Progress scrub into Letter 'O' zoom

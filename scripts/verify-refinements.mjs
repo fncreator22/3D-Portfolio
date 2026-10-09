@@ -39,7 +39,7 @@ async function verifyRefinements() {
     // 2. Aperture Portal: Zero Ghost Text Bleed Verification (Scroll to portal resting state)
     console.log("\n[2] Verifying Aperture Portal Resting State (Zero Ghost Text Bleed)...");
     await page.evaluate(() => {
-      window.scrollTo({ top: window.innerHeight * 0.70, behavior: "instant" });
+      window.scrollTo({ top: window.innerHeight * 1.02, behavior: "instant" });
     });
     await page.waitForTimeout(600);
     await page.screenshot({ path: "test-aperture-resting-no-ghost.png" });
@@ -55,19 +55,29 @@ async function verifyRefinements() {
     // 3. Aperture Portal: Perfect Symmetry Verification
     console.log("\n[3] Verifying Aperture Portal Circular Symmetry...");
     await page.evaluate(() => {
-      window.scrollTo({ top: window.innerHeight * 1.15, behavior: "instant" });
+      window.scrollTo({ top: window.innerHeight * 1.25, behavior: "instant" });
     });
     await page.waitForTimeout(600);
     await page.screenshot({ path: "test-aperture-zoom-symmetric.png" });
     console.log("✓ Captured test-aperture-zoom-symmetric.png (symmetric circular aperture expansion)");
 
-    const svgEllipseRxRy = await page.evaluate(() => {
-      const el = document.querySelector("#letter-o-aperture-mask ellipse");
-      return el ? { rx: el.getAttribute("rx"), ry: el.getAttribute("ry") } : null;
+    const svgCircleRadius = await page.evaluate(() => {
+      const circleEl = document.querySelector("#letter-o-aperture-mask circle");
+      if (circleEl) {
+        return { isCircle: true, r: circleEl.getAttribute("r") };
+      }
+      const ellipseEl = document.querySelector("#letter-o-aperture-mask ellipse");
+      if (ellipseEl) {
+        return { isCircle: false, rx: ellipseEl.getAttribute("rx"), ry: ellipseEl.getAttribute("ry") };
+      }
+      return null;
     });
-    console.log(`- Aperture mask dimensions: rx=${svgEllipseRxRy?.rx}, ry=${svgEllipseRxRy?.ry} (must be equal for symmetric circle)`);
-    if (svgEllipseRxRy?.rx !== svgEllipseRxRy?.ry) {
-      throw new Error(`Aperture mask is not symmetric! rx=${svgEllipseRxRy?.rx}, ry=${svgEllipseRxRy?.ry}`);
+    console.log(`- Aperture mask geometry:`, JSON.stringify(svgCircleRadius));
+    if (!svgCircleRadius) {
+      throw new Error("Could not find aperture mask circle/ellipse!");
+    }
+    if (!svgCircleRadius.isCircle && svgCircleRadius.rx !== svgCircleRadius.ry) {
+      throw new Error(`Aperture mask is not symmetric! rx=${svgCircleRadius.rx}, ry=${svgCircleRadius.ry}`);
     }
 
     // 4. Section 01: De-boxified Identity Card

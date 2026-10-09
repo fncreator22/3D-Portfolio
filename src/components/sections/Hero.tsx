@@ -52,7 +52,7 @@ export function Hero() {
     setActiveScene(scene);
   };
 
-  // Cinematic Typewriter Text Reveal Effect
+  // Cinematic Typewriter Text Reveal Effect with robust timer lifecycle cleanup
   useEffect(() => {
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setDisplayedSubtitle(SUBTITLE_TEXT);
@@ -60,21 +60,23 @@ export function Hero() {
       return;
     }
 
-    let currentIndex = 0;
+    let intervalId: NodeJS.Timeout | null = null;
     const startDelay = setTimeout(() => {
-      const interval = setInterval(() => {
+      let currentIndex = 0;
+      intervalId = setInterval(() => {
         currentIndex++;
         setDisplayedSubtitle(SUBTITLE_TEXT.slice(0, currentIndex));
         if (currentIndex >= SUBTITLE_TEXT.length) {
-          clearInterval(interval);
+          if (intervalId) clearInterval(intervalId);
           setIsTypingComplete(true);
         }
       }, 22);
-
-      return () => clearInterval(interval);
     }, 450);
 
-    return () => clearTimeout(startDelay);
+    return () => {
+      clearTimeout(startDelay);
+      if (intervalId) clearInterval(intervalId);
+    };
   }, []);
 
   // Autoplay & Scroll-aware Audio/Video IntersectionObserver
@@ -383,12 +385,12 @@ export function Hero() {
           }}
         />
 
-        {/* Top edge gradient: Balanced translucent obsidian fade matching stage symmetry and lightness */}
+        {/* Top edge gradient: Ultra-delicate translucent obsidian feathering matching stage symmetry and lightness */}
         <div
-          className="absolute inset-x-0 top-0 h-24 sm:h-28 z-10 pointer-events-none"
+          className="absolute inset-x-0 top-0 h-20 sm:h-24 z-10 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(11, 10, 9, 0.70) 0%, rgba(11, 10, 9, 0.52) 22%, rgba(11, 10, 9, 0.32) 48%, rgba(11, 10, 9, 0.12) 75%, transparent 100%)",
+              "linear-gradient(to bottom, rgba(11, 10, 9, 0.32) 0%, rgba(11, 10, 9, 0.18) 35%, rgba(11, 10, 9, 0.06) 65%, transparent 100%)",
           }}
         />
 

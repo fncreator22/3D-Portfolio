@@ -61,14 +61,14 @@ export function Identity() {
       aria-labelledby="identity-heading"
     >
       <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
-        {/* ─── De-boxified Organic Architecture: Section Card 01 ─── */}
+        {/* ─── De-boxified Organic Architecture: Section 01 Stage ─── */}
         <div
           ref={cardRef}
-          className="rounded-[32px] sm:rounded-[44px] bg-gradient-to-b from-[#141210]/70 via-[#0e0d0b]/45 to-transparent p-6 sm:p-10 lg:p-14 transition-all duration-300 relative overflow-hidden will-change-transform"
+          className="relative transition-all duration-300 will-change-transform"
         >
-          {/* Subtle Ambient Rim Glows for Seamless Depth */}
-          <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-3/4 h-48 bg-accent/[0.04] blur-[100px] pointer-events-none rounded-full" />
-          <div className="absolute top-0 right-0 w-80 h-80 bg-accent/[0.07] rounded-full blur-[90px] pointer-events-none" />
+          {/* Subtle Ambient Radial Lighting for Seamless Canvas Depth */}
+          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-full max-w-[840px] h-72 bg-accent/[0.035] blur-[120px] pointer-events-none rounded-full" />
+          <div className="absolute top-1/3 -right-24 w-80 h-80 bg-accent/[0.04] rounded-full blur-[100px] pointer-events-none" />
 
           {/* Section Header */}
           <div className="identity-reveal max-w-[820px] mb-8 sm:mb-12 relative z-10">
@@ -76,7 +76,7 @@ export function Identity() {
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
               <span>01 / Identity &amp; Architecture</span>
             </div>
-            {/* Space Grotesk 500 high-conviction headline without italic overload */}
+            {/* Space Grotesk 500 high-conviction headline */}
             <h2
               id="identity-heading"
               className="font-display font-medium text-[clamp(1.85rem,4.2vw,3.1rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.1] text-paper"
@@ -99,19 +99,19 @@ export function Identity() {
                   Verified Engineering Invariants:
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <span className="font-mono text-[0.68rem] sm:text-xs px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm">
+                  <span className="font-mono text-[0.68rem] sm:text-xs px-3 py-1.5 rounded-full bg-white/[0.02] border border-white/[0.05] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm hover:border-accent/30 transition-colors">
                     <span className="text-accent font-bold">•</span>
                     <span>&lt;150ms P99 Voice Latency</span>
                   </span>
-                  <span className="font-mono text-[0.68rem] sm:text-xs px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm">
+                  <span className="font-mono text-[0.68rem] sm:text-xs px-3 py-1.5 rounded-full bg-white/[0.02] border border-white/[0.05] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm hover:border-accent/30 transition-colors">
                     <span className="text-accent font-bold">•</span>
                     <span>Deterministic Agent Evals</span>
                   </span>
-                  <span className="font-mono text-[0.68rem] sm:text-xs px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm">
+                  <span className="font-mono text-[0.68rem] sm:text-xs px-3 py-1.5 rounded-full bg-white/[0.02] border border-white/[0.05] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm hover:border-accent/30 transition-colors">
                     <span className="text-accent font-bold">•</span>
                     <span>Multi-Agent Sandboxing</span>
                   </span>
-                  <span className="font-mono text-[0.68rem] sm:text-xs px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm">
+                  <span className="font-mono text-[0.68rem] sm:text-xs px-3 py-1.5 rounded-full bg-white/[0.02] border border-white/[0.05] text-stone-300 flex items-center gap-1.5 backdrop-blur-sm hover:border-accent/30 transition-colors">
                     <span className="text-accent font-bold">•</span>
                     <span>Zero-Breakdown CI Gates</span>
                   </span>
@@ -119,10 +119,10 @@ export function Identity() {
               </div>
             </div>
 
-            {/* Right: 2x2 Metric Grid with Frameless Obsidian Elevation */}
+            {/* Right: 2x2 Sleek Architectural Telemetry Stats */}
             <div className="identity-reveal grid grid-cols-2 gap-3.5 sm:gap-4">
-              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/[0.06] hover:border-accent/40 active:scale-[0.98] shadow-[0_6px_24px_rgba(0,0,0,0.3)] backdrop-blur-sm transition-all flex flex-col justify-between">
-                <span className="font-display font-semibold text-3xl sm:text-4xl text-accent tracking-tight">
+              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.05] hover:border-accent/40 active:scale-[0.98] shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-sm transition-all duration-300 flex flex-col justify-between group">
+                <span className="font-display font-semibold text-3xl sm:text-4xl text-accent tracking-tight group-hover:scale-105 transition-transform origin-left">
                   {PROJECTS.length}
                 </span>
                 <span className="font-mono text-[0.68rem] sm:text-xs tracking-wider uppercase text-stone-300 font-semibold mt-2">
@@ -130,8 +130,8 @@ export function Identity() {
                 </span>
               </div>
 
-              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/[0.06] hover:border-accent/40 active:scale-[0.98] shadow-[0_6px_24px_rgba(0,0,0,0.3)] backdrop-blur-sm transition-all flex flex-col justify-between">
-                <span className="font-display font-semibold text-3xl sm:text-4xl text-accent tracking-tight">
+              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.05] hover:border-accent/40 active:scale-[0.98] shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-sm transition-all duration-300 flex flex-col justify-between group">
+                <span className="font-display font-semibold text-3xl sm:text-4xl text-accent tracking-tight group-hover:scale-105 transition-transform origin-left">
                   {String(SKILL_DOMAINS.length).padStart(2, "0")}
                 </span>
                 <span className="font-mono text-[0.68rem] sm:text-xs tracking-wider uppercase text-stone-300 font-semibold mt-2">
@@ -139,8 +139,8 @@ export function Identity() {
                 </span>
               </div>
 
-              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/[0.06] hover:border-accent/40 active:scale-[0.98] shadow-[0_6px_24px_rgba(0,0,0,0.3)] backdrop-blur-sm transition-all flex flex-col justify-between">
-                <span className="font-display font-semibold text-3xl sm:text-4xl text-accent tracking-tight">
+              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.05] hover:border-accent/40 active:scale-[0.98] shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-sm transition-all duration-300 flex flex-col justify-between group">
+                <span className="font-display font-semibold text-3xl sm:text-4xl text-accent tracking-tight group-hover:scale-105 transition-transform origin-left">
                   40+
                 </span>
                 <span className="font-mono text-[0.68rem] sm:text-xs tracking-wider uppercase text-stone-300 font-semibold mt-2">
@@ -148,8 +148,8 @@ export function Identity() {
                 </span>
               </div>
 
-              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/[0.06] hover:border-accent/40 active:scale-[0.98] shadow-[0_6px_24px_rgba(0,0,0,0.3)] backdrop-blur-sm transition-all flex flex-col justify-between">
-                <span className="font-display font-semibold text-3xl sm:text-4xl text-accent tracking-tight">
+              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.05] hover:border-accent/40 active:scale-[0.98] shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-sm transition-all duration-300 flex flex-col justify-between group">
+                <span className="font-display font-semibold text-3xl sm:text-4xl text-accent tracking-tight group-hover:scale-105 transition-transform origin-left">
                   1+
                 </span>
                 <span className="font-mono text-[0.68rem] sm:text-xs tracking-wider uppercase text-stone-300 font-semibold mt-2">

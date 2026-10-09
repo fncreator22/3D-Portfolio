@@ -12,7 +12,7 @@ interface LetterPortalTransitionProps {
 export function LetterPortalTransition({ children }: LetterPortalTransitionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
-  const maskHoleRef = useRef<SVGGElement>(null);
+  const maskCircleRef = useRef<SVGCircleElement>(null);
   const leftLettersRef = useRef<HTMLSpanElement>(null);
   const focalLetterRef = useRef<HTMLSpanElement>(null);
   const rightLettersRef = useRef<HTMLSpanElement>(null);
@@ -31,6 +31,7 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
     const ctx = gsap.context(() => {
       const isMobile = window.innerWidth < 768;
       const targetScale = isMobile ? 18 : 28;
+      const targetRadius = isMobile ? 850 : 1400;
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -46,7 +47,7 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
 
       // Initial resting state: 0% opacity prevents ghost bleed inside resting aperture hole
       gsap.set(shaderVignetteRef.current, { opacity: 0 });
-      gsap.set(contentWrapperRef.current, { scale: 0.88, opacity: 0 });
+      gsap.set(contentWrapperRef.current, { scale: 0.82, opacity: 0, transformOrigin: "50% 45%" });
       if (conduitBeamRef.current) {
         gsap.set(conduitBeamRef.current, { scaleY: 0 });
       }
@@ -63,23 +64,23 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
       // 2. Sub-badge and Outer letters disperse outward horizontally and fade out
       tl.to(
         badgeRef.current,
-        { opacity: 0, y: -30, duration: 0.25, ease: "power2.in" },
+        { opacity: 0, y: -24, duration: 0.22, ease: "power2.in" },
         0.02
       );
       tl.to(
         leftLettersRef.current,
-        { opacity: 0, x: -160, duration: 0.35, ease: "power2.in" },
-        0.05
+        { opacity: 0, x: -180, duration: 0.35, ease: "power2.in" },
+        0.04
       );
       tl.to(
         rightLettersRef.current,
-        { opacity: 0, x: 160, duration: 0.35, ease: "power2.in" },
-        0.05
+        { opacity: 0, x: 180, duration: 0.35, ease: "power2.in" },
+        0.04
       );
 
-      // 3. Focal Aperture: SVG Mask Hole and Letter 'O' Rim expand massively
+      // 3. Focal Aperture: SVG Mask Hole and Letter 'O' Rim expand concentrically
       tl.to(
-        [maskHoleRef.current, focalLetterRef.current],
+        focalLetterRef.current,
         {
           scale: targetScale,
           transformOrigin: "50% 50%",
@@ -88,29 +89,41 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
         },
         0.05
       );
+      if (maskCircleRef.current) {
+        tl.to(
+          maskCircleRef.current,
+          {
+            attr: { r: targetRadius },
+            duration: 0.85,
+            ease: "power2.inOut",
+          },
+          0.05
+        );
+      }
 
-      // 4. Sudden Shader Vignette sweeps in from all 4 sides of the screen
+      // 4. Subtle ambient vignette at outer perimeter
       tl.fromTo(
         shaderVignetteRef.current,
         { opacity: 0, scale: 1.15 },
-        { opacity: 0.95, scale: 1, duration: 0.4, ease: "power1.inOut" },
+        { opacity: 0.6, scale: 1, duration: 0.4, ease: "power1.inOut" },
         0.08
       );
 
-      // 5. Revealed Section Content (The REAL Section 01) emerges only after aperture expands past >0.25
+      // 5. Revealed Section Content (The REAL Section 01):
+      // Smoothly emerges from within the expanding aperture hole, zooming organically into view!
       tl.fromTo(
         contentWrapperRef.current,
-        { scale: 0.88, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.55, ease: "power2.out" },
-        0.28
+        { scale: 0.82, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.62, ease: "power2.out" },
+        0.12
       );
 
       // Stagger internal Identity elements to align with aperture reveal
       tl.fromTo(
         ".identity-reveal",
         { y: 24, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.45, stagger: 0.05, ease: "power2.out" },
-        0.34
+        { y: 0, opacity: 1, duration: 0.48, stagger: 0.07, ease: "power2.out" },
+        0.22
       );
 
       // 6. As 'O' expands past viewport bounds, shader vignette and aperture overlay dissolve smoothly
@@ -122,7 +135,7 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
       tl.to(
         overlayRef.current,
         { opacity: 0, duration: 0.2, ease: "power1.out" },
-        0.8
+        0.78
       );
     }, containerRef);
 
@@ -169,36 +182,32 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
           }}
         />
 
-        {/* Sudden Shader Vignette (Closes in from all 4 sides of the screen) */}
+        {/* Subtle Ambient Vignette for Atmospheric Depth */}
         <div
           ref={shaderVignetteRef}
-          className="absolute inset-0 pointer-events-none z-30 will-change-[opacity,transform]"
+          className="absolute inset-0 pointer-events-none z-15 will-change-[opacity,transform]"
           style={{
             background:
-              "radial-gradient(ellipse at 50% 50%, transparent 20%, rgba(11, 10, 9, 0.8) 55%, #0b0a09 95%)",
-            boxShadow: "inset 0 0 160px 90px rgba(11, 10, 9, 0.98)",
+              "radial-gradient(circle at 50% 50%, transparent 35%, rgba(11, 10, 9, 0.6) 70%, #0b0a09 100%)",
           }}
         />
 
-        {/* SVG Aperture Mask Layer: Punches hole in dark overlay */}
+        {/* SVG Aperture Mask Layer: Punches circular hole in dark overlay */}
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none z-20"
-          preserveAspectRatio="none"
         >
           <defs>
             <mask id="letter-o-aperture-mask">
               {/* Fill entire canvas with white (solid overlay) */}
               <rect width="100%" height="100%" fill="white" />
-              {/* Focal letter 'O' counter hole (cutout through which Identity is visible!) */}
-              <g
-                ref={maskHoleRef}
-                style={{
-                  transformBox: "fill-box",
-                  transformOrigin: "center",
-                }}
-              >
-                <ellipse cx="50%" cy="50%" rx="40" ry="40" fill="black" />
-              </g>
+              {/* Focal circular counter hole (cutout through which Identity is revealed) */}
+              <circle
+                ref={maskCircleRef}
+                cx="50%"
+                cy="50%"
+                r="36"
+                fill="black"
+              />
             </mask>
           </defs>
           {/* Dark base surface masked with the aperture hole */}
@@ -210,18 +219,18 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
           />
         </svg>
 
-        {/* Main Typographic Stage: Word 'AUTONOMOUS' */}
-        <div className="relative z-40 flex flex-col items-center justify-center w-full px-4 select-none">
-          {/* Sub-label above word */}
+        {/* Main Typographic Stage: Word 'AUTONOMOUS' dead-centered in viewport */}
+        <div className="relative z-40 flex items-center justify-center w-full px-4 select-none">
+          {/* Sub-label above word, positioned absolutely so the word remains dead-centered at 50% Y */}
           <div
             ref={badgeRef}
-            className="font-mono text-[0.65rem] sm:text-xs tracking-[0.25em] text-accent uppercase font-semibold mb-3 flex items-center gap-2 will-change-transform"
+            className="absolute bottom-full mb-3.5 sm:mb-5 left-1/2 -translate-x-1/2 font-mono text-[0.65rem] sm:text-xs tracking-[0.25em] text-accent uppercase font-semibold flex items-center gap-2 will-change-transform whitespace-nowrap"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
             <span>AUTONOMOUS SYSTEMS ARCHITECTURE</span>
           </div>
 
-          {/* The Word with Focal Aperture Letter 'O' - Perfectly Symmetric and Concentric */}
+          {/* The Word with Focal Aperture Letter 'O' - 100% Mathematically Concentric */}
           <div className="flex items-center justify-center w-full font-display font-medium tracking-[0.06em] sm:tracking-[0.14em] text-[clamp(2.4rem,7vw,6.5rem)] text-paper uppercase">
             {/* Left Block: AUTON (pinned right-aligned to center) */}
             <div className="flex-1 flex justify-end">
@@ -237,23 +246,23 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
             <div className="shrink-0 flex items-center justify-center">
               <span
                 ref={focalLetterRef}
-                className="w-[1.08em] h-[1.08em] aspect-square inline-flex items-center justify-center relative mx-[0.04em] will-change-transform"
+                className="w-[1.04em] h-[1.04em] aspect-square inline-flex items-center justify-center relative mx-[0.04em] will-change-transform"
                 style={{ transformOrigin: "50% 50%" }}
               >
                 {/* Geometrically Perfect Circular Lens Ring representing 'O' */}
                 <svg
-                  className="w-[0.92em] h-[0.92em] text-accent select-none relative z-10"
+                  className="w-full h-full text-accent select-none relative z-10"
                   viewBox="0 0 100 100"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="13"
+                  strokeWidth="11"
                   aria-hidden="true"
                 >
-                  <circle cx="50" cy="50" r="42" />
+                  <circle cx="50" cy="50" r="40" />
                 </svg>
                 {/* Concentric aperture glowing ring - 100% symmetric circle */}
                 <span
-                  className="absolute inset-0 rounded-full border border-accent/70 scale-95 pointer-events-none shadow-[0_0_24px_rgba(193,99,59,0.55)]"
+                  className="absolute inset-0 rounded-full border border-accent/60 scale-95 pointer-events-none shadow-[0_0_24px_rgba(193,99,59,0.55)]"
                   aria-hidden="true"
                 />
               </span>
