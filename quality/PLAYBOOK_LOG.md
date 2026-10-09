@@ -72,11 +72,12 @@ To deactivate any transition without touching component code:
 
 ### Git Anchor Rollback Commands
 - **Baseline Tag**: `checkpoint/stable-baseline` (`0da12ea`)
+- **Cinematic Transitions Checkpoint Tag**: `checkpoint/cinematic-transitions-complete` (`b119679`)
 - **To revert entire repository to baseline**:
   ```powershell
   git checkout checkpoint/stable-baseline
   ```
-- **To revert a specific transition commit**:
+- **To revert this transition batch**:
   ```powershell
-  git revert <commit-hash>
+  git revert b119679
   ```
