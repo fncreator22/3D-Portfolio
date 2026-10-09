@@ -91,9 +91,10 @@ export const WorkflowBuilderCard = ({
       onFocus={() => setIsHovered(true)}
       onBlur={() => setIsHovered(false)}
       whileHover={{ y: -6 }}
+      whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.28, ease: [0.25, 1, 0.5, 1] }}
       className={cn(
-        "w-[84vw] sm:w-[350px] lg:w-[380px] xl:w-[400px] snap-center flex-shrink-0 cursor-pointer relative group select-none",
+        "w-[84vw] sm:w-[350px] lg:w-[380px] xl:w-[400px] snap-center flex-shrink-0 cursor-pointer relative group select-none active:scale-[0.98]",
         className
       )}
     >
@@ -110,7 +111,7 @@ export const WorkflowBuilderCard = ({
 
       <Card className="overflow-hidden rounded-2xl border border-line bg-bg-raise text-paper shadow-[0_16px_40px_rgba(0,0,0,0.65)] transition-all duration-300 group-hover:border-accent group-hover:shadow-[0_24px_60px_rgba(0,0,0,0.85),0_0_35px_rgba(193,99,59,0.2)]">
         {/* Card Image with Themed Vignette */}
-        <div className="relative h-44 sm:h-48 w-full overflow-hidden bg-bg border-b border-line/60 flex-shrink-0">
+        <div className="relative h-36 sm:h-44 lg:h-48 w-full overflow-hidden bg-bg border-b border-line/60 flex-shrink-0">
           <img
             src={imageUrl}
             alt={displayTitle}

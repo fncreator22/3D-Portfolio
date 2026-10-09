@@ -106,3 +106,22 @@ To deactivate any transition without touching component code:
    - *Axonal Synaptic Discharge*: When hovering a technology domain chip, send a directional laser pulse through the WebGL axon cluster connecting directly to that technology's specific node in the Three.js 3D space.
    - *Frequency Waveform Shader*: Integrate an ambient audio-reactive frequency ribbon behind the Voice AI skill cluster that subtly undulates as the user hovers over speech tools.
 
+---
+
+## 7. Anti-AI-Slop & Mobile Precision Overhaul (Phase 7 Quality Gate)
+
+### Remediation Matrix & Verification Evidence
+
+| Defect / AI-Slop Pattern | Root Cause | Engineering Remediation | Verification Screenshot |
+| :--- | :--- | :--- | :--- |
+| **Mobile Aperture Blurry Halo** (Screenshots 1 & 2) | Scaling small DOM `span` by 1,800% forced GPU to rasterize an offscreen bitmap cache; halo hovered over Section 01 text. | Converted aperture ring to an SVG vector `<circle ref={vectorRingRef} />` whose radius `r` and stroke animate natively in vector coordinate space. Decoupled opacity timeline so the ring completely fades to 0 by progress 0.22. | `verify_mobile_aperture_transition.png`, `verify_mobile_identity.png` |
+| **Mobile Projects Disappearing Header & Black Void** (Screenshot 3) | Pinned container collided with fixed 64px navbar; `my-auto` split remaining height equally, creating a 125px dead black canyon above cards. | Added `pt-[4.75rem] sm:pt-20 lg:pt-8` for pristine navbar clearance; removed `my-auto` and anchored track with `flex-1 items-center`; restored spread cards with secondary `text-stone-400` details. | `verify_mobile_projects_header_cards.png` |
+| **Mobile Hero Congestion & Voids** (Screenshot 4) | Clamped center stage between two large empty black voids; redundant `18,488 NEURAL NODES` badge crowded canvas. | Removed the neural nodes badge on mobile; balanced vertical padding (`pt-16 sm:pt-20 pb-4`); proportioned 3D canvas (`max-w-[200px]`); added tactile Emil Kowalski `active:scale-[0.97]` interactions. | `verify_mobile_hero_clean.png` |
+| **Section 05 AI-Slop Static Cards** | Generic "01, 02, 03" text boxes felt like templated boilerplate rather than an authentic developer platform. | Replaced 3 static text boxes with an **Interactive Autonomous Systems Trace Inspector** (40/60 Master-Detail console, 3 real production spans: `POST /eval/ast-guardrail [3.8ms]`, `WS /voice/duplex-stream [142ms]`, `STATE /agent/rollback-gate [18.0ms]`, interactive latency waterfall bars, live JSON payload schema, and interactive probe simulator). | `verify_mobile_trace_inspector.png`, `verify_desktop_trace_inspector.png` |
+| **Section 06 AI-Slop Text Boxes** | Generic "01 / Agentic AI", "02 / Full-Stack" text containers. | Replaced with **Production Telemetry HUD**: `16+ Shipped Agents`, `< 4.8ms P99 Gateway`, `99.98% Guardrail SLA`, plus live copyable developer CLI curl command: `$ curl -s https://sagarmahajan.cloud/api/v1/health`. | `verify_mobile_telemetry_hud.png`, `verify_desktop_telemetry_hud.png` |
+
+### Compilation & Build Verification
+- **Framework**: Next.js 15.5.24 App Router (React 19, TypeScript 5.7).
+- **Static Pages Generated**: 22 / 22 pages built successfully with 0 compilation errors.
+- **Verification Environment**: Playwright headless Chrome testing at 390x844 (Mobile) and 1440x900 (Desktop).
+

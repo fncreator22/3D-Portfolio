@@ -276,24 +276,24 @@ export function HorizontalProjects() {
 
   return (
     <section id="projects" ref={sectionRef} className="relative z-10 border-t border-line py-0 overflow-x-clip max-w-full" aria-labelledby="projects-heading">
-      <div ref={pinRef} className="h-[100svh] min-h-[580px] lg:min-h-[700px] flex flex-col justify-between pt-4 sm:pt-6 lg:pt-8 pb-3 sm:pb-4 lg:pb-6">
+      <div ref={pinRef} className="h-[100svh] min-h-[580px] lg:min-h-[700px] flex flex-col justify-between pt-[4.75rem] sm:pt-20 lg:pt-8 pb-3 sm:pb-4 lg:pb-6">
         
         {/* Header Bar */}
-        <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] mb-2 lg:mb-3 flex-shrink-0 flex flex-col md:flex-row md:items-end justify-between gap-2.5 sm:gap-3 relative z-20">
+        <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] mb-1 sm:mb-2 lg:mb-3 flex-shrink-0 flex flex-col md:flex-row md:items-end justify-between gap-2 sm:gap-2.5 relative z-20">
           <div>
-            <div className="eyebrow">04 / Selected Work</div>
-            <h2 id="projects-heading" className="font-display font-medium text-[clamp(1.5rem,3.2vw,2.6rem)] tracking-[-0.01em] mt-1 sm:mt-1.5 leading-tight text-paper">
+            <div className="eyebrow text-accent font-semibold text-[0.65rem] sm:text-xs">04 / Selected Work</div>
+            <h2 id="projects-heading" className="font-display font-medium text-xl sm:text-2xl lg:text-[clamp(1.5rem,3.2vw,2.6rem)] tracking-[-0.01em] mt-0.5 sm:mt-1 leading-tight text-paper">
               Engineered for <span className="font-serif italic text-accent font-normal">Autonomy &amp; Scale</span>.
             </h2>
           </div>
 
           {/* Category Filter Pills (Sleek Horizontal Scroll Rail) */}
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 max-w-full md:max-w-xl xl:max-w-2xl">
+          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 max-w-full md:max-w-xl xl:max-w-2xl">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`font-mono text-[0.68rem] uppercase tracking-wider px-3 py-1 rounded-full border whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-accent ${
+                className={`font-mono text-[0.65rem] sm:text-[0.68rem] uppercase tracking-wider px-2.5 sm:px-3 py-1 rounded-full border whitespace-nowrap transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-accent ${
                 activeCategory === cat
                   ? "bg-accent text-bg border-accent font-semibold shadow-md shadow-accent/20"
                   : "border-line text-stone-300 hover:text-paper hover:border-paper/40 bg-bg/50"
@@ -308,12 +308,13 @@ export function HorizontalProjects() {
         {/* 
           Horizontal Track:
           - Universal GSAP scroll-driven horizontal pinned stream for both desktop & mobile
+          - flex-1 min-h-0 flex items-center anchors cards with natural spacing (ZERO dead black canyon)
         */}
         <div
           id="projects-carousel"
           ref={scrollContainerRef}
           onScroll={handleMobileScroll}
-          className="w-full min-h-0 py-2 sm:py-3 lg:py-2 overflow-hidden relative z-10 my-auto"
+          className="w-full min-h-0 py-1 sm:py-2 overflow-hidden relative z-10 flex-1 flex items-center my-0"
         >
           <div
             ref={trackRef}

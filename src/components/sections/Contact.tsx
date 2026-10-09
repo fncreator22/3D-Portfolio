@@ -1,8 +1,18 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { PROFILE } from "@/data/projects";
 import { IDCardLanyard } from "@/components/ui/id-card-lanyard";
+import { Copy, Check, Terminal, Activity, ShieldCheck, Zap } from "lucide-react";
 
 export function Contact() {
+  const [copied, setCopied] = useState(false);
+
+  const copyCurl = () => {
+    navigator.clipboard.writeText("curl -s https://sagarmahajan.cloud/api/v1/health");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <section id="invariants" className="py-[clamp(5rem,9vw,9rem)] border-t border-line relative z-10 overflow-x-clip max-w-full bg-bg" aria-labelledby="invariants-heading">
@@ -22,25 +32,62 @@ export function Contact() {
               I engineer autonomous AI agents, conversational voice systems, and reliable full-stack applications. Focused on clean architecture, sub-second responsiveness, and software that delivers real-world value.
             </p>
 
-            {/* Core Capabilities */}
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[520px]">
-              <div className="p-4 rounded-xl bg-bg-raise/80 border border-line/80">
-                <div className="font-mono text-xs text-accent font-semibold tracking-wider uppercase">01 / Agentic AI &amp; Voice</div>
-                <p className="text-stone-300 font-light text-xs mt-1.5 leading-relaxed">
-                  Autonomous reasoning workflows, MCP tool integrations, and real-time voice agents.
-                </p>
+            {/* Production Telemetry HUD (Anti-AI-Slop Architecture) */}
+            <div className="mt-6 max-w-[520px] rounded-xl bg-bg-raise/80 border border-line/80 p-4 relative overflow-hidden backdrop-blur-sm">
+              <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+                <div className="flex items-center gap-2 font-mono text-[0.68rem] text-accent font-semibold uppercase tracking-wider">
+                  <Activity className="w-3.5 h-3.5" />
+                  <span>Production Telemetry HUD</span>
+                </div>
+                <span className="inline-flex items-center gap-1.5 font-mono text-[0.62rem] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  STATUS: HEALTHY
+                </span>
               </div>
 
-              <div className="p-4 rounded-xl bg-bg-raise/80 border border-line/80">
-                <div className="font-mono text-xs text-accent font-semibold tracking-wider uppercase">02 / Full-Stack Systems</div>
-                <p className="text-stone-300 font-light text-xs mt-1.5 leading-relaxed">
-                  Production-grade web apps built with Next.js, TypeScript, Python/FastAPI, and fast APIs.
-                </p>
+              <div className="mt-3.5 grid grid-cols-3 gap-2.5 sm:gap-3 text-center">
+                <div className="p-2 sm:p-2.5 rounded-lg bg-black/40 border border-white/[0.04]">
+                  <div className="font-mono text-sm sm:text-base font-bold text-paper">16+</div>
+                  <div className="font-mono text-[0.62rem] sm:text-[0.68rem] text-stone-400 mt-0.5 leading-tight">
+                    Shipped Agents
+                  </div>
+                </div>
+
+                <div className="p-2 sm:p-2.5 rounded-lg bg-black/40 border border-white/[0.04]">
+                  <div className="font-mono text-sm sm:text-base font-bold text-accent">&lt; 4.8ms</div>
+                  <div className="font-mono text-[0.62rem] sm:text-[0.68rem] text-stone-400 mt-0.5 leading-tight">
+                    P99 Gateway
+                  </div>
+                </div>
+
+                <div className="p-2 sm:p-2.5 rounded-lg bg-black/40 border border-white/[0.04]">
+                  <div className="font-mono text-sm sm:text-base font-bold text-emerald-400">99.98%</div>
+                  <div className="font-mono text-[0.62rem] sm:text-[0.68rem] text-stone-400 mt-0.5 leading-tight">
+                    Guardrail SLA
+                  </div>
+                </div>
+              </div>
+
+              {/* Developer CLI Terminal Snippet */}
+              <div className="mt-3.5 pt-3 border-t border-white/[0.06] flex items-center justify-between gap-2 bg-black/60 px-3 py-2 rounded-lg border border-white/[0.04]">
+                <div className="flex items-center gap-2 overflow-x-auto font-mono text-[0.68rem] sm:text-xs text-stone-300">
+                  <Terminal className="w-3.5 h-3.5 text-accent shrink-0" />
+                  <span className="text-stone-500 select-none">$</span>
+                  <span className="whitespace-nowrap text-paper/90">curl -s https://sagarmahajan.cloud/api/v1/health</span>
+                </div>
+                <button
+                  onClick={copyCurl}
+                  className="shrink-0 inline-flex items-center gap-1 font-mono text-[0.62rem] text-stone-400 hover:text-paper bg-white/[0.05] hover:bg-white/[0.1] px-2 py-1 rounded transition-colors active:scale-[0.95]"
+                  title="Copy command"
+                >
+                  {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                  <span>{copied ? "Copied" : "Copy"}</span>
+                </button>
               </div>
             </div>
 
             {/* Academic Background */}
-            <div className="mt-6 p-4 rounded-xl bg-bg-raise/80 border border-line/80 max-w-[520px]">
+            <div className="mt-4 p-4 rounded-xl bg-bg-raise/80 border border-line/80 max-w-[520px]">
               <div>
                 <div className="font-mono text-[0.68rem] text-accent uppercase tracking-wider font-semibold">
                   Academic Background

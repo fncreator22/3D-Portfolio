@@ -21,6 +21,8 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
   const conduitBeamRef = useRef<HTMLDivElement>(null);
   const contentWrapperRef = useRef<HTMLDivElement>(null);
 
+  const vectorRingRef = useRef<SVGCircleElement>(null);
+
   const enabled = isTransitionEnabled("HERO_TO_IDENTITY_PORTAL");
 
   useEffect(() => {
@@ -30,7 +32,6 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
 
     const ctx = gsap.context(() => {
       const isMobile = window.innerWidth < 768;
-      const targetScale = isMobile ? 18 : 28;
       const targetRadius = isMobile ? 850 : 1400;
 
       const tl = gsap.timeline({
@@ -47,7 +48,7 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
 
       // Initial resting state: 0% opacity prevents ghost bleed inside resting aperture hole
       gsap.set(shaderVignetteRef.current, { opacity: 0 });
-      gsap.set(contentWrapperRef.current, { scale: 0.82, opacity: 0, transformOrigin: "50% 45%" });
+      gsap.set(contentWrapperRef.current, { scale: 0.84, opacity: 0, transformOrigin: "50% 45%" });
       if (conduitBeamRef.current) {
         gsap.set(conduitBeamRef.current, { scaleY: 0 });
       }
@@ -64,31 +65,57 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
       // 2. Sub-badge and Outer letters disperse outward horizontally and fade out
       tl.to(
         badgeRef.current,
-        { opacity: 0, y: -24, duration: 0.22, ease: "power2.in" },
+        { opacity: 0, y: -24, duration: 0.18, ease: "power2.in" },
         0.02
       );
       tl.to(
         leftLettersRef.current,
-        { opacity: 0, x: -180, duration: 0.35, ease: "power2.in" },
+        { opacity: 0, x: -160, duration: 0.28, ease: "power2.in" },
         0.04
       );
       tl.to(
         rightLettersRef.current,
-        { opacity: 0, x: 180, duration: 0.35, ease: "power2.in" },
+        { opacity: 0, x: 160, duration: 0.28, ease: "power2.in" },
         0.04
       );
 
-      // 3. Focal Aperture: SVG Mask Hole and Letter 'O' Rim expand concentrically
+      // 3. Focal 'O' letter smoothly hands off into the vector SVG iris ring
       tl.to(
         focalLetterRef.current,
         {
-          scale: targetScale,
-          transformOrigin: "50% 50%",
-          duration: 0.85,
-          ease: "power2.inOut",
+          scale: 1.6,
+          opacity: 0,
+          duration: 0.22,
+          ease: "power2.in",
         },
-        0.05
+        0.04
       );
+
+      // 4. Pure Vector SVG Iris Ring expands concentrically - ZERO raster blur & pixelation
+      if (vectorRingRef.current) {
+        tl.to(
+          vectorRingRef.current,
+          {
+            attr: { r: isMobile ? 180 : 320 },
+            strokeWidth: isMobile ? 4 : 6,
+            duration: 0.35,
+            ease: "power2.inOut",
+          },
+          0.04
+        );
+        // Fade out iris ring cleanly before Section 01 text is revealed (NEVER hovers over text)
+        tl.to(
+          vectorRingRef.current,
+          {
+            opacity: 0,
+            duration: 0.20,
+            ease: "power1.out",
+          },
+          0.22
+        );
+      }
+
+      // 5. SVG Mask Hole expands fullscreen, opening the portal into Identity
       if (maskCircleRef.current) {
         tl.to(
           maskCircleRef.current,
@@ -101,40 +128,40 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
         );
       }
 
-      // 4. Subtle ambient vignette at outer perimeter
+      // 6. Subtle ambient vignette at outer perimeter
       tl.fromTo(
         shaderVignetteRef.current,
         { opacity: 0, scale: 1.15 },
-        { opacity: 0.6, scale: 1, duration: 0.4, ease: "power1.inOut" },
+        { opacity: 0.5, scale: 1, duration: 0.35, ease: "power1.inOut" },
         0.08
       );
 
-      // 5. Revealed Section Content (The REAL Section 01):
+      // 7. Revealed Section Content (The REAL Section 01):
       // Smoothly emerges from within the expanding aperture hole, zooming organically into view!
       tl.fromTo(
         contentWrapperRef.current,
-        { scale: 0.82, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.62, ease: "power2.out" },
-        0.12
+        { scale: 0.84, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.60, ease: "power2.out" },
+        0.18
       );
 
       // Stagger internal Identity elements to align with aperture reveal
       tl.fromTo(
         ".identity-reveal",
-        { y: 24, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.48, stagger: 0.07, ease: "power2.out" },
-        0.22
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.45, stagger: 0.06, ease: "power2.out" },
+        0.26
       );
 
-      // 6. As 'O' expands past viewport bounds, shader vignette and aperture overlay dissolve smoothly
+      // 8. As portal opens fully, shader vignette and aperture overlay dissolve smoothly
       tl.to(
         shaderVignetteRef.current,
-        { opacity: 0, duration: 0.25, ease: "power1.out" },
+        { opacity: 0, duration: 0.22, ease: "power1.out" },
         0.72
       );
       tl.to(
         overlayRef.current,
-        { opacity: 0, duration: 0.2, ease: "power1.out" },
+        { opacity: 0, duration: 0.18, ease: "power1.out" },
         0.78
       );
     }, containerRef);
@@ -217,6 +244,17 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
             fill="#0b0a09"
             mask="url(#letter-o-aperture-mask)"
           />
+          {/* Pure Vector Iris Ring: Concentric with aperture cutout, 100% vector-sharp at any DPR */}
+          <circle
+            ref={vectorRingRef}
+            cx="50%"
+            cy="50%"
+            r="36"
+            fill="none"
+            stroke="#c1633b"
+            strokeWidth="2.5"
+            className="pointer-events-none will-change-[transform,opacity]"
+          />
         </svg>
 
         {/* Main Typographic Stage: Word 'AUTONOMOUS' dead-centered in viewport */}
@@ -260,11 +298,6 @@ export function LetterPortalTransition({ children }: LetterPortalTransitionProps
                 >
                   <circle cx="50" cy="50" r="40" />
                 </svg>
-                {/* Concentric aperture glowing ring - 100% symmetric circle */}
-                <span
-                  className="absolute inset-0 rounded-full border border-accent/60 scale-95 pointer-events-none shadow-[0_0_24px_rgba(193,99,59,0.55)]"
-                  aria-hidden="true"
-                />
               </span>
             </div>
 

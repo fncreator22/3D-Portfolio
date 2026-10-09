@@ -408,24 +408,24 @@ export function Hero() {
       </div>
 
       {/* ─── Hero Content Foreground Layer ─── */}
-      <div className="relative z-20 flex-1 flex items-center pt-20 sm:pt-28 lg:pt-32 pb-6 sm:pb-10 lg:pb-12 pointer-events-auto">
-        <div className="max-w-[1320px] mx-auto px-[clamp(1rem,4vw,3.5rem)] w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-10 items-center">
+      <div className="relative z-20 flex-1 flex flex-col justify-between lg:justify-center pt-16 sm:pt-20 lg:pt-32 pb-4 sm:pb-8 lg:pb-12 pointer-events-auto">
+        <div className="max-w-[1320px] mx-auto px-[clamp(1rem,4vw,3.5rem)] w-full my-auto lg:my-0">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 sm:gap-6 lg:gap-10 items-center">
 
             {/* Left: Tightly Constrained & Balanced Text Column */}
             <div className="flex flex-col max-w-[460px]">
               
               {/* Shortened Eyebrow Tag */}
-              <div className="eyebrow mb-2 sm:mb-3 text-[0.66rem] sm:text-xs tracking-wider">
+              <div className="eyebrow mb-1.5 sm:mb-3 text-[0.65rem] sm:text-xs tracking-wider">
                 AI ENGINEER · AGENTIC SYSTEMS · VOICE AI
               </div>
 
-              {/* High-Impact Headline */}
+              {/* High-Impact Headline with balanced line breaks */}
               <motion.h1
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-                className="font-display font-medium text-[clamp(1.75rem,5.2vw,3.8rem)] tracking-[-0.02em] leading-[1.08] text-paper mb-2.5 sm:mb-3.5 break-words"
+                className="font-display font-medium text-[clamp(1.75rem,5.2vw,3.8rem)] tracking-[-0.02em] leading-[1.08] text-paper mb-2 sm:mb-3.5 break-words [text-wrap:balance]"
               >
                 Engineering <span className="text-accent">Autonomous Systems</span> &amp; Production AI.
               </motion.h1>
@@ -433,7 +433,7 @@ export function Hero() {
               {/* Typewriter Letter-by-Letter Brand Statement */}
               <p
                 aria-label={SUBTITLE_TEXT}
-                className="text-stone-300 mb-3 sm:mb-5 font-body text-[clamp(0.85rem,1.2vw,1.05rem)] leading-relaxed max-w-[440px] min-h-[4rem]"
+                className="text-stone-300 mb-2.5 sm:mb-4 font-body text-[clamp(0.82rem,1.15vw,1.05rem)] leading-relaxed max-w-[440px] min-h-[3.2rem] sm:min-h-[4rem]"
               >
                 <span>{displayedSubtitle}</span>
                 {!isTypingComplete && (
@@ -444,23 +444,23 @@ export function Hero() {
                 )}
               </p>
 
-              {/* ─── Mobile Avatar Stage (Interactive 3D Particle Canvas for mobile) ─── */}
-              <div className="block lg:hidden my-3.5 sm:my-5 self-center w-full max-w-[280px]">
+              {/* ─── Mobile Avatar Stage (Scaled for balanced 100svh viewport fit) ─── */}
+              <div className="block lg:hidden my-1.5 sm:my-3 self-center w-full max-w-[200px] sm:max-w-[250px] aspect-square">
                 <Avatar3DModel />
               </div>
 
-              {/* Primary Action Buttons */}
-              <div className="flex flex-wrap sm:flex-nowrap gap-1.5 sm:gap-2.5 items-center mb-4 sm:mb-6">
+              {/* Primary Action Buttons with Emil Kowalski active tactile feedback */}
+              <div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-2.5 items-center mb-3 sm:mb-5">
                 <Link
                   href="/work"
-                  className="inline-flex items-center justify-center bg-paper text-bg border border-black/10 rounded-full font-body font-medium hover:bg-accent hover:text-paper hover:border-accent transition-all duration-200 text-[0.72rem] sm:text-[0.88rem] px-3 sm:px-4 py-1.5 sm:py-2 shadow-sm cursor-pointer whitespace-nowrap"
+                  className="inline-flex items-center justify-center bg-paper text-bg border border-black/10 rounded-full font-body font-medium hover:bg-accent hover:text-paper hover:border-accent active:scale-[0.97] transition-all duration-160 text-[0.74rem] sm:text-[0.88rem] px-3.5 sm:px-4 py-2 sm:py-2.5 shadow-sm cursor-pointer whitespace-nowrap"
                 >
                   Explore 16 Systems
                 </Link>
 
                 <a
                   href="#contact"
-                  className="inline-flex items-center justify-center bg-accent text-bg font-medium rounded-full hover:bg-accent/90 hover:shadow-md transition-all text-[0.72rem] sm:text-[0.88rem] px-3 sm:px-4 py-1.5 sm:py-2 gap-1 sm:gap-1.5 cursor-pointer whitespace-nowrap"
+                  className="inline-flex items-center justify-center bg-accent text-bg font-medium rounded-full hover:bg-accent/90 hover:shadow-md active:scale-[0.97] transition-all duration-160 text-[0.74rem] sm:text-[0.88rem] px-3.5 sm:px-4 py-2 sm:py-2.5 gap-1 sm:gap-1.5 cursor-pointer whitespace-nowrap"
                 >
                   <span>Get in Touch</span>
                   <span className="text-xs">↓</span>
@@ -470,7 +470,7 @@ export function Hero() {
                   href="/resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center text-paper bg-transparent border border-paper/60 rounded-full font-body hover:bg-paper hover:text-bg hover:border-paper transition-all duration-200 text-[0.72rem] sm:text-[0.88rem] px-3 sm:px-4 py-1.5 sm:py-2 gap-1 sm:gap-1.5 cursor-pointer whitespace-nowrap"
+                  className="inline-flex items-center justify-center text-paper bg-transparent border border-paper/60 rounded-full font-body hover:bg-paper hover:text-bg hover:border-paper active:scale-[0.97] transition-all duration-160 text-[0.74rem] sm:text-[0.88rem] px-3.5 sm:px-4 py-2 sm:py-2.5 gap-1 sm:gap-1.5 cursor-pointer whitespace-nowrap"
                 >
                   <span>Resume</span>
                   <span className="text-xs">↗</span>
@@ -478,7 +478,7 @@ export function Hero() {
               </div>
 
               {/* Flagship Project Quick Links */}
-              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-3 border-t border-line/60">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-2.5 border-t border-line/60">
                 <span className="font-mono text-[0.62rem] uppercase tracking-widest text-stone mr-1">
                   Flagship:
                 </span>
@@ -486,7 +486,7 @@ export function Hero() {
                   <Link
                     key={chip.href}
                     href={chip.href}
-                    className="inline-flex items-center gap-1 font-mono text-[0.68rem] sm:text-xs text-paper/90 bg-bg-raise/90 border border-line/80 hover:border-accent hover:text-accent rounded-lg px-2.5 py-1 transition-all backdrop-blur-sm cursor-pointer"
+                    className="inline-flex items-center gap-1 font-mono text-[0.68rem] sm:text-xs text-paper/90 bg-bg-raise/90 border border-line/80 hover:border-accent hover:text-accent active:scale-[0.97] rounded-lg px-2.5 py-1 transition-all backdrop-blur-sm cursor-pointer"
                   >
                     <span>{chip.label}</span>
                     <span className="text-accent text-[0.65rem]">→</span>
