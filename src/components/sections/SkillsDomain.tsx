@@ -2,18 +2,26 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SKILL_DOMAINS } from "@/data/projects";
 import { TechLogo } from "@/components/ui/TechLogo";
 import { isTransitionEnabled } from "@/lib/motion-flags";
 
 export function SkillsDomain() {
   const [activeDomain, setActiveDomain] = useState<number>(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const mountRef = useRef<HTMLDivElement>(null);
   const flareRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
+
+    if (typeof window !== "undefined") {
+      gsap.registerPlugin(ScrollTrigger);
+    }
 
     const width = mount.clientWidth || 300;
     const height = mount.clientHeight || 300;
@@ -104,21 +112,61 @@ export function SkillsDomain() {
     const lines = new THREE.LineSegments(lineGeo, lineMat);
     scene.add(lines);
 
-    // 4. Transition 03: Traveling Laser Photon Shockwave Listener
+    // 4. Transition 03: Traveling Laser Photon Shockwave Mechanics
     let burstExpansion = 0;
+    const triggerBurst = (intensity = 1) => {
+      burstExpansion = Math.min(2.2, intensity * 2.0);
+      if (flareRef.current) {
+        flareRef.current.style.opacity = `${Math.min(0.85, intensity)}`;
+      }
+    };
+
     const handlePhotonBurst = (e: Event) => {
       if (!isTransitionEnabled("TRAJECTORY_TO_SKILLS_PHOTON")) return;
       const customEvent = e as CustomEvent<{ intensity?: number }>;
       const intensity = customEvent.detail?.intensity ?? 1;
-      burstExpansion = Math.min(2.2, intensity * 2.0);
-
-      // Flash subtle top flare
-      if (flareRef.current) {
-        flareRef.current.style.opacity = `${Math.min(0.8, intensity)}`;
-      }
+      triggerBurst(intensity);
     };
 
     window.addEventListener("trajectory-photon-burst", handlePhotonBurst);
+
+    const ctx = gsap.context(() => {
+      // Synchronize Transition 03: Excite cluster when Skills arrives in viewport from Journey
+      if (isTransitionEnabled("TRAJECTORY_TO_SKILLS_PHOTON") && sectionRef.current) {
+        ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: "top 85%",
+          end: "top 35%",
+          onEnter: () => triggerBurst(1.0),
+          onEnterBack: () => triggerBurst(0.75),
+        });
+      }
+
+      // Transition 02 Extension: Card 03 3D Splash Entry Physics
+      if (isTransitionEnabled("IDENTITY_TO_TRAJECTORY_STACK") && cardRef.current && sectionRef.current) {
+        gsap.fromTo(
+          cardRef.current,
+          {
+            y: 55,
+            scale: 0.96,
+            rotateX: -3.2,
+            transformOrigin: "center bottom",
+          },
+          {
+            y: 0,
+            scale: 1,
+            rotateX: 0,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top 95%",
+              end: "top 45%",
+              scrub: 0.8,
+            },
+          }
+        );
+      }
+    }, sectionRef);
 
     // 5. Interactive Orbital Motion with Mouse & Touch Gestures
     let animId: number;
@@ -195,6 +243,7 @@ export function SkillsDomain() {
     return () => {
       cancelAnimationFrame(animId);
       if (resizeFrameId) cancelAnimationFrame(resizeFrameId);
+      ctx.revert();
       window.removeEventListener("trajectory-photon-burst", handlePhotonBurst);
       window.removeEventListener("mousemove", handlePointerMove);
       mount.parentElement?.removeEventListener("touchstart", handlePointerMove);
@@ -216,122 +265,136 @@ export function SkillsDomain() {
 
   return (
     <section
+      ref={sectionRef}
       id="skills"
-      className="py-[clamp(4rem,8vw,8rem)] border-t border-line relative z-10 overflow-x-clip max-w-full"
+      className="py-[clamp(3.5rem,7vw,7rem)] relative z-10 overflow-visible max-w-full"
+      style={{ perspective: "1200px" }}
       aria-labelledby="skills-heading"
     >
-      {/* Photon Shockwave Radiant Flare (Transition 03 Seeding Anchor) */}
-      <div
-        ref={flareRef}
-        className="absolute top-0 left-1/4 -translate-x-1/2 w-[420px] h-32 bg-[radial-gradient(ellipse_at_top,rgba(193,99,59,0.45),transparent_70%)] pointer-events-none opacity-0 transition-opacity duration-300 z-0"
-        aria-hidden="true"
-      />
+      <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
+        {/* ─── 3D Card Deck: Section Card 03 ─── */}
+        <div
+          ref={cardRef}
+          className="rounded-[28px] sm:rounded-[36px] bg-bg-raise/95 border border-line/90 shadow-[0_30px_70px_rgba(0,0,0,0.8),0_0_35px_rgba(193,99,59,0.1)] p-6 sm:p-10 lg:p-14 relative overflow-hidden will-change-transform"
+        >
+          {/* Subtle Ambient Rim Glow */}
+          <div className="absolute top-0 right-0 w-80 h-80 bg-accent/6 rounded-full blur-[90px] pointer-events-none" />
 
-      <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)] relative z-10">
-        {/* Header */}
-        <div className="max-w-[760px] mb-8 sm:mb-14">
-          <div className="eyebrow text-accent font-semibold flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-            <span>03 / Technical Matrix</span>
-          </div>
-          <h2
-            id="skills-heading"
-            className="font-display font-medium text-[clamp(2rem,5vw,3.4rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.08] text-paper"
-          >
-            Core Domains &amp;{" "}
-            <span className="text-accent font-medium">Production Toolchains</span>.
-          </h2>
-          <p className="mt-3.5 text-stone-300 font-light text-base sm:text-lg max-w-[620px] leading-relaxed">
-            Drag or tap to explore the live 3D neural graph and inspect production toolchains with verified badges.
-          </p>
-        </div>
-
-        {/* 2-Column Matrix */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-14 items-start">
-          {/* Left: Interactive Domain Accordion Cards */}
+          {/* Photon Shockwave Radiant Flare (Transition 03 Seeding Anchor) */}
           <div
-            className="order-2 lg:order-1 space-y-3.5 sm:space-y-4"
-            role="tablist"
-            aria-label="Technical Skill Domains"
-          >
-            {SKILL_DOMAINS.map((domain, idx) => {
-              const isActive = activeDomain === idx;
-              return (
-                <div
-                  key={domain.idx}
-                  role="tab"
-                  tabIndex={0}
-                  aria-selected={isActive}
-                  aria-expanded={isActive}
-                  aria-controls={`domain-panel-${idx}`}
-                  onClick={() => setActiveDomain(idx)}
-                  onKeyDown={(e) => handleKeyDown(e, idx)}
-                  className={`p-5 sm:p-6 rounded-2xl border transition-all duration-300 cursor-pointer focus-visible:ring-2 focus-visible:ring-accent ${
-                    isActive
-                      ? "bg-bg-raise border-accent shadow-[0_10px_30px_rgba(0,0,0,0.6),0_0_20px_rgba(193,99,59,0.15)]"
-                      : "bg-bg-raise/40 border-line/70 hover:border-accent/40 hover:bg-bg-raise/70"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono text-xs text-accent font-semibold">
-                        {domain.idx}
-                      </span>
-                      <h3 className="font-display font-medium text-base sm:text-xl text-paper">
-                        {domain.name}
-                      </h3>
-                    </div>
-                    <span
-                      className="font-mono text-xs text-stone-300 font-semibold"
-                      aria-hidden="true"
-                    >
-                      {isActive ? "▼" : "▶"}
-                    </span>
-                  </div>
+            ref={flareRef}
+            className="absolute top-0 left-1/4 -translate-x-1/2 w-[420px] h-32 bg-[radial-gradient(ellipse_at_top,rgba(193,99,59,0.45),transparent_70%)] pointer-events-none opacity-0 transition-opacity duration-300 z-0"
+            aria-hidden="true"
+          />
 
-                  {/* Skills badges with Logos inside active domain */}
-                  {isActive && (
-                    <div
-                      id={`domain-panel-${idx}`}
-                      className="mt-5 pt-4 border-t border-line/60 flex flex-wrap gap-2 animate-fadeIn"
-                    >
-                      {domain.items.map((skill) => (
-                        <TechLogo key={skill} name={skill} />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+          {/* Header */}
+          <div className="max-w-[760px] mb-8 sm:mb-14 relative z-10">
+            <div className="eyebrow text-accent font-semibold flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+              <span>03 / Technical Matrix</span>
+            </div>
+            <h2
+              id="skills-heading"
+              className="font-display font-medium text-[clamp(1.85rem,4.5vw,3.2rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.08] text-paper"
+            >
+              Core Domains &amp;{" "}
+              <span className="text-accent font-medium">Production Toolchains</span>.
+            </h2>
+            <p className="mt-3.5 text-stone-300 font-light text-base sm:text-lg max-w-[620px] leading-relaxed">
+              Drag or tap to explore the live 3D neural graph and inspect production toolchains with verified badges.
+            </p>
           </div>
 
-          {/* Right: 3D Interactive Synaptic Visualizer & Active Domain Inspector */}
-          <div className="order-1 lg:order-2 relative rounded-3xl overflow-hidden border border-line bg-gradient-to-b from-bg-raise to-bg p-5 sm:p-8 flex flex-col justify-between h-[340px] sm:h-[460px] lg:h-[540px] shadow-[0_24px_60px_rgba(0,0,0,0.7)] lg:sticky lg:top-28 touch-pan-y">
-            <div className="flex items-center justify-between z-10">
-              <span className="font-mono text-[0.68rem] tracking-widest uppercase text-accent font-semibold">
-                Domain 0{activeDomain + 1} / Neural Graph
-              </span>
-              <span className="font-mono text-[0.65rem] tracking-wider uppercase px-2.5 py-1 rounded bg-bg border border-line text-stone-300 font-medium">
-                3D Interactive
-              </span>
+          {/* 2-Column Matrix */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-14 items-start relative z-10">
+            {/* Left: Interactive Domain Accordion Cards */}
+            <div
+              className="order-2 lg:order-1 space-y-3.5 sm:space-y-4"
+              role="tablist"
+              aria-label="Technical Skill Domains"
+            >
+              {SKILL_DOMAINS.map((domain, idx) => {
+                const isActive = activeDomain === idx;
+                return (
+                  <div
+                    key={domain.idx}
+                    role="tab"
+                    tabIndex={0}
+                    aria-selected={isActive}
+                    aria-expanded={isActive}
+                    aria-controls={`domain-panel-${idx}`}
+                    onClick={() => setActiveDomain(idx)}
+                    onKeyDown={(e) => handleKeyDown(e, idx)}
+                    className={`p-5 sm:p-6 rounded-2xl border transition-all duration-300 cursor-pointer focus-visible:ring-2 focus-visible:ring-accent ${
+                      isActive
+                        ? "bg-bg border-accent shadow-[0_10px_30px_rgba(0,0,0,0.6),0_0_20px_rgba(193,99,59,0.15)]"
+                        : "bg-bg/40 border-line/70 hover:border-accent/40 hover:bg-bg/70"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-xs text-accent font-semibold">
+                          {domain.idx}
+                        </span>
+                        <h3 className="font-display font-medium text-base sm:text-xl text-paper">
+                          {domain.name}
+                        </h3>
+                      </div>
+                      <span
+                        className="font-mono text-xs text-stone-300 font-semibold"
+                        aria-hidden="true"
+                      >
+                        {isActive ? "▼" : "▶"}
+                      </span>
+                    </div>
+
+                    {/* Skills badges with Logos inside active domain */}
+                    {isActive && (
+                      <div
+                        id={`domain-panel-${idx}`}
+                        className="mt-5 pt-4 border-t border-line/60 flex flex-wrap gap-2 animate-fadeIn"
+                      >
+                        {domain.items.map((skill) => (
+                          <TechLogo key={skill} name={skill} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
-            {/* Three.js Canvas Mount */}
-            <div
-              ref={mountRef}
-              className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none"
-              aria-hidden="true"
-            />
+            {/* Right: Three.js Interactive Synaptic WebGL Cluster Canvas */}
+            <div className="order-1 lg:order-2 flex flex-col items-center">
+              <div
+                ref={mountRef}
+                className="w-full aspect-square max-w-[420px] rounded-2xl border border-line/80 bg-bg/80 backdrop-blur-sm relative overflow-hidden flex items-center justify-center cursor-grab active:cursor-grabbing shadow-[inset_0_0_40px_rgba(0,0,0,0.8),0_16px_40px_rgba(0,0,0,0.5)]"
+                aria-label="3D Synaptic Neural Graph Visualization"
+                role="img"
+              >
+                <div className="absolute top-3.5 left-4 z-10 flex items-center gap-2 font-mono text-[0.62rem] sm:text-xs text-stone-300 uppercase tracking-widest pointer-events-none">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
+                  <span>Interactive Synaptic Cluster</span>
+                </div>
 
-            {/* Bottom Active Stack Card */}
-            <div className="z-10 bg-bg/95 backdrop-blur-xl border border-line/80 p-4 sm:p-5 rounded-2xl shadow-xl">
-              <div className="font-mono text-xs text-accent font-semibold uppercase tracking-wider mb-2">
-                {SKILL_DOMAINS[activeDomain].name}
+                <div className="absolute bottom-3.5 right-4 z-10 font-mono text-[0.58rem] sm:text-[0.65rem] text-stone-400 pointer-events-none">
+                  Drag to rotate · Touch responsive
+                </div>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {SKILL_DOMAINS[activeDomain].items.slice(0, 8).map((item) => (
-                  <TechLogo key={item} name={item} />
-                ))}
+
+              {/* Active Category Quick View */}
+              <div className="mt-4 p-4 rounded-xl border border-line/60 bg-bg/60 w-full max-w-[420px] backdrop-blur-sm">
+                <div className="font-mono text-[0.65rem] text-accent font-semibold uppercase tracking-wider mb-1">
+                  Active Domain Inspector
+                </div>
+                <div className="font-display font-medium text-paper text-sm mb-2">
+                  {SKILL_DOMAINS[activeDomain].name}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {SKILL_DOMAINS[activeDomain].items.slice(0, 8).map((item) => (
+                    <TechLogo key={item} name={item} />
+                  ))}
+                </div>
               </div>
             </div>
           </div>

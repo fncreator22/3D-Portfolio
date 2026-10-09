@@ -69,7 +69,7 @@ export function JourneyTimeline() {
         });
       }
 
-      // Transition 02: 3D Card Splash Physics on Section Entry
+      // Transition 02: 3D Card Splash Physics on Section Entry & Exit Tilt
       if (isTransitionEnabled("IDENTITY_TO_TRAJECTORY_STACK") && cardRef.current) {
         gsap.fromTo(
           cardRef.current,
@@ -94,6 +94,22 @@ export function JourneyTimeline() {
             },
           }
         );
+
+        // Card 02 Exit Tilt toward Card 03 (Skills)
+        gsap.to(cardRef.current, {
+          scale: 0.95,
+          rotateX: 3.2,
+          y: -20,
+          filter: "brightness(0.8)",
+          transformOrigin: "center top",
+          ease: "power1.out",
+          scrollTrigger: {
+            trigger: "#skills",
+            start: "top 95%",
+            end: "top 35%",
+            scrub: 0.8,
+          },
+        });
       }
     }, containerRef);
 

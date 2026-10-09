@@ -16,8 +16,9 @@ export default function Home() {
         <div id="hero">
           <Hero />
         </div>
-        <LetterPortalTransition />
-        <Identity />
+        <LetterPortalTransition>
+          <Identity />
+        </LetterPortalTransition>
         <JourneyTimeline />
         <SkillsDomain />
         <HorizontalProjects />

@@ -13,19 +13,21 @@ export function Identity() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     const ctx = gsap.context(() => {
-      // 1. Initial Content Reveal
-      gsap.from(".identity-reveal", {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 85%",
-          once: true,
-        },
-        opacity: 0,
-        y: 24,
-        duration: 0.8,
-        ease: "power3.out",
-        stagger: 0.12,
-      });
+      // 1. Initial Content Reveal (Active when aperture portal is disabled)
+      if (!isTransitionEnabled("HERO_TO_IDENTITY_PORTAL")) {
+        gsap.from(".identity-reveal", {
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 85%",
+            once: true,
+          },
+          opacity: 0,
+          y: 24,
+          duration: 0.8,
+          ease: "power3.out",
+          stagger: 0.12,
+        });
+      }
 
       // 2. Transition 02: 3D Deck Card Stacking & Tilt
       if (isTransitionEnabled("IDENTITY_TO_TRAJECTORY_STACK") && cardRef.current) {
