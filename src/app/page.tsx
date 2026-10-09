@@ -1,4 +1,5 @@
 import { Hero } from "@/components/sections/Hero";
+import { LetterPortalTransition } from "@/components/effects/LetterPortalTransition";
 import { Identity } from "@/components/sections/Identity";
 import { JourneyTimeline } from "@/components/sections/JourneyTimeline";
 import { SkillsDomain } from "@/components/sections/SkillsDomain";
@@ -15,6 +16,7 @@ export default function Home() {
         <div id="hero">
           <Hero />
         </div>
+        <LetterPortalTransition />
         <Identity />
         <JourneyTimeline />
         <SkillsDomain />

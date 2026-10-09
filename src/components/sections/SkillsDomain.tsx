@@ -4,10 +4,12 @@ import React, { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 import { SKILL_DOMAINS } from "@/data/projects";
 import { TechLogo } from "@/components/ui/TechLogo";
+import { isTransitionEnabled } from "@/lib/motion-flags";
 
 export function SkillsDomain() {
   const [activeDomain, setActiveDomain] = useState<number>(0);
   const mountRef = useRef<HTMLDivElement>(null);
+  const flareRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -102,7 +104,23 @@ export function SkillsDomain() {
     const lines = new THREE.LineSegments(lineGeo, lineMat);
     scene.add(lines);
 
-    // 4. Interactive Orbital Motion with Mouse & Touch Gestures
+    // 4. Transition 03: Traveling Laser Photon Shockwave Listener
+    let burstExpansion = 0;
+    const handlePhotonBurst = (e: Event) => {
+      if (!isTransitionEnabled("TRAJECTORY_TO_SKILLS_PHOTON")) return;
+      const customEvent = e as CustomEvent<{ intensity?: number }>;
+      const intensity = customEvent.detail?.intensity ?? 1;
+      burstExpansion = Math.min(2.2, intensity * 2.0);
+
+      // Flash subtle top flare
+      if (flareRef.current) {
+        flareRef.current.style.opacity = `${Math.min(0.8, intensity)}`;
+      }
+    };
+
+    window.addEventListener("trajectory-photon-burst", handlePhotonBurst);
+
+    // 5. Interactive Orbital Motion with Mouse & Touch Gestures
     let animId: number;
     let targetRotY = 0;
     let targetRotX = 0;
@@ -123,6 +141,27 @@ export function SkillsDomain() {
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
+
+      // Damp burst expansion smoothly
+      if (burstExpansion > 0.005) {
+        burstExpansion *= 0.94;
+        const scaleFactor = 1 + burstExpansion * 0.35;
+        nodes.scale.set(scaleFactor, scaleFactor, scaleFactor);
+        lines.scale.set(scaleFactor, scaleFactor, scaleFactor);
+        nodeMat.size = 0.45 + burstExpansion * 0.3;
+        lineMat.opacity = 0.25 + burstExpansion * 0.45;
+        if (flareRef.current) {
+          flareRef.current.style.opacity = `${burstExpansion * 0.5}`;
+        }
+      } else {
+        nodes.scale.set(1, 1, 1);
+        lines.scale.set(1, 1, 1);
+        nodeMat.size = 0.45;
+        lineMat.opacity = 0.25;
+        if (flareRef.current) {
+          flareRef.current.style.opacity = "0";
+        }
+      }
 
       nodes.rotation.y += 0.003;
       lines.rotation.y += 0.003;
@@ -156,6 +195,7 @@ export function SkillsDomain() {
     return () => {
       cancelAnimationFrame(animId);
       if (resizeFrameId) cancelAnimationFrame(resizeFrameId);
+      window.removeEventListener("trajectory-photon-burst", handlePhotonBurst);
       window.removeEventListener("mousemove", handlePointerMove);
       mount.parentElement?.removeEventListener("touchstart", handlePointerMove);
       mount.parentElement?.removeEventListener("touchmove", handlePointerMove);
@@ -175,23 +215,45 @@ export function SkillsDomain() {
   };
 
   return (
-    <section id="skills" className="py-[clamp(5rem,9vw,9rem)] border-t border-line relative z-10 overflow-x-clip max-w-full" aria-labelledby="skills-heading">
-      <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)]">
+    <section
+      id="skills"
+      className="py-[clamp(4rem,8vw,8rem)] border-t border-line relative z-10 overflow-x-clip max-w-full"
+      aria-labelledby="skills-heading"
+    >
+      {/* Photon Shockwave Radiant Flare (Transition 03 Seeding Anchor) */}
+      <div
+        ref={flareRef}
+        className="absolute top-0 left-1/4 -translate-x-1/2 w-[420px] h-32 bg-[radial-gradient(ellipse_at_top,rgba(193,99,59,0.45),transparent_70%)] pointer-events-none opacity-0 transition-opacity duration-300 z-0"
+        aria-hidden="true"
+      />
+
+      <div className="max-w-[1240px] mx-auto px-[clamp(1rem,5vw,4rem)] relative z-10">
         {/* Header */}
         <div className="max-w-[760px] mb-8 sm:mb-14">
-          <div className="eyebrow">03 / Technical Matrix</div>
-          <h2 id="skills-heading" className="font-display font-medium text-[clamp(2rem,5vw,3.4rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.08] text-paper">
-            Core Domains &amp; <span className="font-serif italic text-accent font-normal">Production Technologies</span>.
+          <div className="eyebrow text-accent font-semibold flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            <span>03 / Technical Matrix</span>
+          </div>
+          <h2
+            id="skills-heading"
+            className="font-display font-medium text-[clamp(2rem,5vw,3.4rem)] tracking-[-0.01em] mt-3 sm:mt-4 leading-[1.08] text-paper"
+          >
+            Core Domains &amp;{" "}
+            <span className="text-accent font-medium">Production Toolchains</span>.
           </h2>
           <p className="mt-3.5 text-stone-300 font-light text-base sm:text-lg max-w-[620px] leading-relaxed">
             Drag or tap to explore the live 3D neural graph and inspect production toolchains with verified badges.
           </p>
         </div>
 
-        {/* 2-Column Matrix: Mobile-first ordering puts 3D Visualizer top on phones, Left on wide screens */}
+        {/* 2-Column Matrix */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-14 items-start">
           {/* Left: Interactive Domain Accordion Cards */}
-          <div className="order-2 lg:order-1 space-y-3.5 sm:space-y-4" role="tablist" aria-label="Technical Skill Domains">
+          <div
+            className="order-2 lg:order-1 space-y-3.5 sm:space-y-4"
+            role="tablist"
+            aria-label="Technical Skill Domains"
+          >
             {SKILL_DOMAINS.map((domain, idx) => {
               const isActive = activeDomain === idx;
               return (
@@ -219,14 +281,20 @@ export function SkillsDomain() {
                         {domain.name}
                       </h3>
                     </div>
-                    <span className="font-mono text-xs text-stone-300 font-semibold" aria-hidden="true">
+                    <span
+                      className="font-mono text-xs text-stone-300 font-semibold"
+                      aria-hidden="true"
+                    >
                       {isActive ? "▼" : "▶"}
                     </span>
                   </div>
 
                   {/* Skills badges with Logos inside active domain */}
                   {isActive && (
-                    <div id={`domain-panel-${idx}`} className="mt-5 pt-4 border-t border-line/60 flex flex-wrap gap-2 animate-fadeIn">
+                    <div
+                      id={`domain-panel-${idx}`}
+                      className="mt-5 pt-4 border-t border-line/60 flex flex-wrap gap-2 animate-fadeIn"
+                    >
                       {domain.items.map((skill) => (
                         <TechLogo key={skill} name={skill} />
                       ))}
@@ -272,3 +340,5 @@ export function SkillsDomain() {
     </section>
   );
 }
+
+export default SkillsDomain;

@@ -15,7 +15,7 @@ export function Contact() {
           <div>
             <h2 id="invariants-heading" className="font-display font-medium text-[clamp(2rem,4.5vw,3.5rem)] tracking-[-0.02em] leading-[1.1] text-paper">
               Building intelligent systems <br />
-              <span className="font-serif italic text-accent font-normal">ready for production.</span>
+              <span className="text-accent font-medium">ready for production.</span>
             </h2>
 
             <p className="mt-4 sm:mt-5 text-stone-300 font-light max-w-[520px] text-[clamp(0.95rem,1.3vw,1.1rem)] leading-relaxed">

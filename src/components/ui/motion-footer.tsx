@@ -419,7 +419,7 @@ export function CinematicFooter() {
 
             <h2 className="font-display font-medium text-4xl sm:text-6xl lg:text-7xl footer-text-glow tracking-tight text-center max-w-4xl leading-[1.08] opacity-100">
               Initiate Transmission. <br />
-              <span className="font-serif italic text-accent font-normal">Let&apos;s build autonomous scale.</span>
+              <span className="text-accent font-medium">Let&apos;s build autonomous scale.</span>
             </h2>
 
             <div className="flex flex-col items-center gap-5 w-full mt-10 opacity-100">
@@ -484,7 +484,7 @@ export function CinematicFooter() {
                 className="font-display font-medium text-3xl sm:text-5xl lg:text-7xl footer-text-glow tracking-tight text-center max-w-4xl leading-[1.1] sm:leading-[1.08]"
               >
                 Initiate Transmission. <br />
-                <span className="font-serif italic text-accent font-normal">Let&apos;s build autonomous scale.</span>
+                <span className="text-accent font-medium">Let&apos;s build autonomous scale.</span>
               </h2>
 
               {/* Interactive Magnetic Glass Pills Layout */}
