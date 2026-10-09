@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PROJECTS } from "@/data/projects";
 import { Project } from "@/lib/types";
 import { WorkflowBuilderCard } from "@/components/ui/workflow-builder-card";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -147,6 +148,7 @@ export function HorizontalProjects() {
   const pinRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const filterTrackRef = useRef<HTMLDivElement>(null);
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [mobileCardIndex, setMobileCardIndex] = useState<number>(0);
 
@@ -174,12 +176,51 @@ export function HorizontalProjects() {
     setMobileCardIndex(idx);
   };
 
+  const handleCategorySelect = (cat: string, btnElement?: HTMLElement) => {
+    setActiveCategory(cat);
+
+    // Smoothly center the active keyword pill inside the filter track
+    const container = filterTrackRef.current;
+    if (container && btnElement) {
+      const targetLeft = btnElement.offsetLeft - container.offsetWidth / 2 + btnElement.offsetWidth / 2;
+      container.scrollTo({ left: targetLeft, behavior: "smooth" });
+    }
+
+    // Reset card index
+    setMobileCardIndex(0);
+
+    // Reset horizontal card stream
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft = 0;
+    }
+
+    // Anchor viewport to start of projects section via ScrollTrigger
+    const st = ScrollTrigger.getAll().find(
+      (s) => s.pin === pinRef.current || s.trigger === pinRef.current
+    );
+    if (st) {
+      st.scroll(st.start);
+    } else if (sectionRef.current) {
+      sectionRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
     // Reset horizontal scroll position on category switch
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollLeft = 0;
       setMobileCardIndex(0);
     }
+
+    const refreshTimer = setTimeout(() => {
+      ScrollTrigger.refresh();
+      const st = ScrollTrigger.getAll().find(
+        (s) => s.pin === pinRef.current || s.trigger === pinRef.current
+      );
+      if (st && (window.scrollY >= st.start && window.scrollY <= st.end + 500)) {
+        st.scroll(st.start);
+      }
+    }, 60);
 
     const mm = gsap.matchMedia();
 
@@ -270,38 +311,92 @@ export function HorizontalProjects() {
     });
 
     return () => {
+      clearTimeout(refreshTimer);
       mm.revert();
     };
   }, [activeCategory, displayedProjects.length]);
 
   return (
     <section id="projects" ref={sectionRef} className="relative z-10 border-t border-line py-0 overflow-x-clip max-w-full" aria-labelledby="projects-heading">
-      <div ref={pinRef} className="h-[100svh] min-h-[580px] lg:min-h-[700px] flex flex-col justify-between pt-[4.75rem] sm:pt-20 lg:pt-8 pb-3 sm:pb-4 lg:pb-6">
+      <div ref={pinRef} className="h-[100svh] min-h-[600px] lg:min-h-[700px] flex flex-col justify-between pt-20 sm:pt-24 lg:pt-24 pb-3 sm:pb-4 lg:pb-6">
         
         {/* Header Bar */}
-        <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] mb-1 sm:mb-2 lg:mb-3 flex-shrink-0 flex flex-col md:flex-row md:items-end justify-between gap-2 sm:gap-2.5 relative z-20">
-          <div>
-            <div className="eyebrow text-accent font-semibold text-[0.65rem] sm:text-xs">04 / Selected Work</div>
-            <h2 id="projects-heading" className="font-display font-medium text-xl sm:text-2xl lg:text-[clamp(1.5rem,3.2vw,2.6rem)] tracking-[-0.01em] mt-0.5 sm:mt-1 leading-tight text-paper">
-              Engineered for <span className="font-serif italic text-accent font-normal">Autonomy &amp; Scale</span>.
-            </h2>
+        <div className="max-w-[1240px] w-full mx-auto px-[clamp(1rem,5vw,4rem)] mb-2 sm:mb-3 flex-shrink-0 flex flex-col gap-2.5 relative z-20">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+            <div>
+              <div className="eyebrow text-accent font-semibold text-[0.65rem] sm:text-xs">04 / Selected Work</div>
+              <h2 id="projects-heading" className="font-display font-medium text-xl sm:text-2xl lg:text-[clamp(1.5rem,3.2vw,2.4rem)] tracking-[-0.01em] mt-0.5 sm:mt-1 leading-tight text-paper">
+                Engineered for <span className="font-serif italic text-accent font-normal">Autonomy &amp; Scale</span>.
+              </h2>
+            </div>
+            <div className="hidden md:flex items-center gap-2 font-mono text-[0.68rem] text-stone-400">
+              <span className="text-accent font-semibold">Active Filter:</span>
+              <span className="text-paper px-2 py-0.5 rounded-md bg-white/[0.05] border border-line">
+                {activeCategory} ({filteredProjects.length})
+              </span>
+            </div>
           </div>
 
-          {/* Category Filter Pills (Sleek Horizontal Scroll Rail) */}
-          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 max-w-full md:max-w-xl xl:max-w-2xl">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`font-mono text-[0.65rem] sm:text-[0.68rem] uppercase tracking-wider px-2.5 sm:px-3 py-1 rounded-full border whitespace-nowrap transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-accent ${
-                activeCategory === cat
-                  ? "bg-accent text-bg border-accent font-semibold shadow-md shadow-accent/20"
-                  : "border-line text-stone-300 hover:text-paper hover:border-paper/40 bg-bg/50"
-              }`}
-              >
-                {cat}
-              </button>
-            ))}
+          {/* Self-Contained Category Filter Capsule Box (100% Contained, Never Bleeds Outside Platform) */}
+          <div className="relative max-w-full rounded-2xl bg-bg-raise/90 border border-line/80 p-1 sm:p-1.5 backdrop-blur-md shadow-md flex items-center group">
+            {/* Left Scroll Chevron Button */}
+            <button
+              type="button"
+              onClick={() => {
+                filterTrackRef.current?.scrollBy({ left: -220, behavior: "smooth" });
+              }}
+              className="hidden sm:flex shrink-0 w-7 h-7 rounded-xl items-center justify-center bg-bg/90 border border-line/70 text-stone-300 hover:text-paper hover:border-accent transition-all z-20 active:scale-[0.92]"
+              aria-label="Scroll categories left"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+            </button>
+
+            {/* Left Fade Gradient Mask */}
+            <div className="absolute left-0 sm:left-8 top-0 bottom-0 w-6 bg-gradient-to-r from-bg-raise/95 to-transparent pointer-events-none z-10" />
+
+            {/* Scrollable Keyword Track */}
+            <div
+              ref={filterTrackRef}
+              className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar scroll-smooth px-3 py-0.5 w-full select-none"
+            >
+              {CATEGORIES.map((cat) => {
+                const count = cat === "All" ? PROJECTS.length : PROJECTS.filter((p) => p.cat === cat).length;
+                const isSelected = activeCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={(e) => handleCategorySelect(cat, e.currentTarget)}
+                    className={`font-mono text-[0.62rem] sm:text-[0.68rem] uppercase tracking-wider px-3 py-1.5 rounded-xl border whitespace-nowrap transition-all duration-150 flex items-center gap-1.5 shrink-0 active:scale-[0.96] focus-visible:ring-2 focus-visible:ring-accent ${
+                      isSelected
+                        ? "bg-accent text-bg border-accent font-bold shadow-md shadow-accent/25"
+                        : "border-line/70 text-stone-300 hover:text-paper hover:border-paper/40 bg-bg/60"
+                    }`}
+                  >
+                    <span>{cat}</span>
+                    <span className={`text-[0.58rem] px-1.5 py-0.5 rounded-md font-mono ${
+                      isSelected ? "bg-black/20 text-bg font-bold" : "bg-white/[0.06] text-stone-400"
+                    }`}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Right Fade Gradient Mask */}
+            <div className="absolute right-0 sm:right-8 top-0 bottom-0 w-6 bg-gradient-to-l from-bg-raise/95 to-transparent pointer-events-none z-10" />
+
+            {/* Right Scroll Chevron Button */}
+            <button
+              type="button"
+              onClick={() => {
+                filterTrackRef.current?.scrollBy({ left: 220, behavior: "smooth" });
+              }}
+              className="hidden sm:flex shrink-0 w-7 h-7 rounded-xl items-center justify-center bg-bg/90 border border-line/70 text-stone-300 hover:text-paper hover:border-accent transition-all z-20 active:scale-[0.92]"
+              aria-label="Scroll categories right"
+            >
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
 

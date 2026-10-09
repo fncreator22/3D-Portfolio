@@ -10,7 +10,6 @@ export const PROFILE = {
     "Full-Stack Developer"
   ],
   location: "Greater Hyderabad Area, India",
-  email: "sagar@sagarmahajan.cloud",
   linkedin: "https://www.linkedin.com/in/sagar-mahajanofficial",
   github: "https://github.com/fncreator22",
   x: "https://x.com/sr2mahajan",
