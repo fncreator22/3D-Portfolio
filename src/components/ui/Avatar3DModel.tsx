@@ -5,7 +5,6 @@ import * as THREE from "three";
 
 export function Avatar3DModel() {
   const mountRef = useRef<HTMLDivElement>(null);
-  const [hudStatus, setHudStatus] = useState("18,488 NEURAL NODES · SYNCED");
   const [dispersionMode, setDispersionMode] = useState(false);
 
   useEffect(() => {
@@ -249,13 +248,7 @@ export function Avatar3DModel() {
       mouse.targetX = Math.max(-1, Math.min(1, normX));
       mouse.targetY = Math.max(-1, Math.min(1, normY));
 
-      if (Math.abs(mouse.targetX) > 0.35) {
-        setHudStatus(mouse.targetX > 0 ? "NEURAL CLUSTER · RIGHT ORBIT" : "NEURAL CLUSTER · LEFT ORBIT");
-      } else if (mouse.targetY < -0.3) {
-        setHudStatus("NEURAL CLUSTER · UPWARD GAZE");
-      } else {
-        setHudStatus("18,488 NEURAL NODES · SYNCED");
-      }
+      // Pointer tracking for particle kinematics
     };
 
     let dispersionTimer: ReturnType<typeof setTimeout> | null = null;
@@ -263,12 +256,10 @@ export function Avatar3DModel() {
     const handlePointerDown = () => {
       targetDispersion = 1.0;
       setDispersionMode(true);
-      setHudStatus("NEURAL PULSE · DISPERSION WAVE");
       if (dispersionTimer) clearTimeout(dispersionTimer);
       dispersionTimer = setTimeout(() => {
         targetDispersion = 0;
         setDispersionMode(false);
-        setHudStatus("18,488 NEURAL NODES · SYNCED");
       }, 700);
     };
 
@@ -280,21 +271,12 @@ export function Avatar3DModel() {
         const normY = (touch.clientY - (rect.top + rect.height / 2)) / (window.innerHeight * 0.35);
         mouse.targetX = Math.max(-1, Math.min(1, normX));
         mouse.targetY = Math.max(-1, Math.min(1, normY));
-
-        if (Math.abs(mouse.targetX) > 0.35) {
-          setHudStatus(mouse.targetX > 0 ? "NEURAL CLUSTER · RIGHT ORBIT" : "NEURAL CLUSTER · LEFT ORBIT");
-        } else if (mouse.targetY < -0.3) {
-          setHudStatus("NEURAL CLUSTER · UPWARD GAZE");
-        } else {
-          setHudStatus("18,488 NEURAL NODES · SYNCED");
-        }
       }
     };
 
     const handleTouchEnd = () => {
       mouse.targetX = 0;
       mouse.targetY = 0;
-      setHudStatus("18,488 NEURAL NODES · SYNCED");
     };
 
     const handleResize = () => {
@@ -376,13 +358,13 @@ export function Avatar3DModel() {
 
   return (
     <div className="flex justify-center items-center w-full select-none">
-      <div className="relative w-[min(320px,76vw)] aspect-square rounded-[28px] sm:rounded-[32px] p-2 bg-[radial-gradient(circle_at_50%_35%,rgba(193,99,59,0.22),#141311_75%)] border border-accent/40 shadow-[0_24px_60px_rgba(0,0,0,0.8),0_0_45px_rgba(193,99,59,0.2)]">
+      <div className="relative w-[min(260px,68vw)] sm:w-[min(290px,72vw)] aspect-square rounded-[24px] sm:rounded-[28px] p-2 bg-[radial-gradient(circle_at_50%_35%,rgba(193,99,59,0.22),#141311_75%)] border border-accent/40 shadow-[0_20px_50px_rgba(0,0,0,0.75),0_0_35px_rgba(193,99,59,0.18)]">
         
         {/* WebGL Canvas Container (Auto-fills responsive parent with touch-action: none) */}
         <div
           ref={mountRef}
           style={{ touchAction: "none" }}
-          className="w-full h-full rounded-[22px] sm:rounded-[24px] overflow-hidden bg-bg/95 flex items-center justify-center cursor-grab active:cursor-grabbing touch-none select-none"
+          className="w-full h-full rounded-[18px] sm:rounded-[22px] overflow-hidden bg-bg/95 flex items-center justify-center cursor-grab active:cursor-grabbing touch-none select-none"
           title="Drag / Swipe to orbit avatar · Tap for particle dispersion pulse"
         />
 
@@ -390,13 +372,7 @@ export function Avatar3DModel() {
         <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 h-[1px] bg-gradient-to-r from-transparent via-accent/50 to-transparent pointer-events-none animate-pulse" />
 
         {/* Ambient Ring */}
-        <div className="absolute -inset-1.5 sm:-inset-2 rounded-[32px] sm:rounded-[36px] border border-accent/20 pointer-events-none" />
-
-        {/* Live HUD Status Badge */}
-        <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 bg-bg/95 backdrop-blur-md border border-accent/80 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full font-mono text-[0.6rem] sm:text-[0.65rem] tracking-[0.12em] uppercase text-paper flex items-center gap-1.5 sm:gap-2 whitespace-nowrap shadow-[0_12px_30px_rgba(0,0,0,0.7)] z-20">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
-          <span>{hudStatus}</span>
-        </div>
+        <div className="absolute -inset-1.5 sm:-inset-2 rounded-[28px] sm:rounded-[32px] border border-accent/20 pointer-events-none" />
       </div>
     </div>
   );

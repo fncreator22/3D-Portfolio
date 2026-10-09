@@ -373,7 +373,7 @@ export function Hero() {
       </div>
 
       {/* ─── Hero Content Foreground Layer ─── */}
-      <div className="relative z-20 flex-1 flex items-center pt-24 sm:pt-32 pb-8 sm:pb-12 pointer-events-auto">
+      <div className="relative z-20 flex-1 flex items-center pt-20 sm:pt-28 lg:pt-32 pb-6 sm:pb-10 lg:pb-12 pointer-events-auto">
         <div className="max-w-[1320px] mx-auto px-[clamp(1rem,4vw,3.5rem)] w-full">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-10 items-center">
 
@@ -381,37 +381,37 @@ export function Hero() {
             <div className="flex flex-col max-w-[460px]">
               
               {/* Shortened Eyebrow Tag */}
-              <div className="eyebrow mb-2.5 sm:mb-3.5 text-[0.66rem] sm:text-xs tracking-wider">
+              <div className="eyebrow mb-2 sm:mb-3 text-[0.66rem] sm:text-xs tracking-wider">
                 AI ENGINEER · AGENTIC SYSTEMS · VOICE AI
               </div>
 
               {/* High-Impact Headline */}
-              <h1 className="font-display font-medium text-[clamp(1.75rem,5.5vw,3.8rem)] tracking-[-0.02em] leading-[1.08] text-paper mb-3 sm:mb-3.5 break-words">
+              <h1 className="font-display font-medium text-[clamp(1.75rem,5.2vw,3.8rem)] tracking-[-0.02em] leading-[1.08] text-paper mb-2.5 sm:mb-3.5 break-words">
                 Engineering <span className="text-accent">Autonomous Systems</span> &amp; Production AI.
               </h1>
 
               {/* Shortened, Punchy Statement */}
-              <p className="text-stone-300 mb-4 sm:mb-6 font-body text-[clamp(0.88rem,1.25vw,1.05rem)] leading-relaxed max-w-[440px]">
+              <p className="text-stone-300 mb-3 sm:mb-5 font-body text-[clamp(0.85rem,1.2vw,1.05rem)] leading-relaxed max-w-[440px]">
                 Architecting self-evaluating agents, sub-200ms voice pipelines, and production systems that make dependable decisions.
               </p>
 
               {/* ─── Mobile Avatar Stage (Interactive 3D Particle Canvas for mobile) ─── */}
-              <div className="block lg:hidden my-5 self-center w-full max-w-[320px]">
+              <div className="block lg:hidden my-3.5 sm:my-5 self-center w-full max-w-[280px]">
                 <Avatar3DModel />
               </div>
 
               {/* Primary Action Buttons */}
-              <div className="flex flex-wrap gap-2 sm:gap-2.5 items-center mb-5 sm:mb-6">
+              <div className="flex flex-wrap sm:flex-nowrap gap-1.5 sm:gap-2.5 items-center mb-4 sm:mb-6">
                 <Link
                   href="/work"
-                  className="inline-flex items-center justify-center bg-paper text-bg border border-black/10 rounded-full font-body font-medium hover:bg-accent hover:text-paper hover:border-accent transition-all duration-200 text-[0.78rem] sm:text-[0.88rem] px-3.5 sm:px-4 py-2 shadow-sm cursor-pointer"
+                  className="inline-flex items-center justify-center bg-paper text-bg border border-black/10 rounded-full font-body font-medium hover:bg-accent hover:text-paper hover:border-accent transition-all duration-200 text-[0.72rem] sm:text-[0.88rem] px-3 sm:px-4 py-1.5 sm:py-2 shadow-sm cursor-pointer whitespace-nowrap"
                 >
                   Explore 16 Systems
                 </Link>
 
                 <a
                   href="#contact"
-                  className="inline-flex items-center justify-center bg-accent text-bg font-medium rounded-full hover:bg-accent/90 hover:shadow-md transition-all text-[0.78rem] sm:text-[0.88rem] px-3.5 sm:px-4 py-2 gap-1.5 cursor-pointer"
+                  className="inline-flex items-center justify-center bg-accent text-bg font-medium rounded-full hover:bg-accent/90 hover:shadow-md transition-all text-[0.72rem] sm:text-[0.88rem] px-3 sm:px-4 py-1.5 sm:py-2 gap-1 sm:gap-1.5 cursor-pointer whitespace-nowrap"
                 >
                   <span>Get in Touch</span>
                   <span className="text-xs">↓</span>
@@ -421,7 +421,7 @@ export function Hero() {
                   href="/resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center text-paper bg-transparent border border-paper/60 rounded-full font-body hover:bg-paper hover:text-bg hover:border-paper transition-all duration-200 text-[0.78rem] sm:text-[0.88rem] px-3.5 sm:px-4 py-2 gap-1.5 cursor-pointer"
+                  className="inline-flex items-center justify-center text-paper bg-transparent border border-paper/60 rounded-full font-body hover:bg-paper hover:text-bg hover:border-paper transition-all duration-200 text-[0.72rem] sm:text-[0.88rem] px-3 sm:px-4 py-1.5 sm:py-2 gap-1 sm:gap-1.5 cursor-pointer whitespace-nowrap"
                 >
                   <span>Resume</span>
                   <span className="text-xs">↗</span>

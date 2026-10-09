@@ -317,7 +317,7 @@ export function HorizontalProjects() {
         >
           <div
             ref={trackRef}
-            className="flex flex-row w-max px-[clamp(1rem,5vw,4rem)] gap-4 sm:gap-6 lg:gap-7 lg:pl-[clamp(1.5rem,5vw,4rem)] items-stretch"
+            className="flex flex-row w-max px-[clamp(1rem,5vw,4rem)] gap-4 sm:gap-6 lg:gap-7 lg:pl-[clamp(1.5rem,5vw,4rem)] items-center"
           >
             {displayedProjects.map((project) => (
               <WorkflowBuilderCard
@@ -327,6 +327,7 @@ export function HorizontalProjects() {
                 lastUpdated={project.cat}
                 title={project.title}
                 tagline={project.tagline}
+                description={project.desc}
                 tags={project.tech}
                 slug={project.slug}
                 idx={project.idx}
